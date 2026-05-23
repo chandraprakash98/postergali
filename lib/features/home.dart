@@ -4,50 +4,88 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/jobfilter.dart';
 import '../widgets/job_templates.dart';
+import '../widgets/job_templates_small.dart';
 import '../widgets/offer_templates.dart';
 import 'job_detail_screen.dart';
 import 'language_selection_screen.dart';
 import 'offer_detail_screen.dart';
 
-class HomeScreen extends StatefulWidget {
+/// =======================================================
+/// COLORS
+/// =======================================================
 
+const Color kPrimaryRed = Color(0xffCF5C4C);
+const Color kDarkRed = Color(0xffA6473A);
+const Color kGolden = Color(0xffF2AD36);
+const Color kCream = Color(0xffFFF9F2);
+const Color kLightCream = Color(0xffF8E5D2);
+const Color kGreen = Color(0xff448655);
+const Color kTextDark = Color(0xff2E211D);
+
+class HomeScreen extends StatefulWidget {
   final String location;
+  final double latitude;
+  final double longitude;
 
   const HomeScreen({
     super.key,
     required this.location,
+    required this.latitude,
+    required this.longitude,
   });
 
   @override
-  State<HomeScreen> createState() =>
-      _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState
-    extends State<HomeScreen> {
-
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
   int selectedTab = 0;
+  int selectedBottomIndex = 0;
 
   bool isLoading = true;
 
   List<dynamic> jobs = [];
   List<dynamic> offers = [];
 
+  /// =====================================================
   /// FILTERS
+  /// =====================================================
 
-  bool showSubCategory = false;
-  bool showExpiry = false;
-  bool showJobType = false;
-  bool showSalary = false;
+  JobFilterModel jobFilter = JobFilterModel();
 
-  List<String> selectedSubCategories = [];
+  final List<String> jobCategories = [
+    "Retail and Shop Jobs",
+    "Food and Hospitality",
+    "Delivery and Logistics",
+    "Office and Admin",
+    "Skilled Workers",
+    "Housekeeping and Maintenance",
+    "Creative and Digital",
+    "HealthCare and Care",
+    "Education and Training",
+    "Construction and Labor",
+  ];
 
-  String selectedExpiry = '';
+  final List<String> expiryOptions = [
+    "Within a day",
+    "Within 3 days",
+    "Within a week",
+  ];
 
-  String selectedJobType = 'Full-time';
+  final List<String> salaryOptions = [
+    "0-10,000",
+    "10,001-20,000",
+    "20,000 and above",
+  ];
 
-  String selectedSalary = '';
+  final List<String> jobTypes = [
+    "Full-time",
+    "Part-time",
+    "Temporary",
+  ];
 
   @override
   void initState() {
@@ -58,85 +96,74 @@ class _HomeScreenState
   /// =====================================================
   /// FETCH JOBS
   /// =====================================================
+  /// =====================================================
+  /// FETCH JOBS
+  /// =====================================================
 
   Future<void> fetchJobs() async {
-
     setState(() {
       isLoading = true;
+      selectedTab = 0;
     });
 
     try {
-
-      final response = await http.get(
-        Uri.parse(
-          'https://postergali.com/api/v1/jobs',
-        ),
+      final query = jobFilter.toQuery(
+        latitude: widget.latitude,
+        longitude: widget.longitude,
       );
 
+      query.removeWhere(
+            (key, value) => value.isEmpty,
+      );
+
+      final uri = Uri.parse(
+        'https://postergali.com/api/v1/jobs',
+      ).replace(
+        queryParameters: query,
+      );
+
+      debugPrint(uri.toString());
+
+      final response = await http.get(uri);
+
       if (response.statusCode == 200) {
-
         jobs = jsonDecode(response.body);
-
-        setState(() {
-          selectedTab = 0;
-          isLoading = false;
-        });
-
-      } else {
-
-        setState(() {
-          isLoading = false;
-        });
       }
-
     } catch (e) {
-
-      setState(() {
-        isLoading = false;
-      });
+      debugPrint(e.toString());
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
+
 
   /// =====================================================
   /// FETCH OFFERS
   /// =====================================================
 
   Future<void> fetchOffers() async {
-
     setState(() {
       isLoading = true;
+      selectedTab = 1;
     });
 
     try {
-
       final response = await http.get(
-        Uri.parse(
-          'https://postergali.com/api/v1/offers',
-        ),
+        Uri.parse('https://postergali.com/api/v1/offers'),
       );
 
       if (response.statusCode == 200) {
-
         offers = jsonDecode(response.body);
-
-        setState(() {
-          selectedTab = 1;
-          isLoading = false;
-        });
-
-      } else {
-
-        setState(() {
-          isLoading = false;
-        });
       }
-
     } catch (e) {
-
-      setState(() {
-        isLoading = false;
-      });
+      debugPrint(e.toString());
     }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 
   /// =====================================================
@@ -145,289 +172,263 @@ class _HomeScreenState
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
+      backgroundColor: kCream,
 
-      backgroundColor:
-      const Color(0xffF6F7FB),
-
-      bottomNavigationBar:
-      _buildBottomBar(),
+      extendBody: true,
 
       floatingActionButtonLocation:
-      FloatingActionButtonLocation
-          .centerDocked,
+      FloatingActionButtonLocation.centerDocked,
 
-      floatingActionButton:
-      Container(
-        height: 76,
-        width: 76,
+      floatingActionButton: GestureDetector(
+        onTap: () {},
+        child: Container(
+          height: 78,
+          width: 78,
 
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
 
-          gradient:
-          const LinearGradient(
-            colors: [
-              Color(0xff6C63FF),
-              Color(0xff8E7BFF),
+            gradient: const LinearGradient(
+              colors: [
+                kGolden,
+                Color(0xffF7C767),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+
+            border: Border.all(
+              color: kCream,
+              width: 7,
+            ),
+
+            boxShadow: [
+              BoxShadow(
+                color: kGolden.withOpacity(.45),
+                blurRadius: 20,
+                spreadRadius: 2,
+                offset: const Offset(0, 6),
+              ),
             ],
           ),
 
-          boxShadow: [
-            BoxShadow(
-              color: Colors.deepPurple
-                  .withOpacity(.18),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-
-        child: const Icon(
-          Icons.add,
-          size: 38,
-          color: Colors.white,
+          child: const Icon(
+            CupertinoIcons.add,
+            size: 36,
+            color: kPrimaryRed,
+          ),
         ),
       ),
 
-      body: SafeArea(
+      bottomNavigationBar: _buildBottomBar(),
 
-        child: CustomScrollView(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              Color(0xffFFF9F2),
+              Color(0xffFCEEDF),
+            ],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
 
-          cacheExtent: 1000,
+        child: SafeArea(
+          child: CustomScrollView(
+            physics: const BouncingScrollPhysics(),
 
-          physics:
-          const BouncingScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 18, 20, 0),
 
-          slivers: [
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
 
-            /// HEADER
+                    children: [
+                      _buildHeader(),
 
-            SliverPadding(
-              padding:
-              const EdgeInsets.only(
-                left: 20,
-                right: 20,
-                top: 18,
-              ),
+                      const SizedBox(height: 28),
 
-              sliver: SliverToBoxAdapter(
-                child: Column(
-                  crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                      _buildTabs(),
 
-                  children: [
+                      const SizedBox(height: 24),
 
-                    _buildHeader(),
+                      _buildResultHeader(),
 
-                    const SizedBox(height: 20),
-
-                    _buildReferCard(),
-
-                    const SizedBox(height: 18),
-
-                    _buildTabs(),
-
-                    const SizedBox(height: 10),
-
-                    _buildResultHeader(),
-
-                    const SizedBox(height: 20),
-                  ],
-                ),
-              ),
-            ),
-
-            /// LOADING
-
-            if (isLoading)
-              const SliverFillRemaining(
-                child: Center(
-                  child:
-                  CircularProgressIndicator(),
+                      const SizedBox(height: 22),
+                    ],
+                  ),
                 ),
               ),
 
-            /// JOB GRID
-
-            if (!isLoading &&
-                selectedTab == 0)
-
-              SliverPadding(
-
-                padding:
-                const EdgeInsets.symmetric(
-                  horizontal: 14,
+              /// LOADING
+              if (isLoading)
+                const SliverFillRemaining(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: kPrimaryRed,
+                    ),
+                  ),
                 ),
 
-                sliver: SliverGrid(
+              /// JOBS
 
-                  delegate:
-                  SliverChildBuilderDelegate(
+              /// JOBS
+              if (!isLoading && selectedTab == 0)
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 8,
+                  ),
 
-                        (context, index) {
+                  sliver: SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                        final job = jobs[index];
 
-                      final job = jobs[index];
 
-                      return Transform.translate(
+                        return Container(
+                          margin: EdgeInsets.only(
+                            bottom: index < 2
+                                ? 25
+                                : index < 4
+                                ? 10
+                                : 0,
+                          ),
 
-                        offset: Offset(
-                          index.isEven ? -6 : 6,
-                          index % 4 == 0
-                              ? 0
-                              : index % 4 == 1
-                              ? 18
-                              : index % 4 == 2
-                              ? -10
-                              : 12,
-                        ),
+                          child: Transform.translate(
+                            offset: Offset(
+                              index.isEven ? -4 : 4,
 
-                        child: Transform.rotate(
+                              index % 6 == 0
+                                  ? 0
+                                  : index % 6 == 1
+                                  ? 16
+                                  : index % 6 == 2
+                                  ? -10
+                                  : index % 6 == 3
+                                  ? 18
+                                  : index % 6 == 4
+                                  ? -12
+                                  : 8,
+                            ),
 
-                          angle:
-                          index.isEven
-                              ? -0.05
-                              : 0.05,
+                            child: Transform.rotate(
+                              angle: index.isEven
+                                  ? -0.045
+                                  : 0.045,
 
-                          child: GestureDetector(
-
-                            onTap: () {
-
-                              Navigator.push(
-
-                                context,
-
-                                MaterialPageRoute(
-
-                                  builder: (_) =>
-                                      JobDetailScreen(
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => JobDetailScreen(
                                         jobId: job['id'],
                                       ),
-                                ),
-                              );
-                            },
+                                    ),
+                                  );
+                                },
 
-                            child: RepaintBoundary(
-                              child:
-                              _buildJobCard(job),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-
-                    childCount:
-                    jobs.length,
-                  ),
-
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
-
-                    crossAxisCount: 2,
-
-                    crossAxisSpacing: 10,
-
-                    mainAxisSpacing: 14,
-
-                    childAspectRatio: 0.62,
-                  ),
-                ),
-              ),
-
-            /// OFFER GRID
-
-            if (!isLoading &&
-                selectedTab == 1)
-
-              SliverPadding(
-
-                padding:
-                const EdgeInsets.symmetric(
-                  horizontal: 14,
-                ),
-
-                sliver: SliverGrid(
-
-                  delegate:
-                  SliverChildBuilderDelegate(
-
-                        (context, index) {
-
-                      final offer =
-                      offers[index];
-
-                      return Transform.translate(
-
-                        offset: Offset(
-                          index.isEven ? -6 : 6,
-                          index % 4 == 0
-                              ? 0
-                              : index % 4 == 1
-                              ? 18
-                              : index % 4 == 2
-                              ? -10
-                              : 12,
-                        ),
-
-                        child: Transform.rotate(
-
-                          angle:
-                          index.isEven
-                              ? -0.05
-                              : 0.05,
-
-                          child: GestureDetector(
-
-                            onTap: () {
-
-                              Navigator.push(
-
-                                context,
-
-                                MaterialPageRoute(
-
-                                  builder: (_) =>
-                                      OfferDetailScreen(
-                                        offerId: offer['id'],
-                                      ),
-                                ),
-                              );
-                            },
-
-                            child: RepaintBoundary(
-                              child:
-                              _buildOfferCard(
-                                offer,
+                                child: _buildJobCard(job),
                               ),
                             ),
                           ),
-                        ),
-                      );
-                    },
+                        );
+                      },
+                      childCount: jobs.length,
+                    ),
 
-                    childCount:
-                    offers.length,
-                  ),
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
 
-                  gridDelegate:
-                  const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 8,
 
-                    crossAxisCount: 2,
-
-                    crossAxisSpacing: 10,
-
-                    mainAxisSpacing: 14,
-
-                    childAspectRatio: 0.62,
+                      childAspectRatio: 0.62,
+                    ),
                   ),
                 ),
-              ),
+              /// OFFERS
+              /// OFFERS
+              if (!isLoading && selectedTab == 1)
+                SliverPadding(
+                  padding: const EdgeInsets.only(
+                    left: 10,
+                    right: 10,
+                    top: 8,
+                  ),
 
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 120),
-            ),
-          ],
+                  sliver: SliverGrid(
+                    delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                        final offer = offers[index];
+
+                        return Transform.translate(
+                          offset: Offset(
+                            index.isEven ? -4 : 4,
+
+                            index % 6 == 0
+                                ? 0
+                                : index % 6 == 1
+                                ? 16
+                                : index % 6 == 2
+                                ? -10
+                                : index % 6 == 3
+                                ? 18
+                                : index % 6 == 4
+                                ? -12
+                                : 8,
+                          ),
+
+                          child: Transform.rotate(
+                            angle: index.isEven
+                                ? -0.045
+                                : 0.045,
+
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        OfferDetailScreen(
+                                          offerId: offer['id'],
+                                        ),
+                                  ),
+                                );
+                              },
+
+                              child: _buildOfferCard(offer),
+                            ),
+                          ),
+                        );
+                      },
+                      childCount: offers.length,
+                    ),
+
+                    gridDelegate:
+                    const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+
+                      crossAxisSpacing: 5,
+                      mainAxisSpacing: 8,
+
+                      childAspectRatio: 0.62,
+                    ),
+                  ),
+                ),
+
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 130),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -439,71 +440,118 @@ class _HomeScreenState
 
   Widget _buildHeader() {
 
-    return Column(
+    final borderRadius = BorderRadius.circular(34);
 
-      crossAxisAlignment:
-      CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
 
-        /// TOP ROW
-
+        /// TOP HEADER
         Row(
-
-          crossAxisAlignment:
-          CrossAxisAlignment.start,
-
-          mainAxisAlignment:
-          MainAxisAlignment.spaceBetween,
-
           children: [
 
+            /// LEFT SIDE
             Expanded(
+              child: Column(
+                crossAxisAlignment:
+                CrossAxisAlignment.start,
 
-              child: ShaderMask(
+                children: [
 
-                shaderCallback: (bounds) {
+                  /// APP NAME
+                  Text(
+                    "PosterGali",
 
-                  return const LinearGradient(
-                    colors: [
-                      Color(0xff5B5FFF),
-                      Color(0xff9B51E0),
-                    ],
-                  ).createShader(bounds);
-                },
+                    style: TextStyle(
+                      fontFamily: 'ClashDisplay',
+                      fontSize: 40,
+                      height: 1,
+                      letterSpacing: -1.5,
+                      fontWeight: FontWeight.w700,
+                      color: kPrimaryRed,
 
-                child: const Text(
-                  "PosterGali",
-
-                  maxLines: 1,
-
-                  overflow:
-                  TextOverflow.ellipsis,
-
-                  style: TextStyle(
-                    fontSize: 38,
-                    fontWeight:
-                    FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: -1.5,
-                    height: 1,
+                      shadows: [
+                        Shadow(
+                          color:
+                          Colors.black.withOpacity(.08),
+                          blurRadius: 10,
+                          offset: const Offset(0, 5),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
+
+                  const SizedBox(height: 12),
+
+                  /// LOCATION
+                  Row(
+                    children: [
+
+                      /// LOCATION ICON
+                      Container(
+                        height: 30,
+                        width: 30,
+
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+
+                          gradient: LinearGradient(
+                            colors: [
+                              kGolden.withOpacity(.22),
+                              kGolden.withOpacity(.08),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+
+                          border: Border.all(
+                            color:
+                            kGolden.withOpacity(.18),
+                          ),
+                        ),
+
+                        child: const Icon(
+                          CupertinoIcons.location_solid,
+                          size: 14,
+                          color: kPrimaryRed,
+                        ),
+                      ),
+
+                      const SizedBox(width: 10),
+
+                      /// LOCATION TEXT
+                      Expanded(
+                        child: Text(
+                          widget.location,
+
+                          maxLines: 1,
+                          overflow:
+                          TextOverflow.ellipsis,
+
+                          style: TextStyle(
+                            fontFamily:
+                            'HelveticaNeue',
+                            fontSize: 14,
+                            fontWeight:
+                            FontWeight.w700,
+                            color: kTextDark
+                                .withOpacity(.72),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
 
-            const SizedBox(width: 14),
-
+            /// LANGUAGE BUTTON
             GestureDetector(
-
               onTap: () {
-
                 Navigator.push(
-
                   context,
-
                   MaterialPageRoute(
-
                     builder: (_) =>
                     const LanguageSelectionScreen(),
                   ),
@@ -511,32 +559,35 @@ class _HomeScreenState
               },
 
               child: Container(
-
-                height: 52,
-                width: 52,
-
-                alignment: Alignment.center,
+                height: 58,
+                width: 58,
 
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  shape: BoxShape.circle,
 
-                  borderRadius:
-                  BorderRadius.circular(18),
+                  gradient: const LinearGradient(
+                    colors: [
+                      kPrimaryRed,
+                      kDarkRed,
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
 
                   boxShadow: [
                     BoxShadow(
                       color:
-                      Colors.black.withOpacity(.05),
-                      blurRadius: 8,
-                      offset:
-                      const Offset(0, 3),
+                      kPrimaryRed.withOpacity(.35),
+                      blurRadius: 18,
+                      spreadRadius: 1,
+                      offset: const Offset(0, 10),
                     ),
                   ],
                 ),
 
                 child: const Icon(
                   CupertinoIcons.globe,
-                  color: Color(0xff5B5FFF),
+                  color: Colors.white,
                   size: 26,
                 ),
               ),
@@ -544,205 +595,117 @@ class _HomeScreenState
           ],
         ),
 
-        const SizedBox(height: 14),
+        const SizedBox(height: 18),
 
-        /// LOCATION
-
+        /// 3D MATERIAL BANNER
         Container(
-
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 14,
-          ),
+          height: 189,
+          width: double.infinity,
 
           decoration: BoxDecoration(
+            borderRadius: borderRadius,
 
-            color: Colors.white,
-
-            borderRadius:
-            BorderRadius.circular(18),
-
-            boxShadow: [
-              BoxShadow(
-                color:
-                Colors.black.withOpacity(.05),
-                blurRadius: 8,
-                offset: const Offset(0, 3),
+            /// IMAGE
+            image: const DecorationImage(
+              image: AssetImage(
+                'assets/images/img_5.png',
               ),
-            ],
+              fit: BoxFit.cover,
+            ),
+
+
           ),
 
-          child: Row(
-            children: [
+          child: ClipRRect(
+            borderRadius: borderRadius,
 
-              const Icon(
-                CupertinoIcons.location_solid,
-                color: Color(0xffFF6B6B),
-                size: 20,
-              ),
+            child: Stack(
+              children: [
 
-              const SizedBox(width: 10),
 
-              Expanded(
-                child: Text(
-                  widget.location,
+                /// LIGHT REFLECTION
+                Positioned(
+                  top: -40,
+                  right: -20,
 
-                  maxLines: 1,
+                  child: Container(
+                    height: 140,
+                    width: 140,
 
-                  overflow:
-                  TextOverflow.ellipsis,
-
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight:
-                    FontWeight.w700,
-                    color:
-                    Color(0xff374151),
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color:
+                      Colors.white.withOpacity(.10),
+                    ),
                   ),
                 ),
-              ),
-            ],
+
+
+
+              ],
+            ),
           ),
         ),
       ],
     );
   }
-
-  /// =====================================================
-  /// REFER CARD
-  /// =====================================================
-
-  Widget _buildReferCard() {
-
-    return Container(
-
-      width: double.infinity,
-
-      padding: const EdgeInsets.all(18),
-
-      decoration: BoxDecoration(
-
-        gradient:
-        const LinearGradient(
-          colors: [
-            Color(0xffd87715),
-            Color(0xff9B51E0),
-          ],
-        ),
-
-        borderRadius:
-        BorderRadius.circular(20),
-      ),
-
-      child: const Column(
-
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
-
-        children: [
-
-          Text(
-            "Refer & Win",
-
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight:
-              FontWeight.w900,
-              color: Colors.white,
-            ),
-          ),
-
-          SizedBox(height: 5),
-
-          Text(
-            "Invite your friends and unlock exciting rewards on every successful referral.",
-
-            style: TextStyle(
-              fontSize: 12,
-              height: 1.5,
-              fontWeight:
-              FontWeight.w500,
-              color: Colors.white,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// =====================================================
   /// TABS
   /// =====================================================
 
   Widget _buildTabs() {
-
     return Container(
+      height: 68,
 
-      height: 64,
-
-      padding: const EdgeInsets.all(6),
+      padding: const EdgeInsets.all(5),
 
       decoration: BoxDecoration(
-
         color: Colors.white,
 
-        borderRadius:
-        BorderRadius.circular(26),
+        borderRadius: BorderRadius.circular(22),
 
         boxShadow: [
           BoxShadow(
-            color:
-            Colors.black.withOpacity(.03),
-            blurRadius: 6,
+            color: Colors.black.withOpacity(.05),
+            blurRadius: 18,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
 
       child: Row(
         children: [
-
           Expanded(
             child: GestureDetector(
-
               onTap: fetchJobs,
 
               child: AnimatedContainer(
-
-                duration:
-                const Duration(
-                  milliseconds: 220,
-                ),
+                duration: const Duration(milliseconds: 250),
 
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
 
-                  gradient:
-                  selectedTab == 0
+                  gradient: selectedTab == 0
                       ? const LinearGradient(
                     colors: [
-                      Color(0xff5B5FFF),
-                      Color(0xff8E7BFF),
+                      kPrimaryRed,
+                      kDarkRed,
                     ],
                   )
                       : null,
-
-                  borderRadius:
-                  BorderRadius.circular(22),
                 ),
 
                 child: Center(
-
                   child: Text(
                     "Jobs",
 
                     style: TextStyle(
-                      fontSize: 17,
-                      fontWeight:
-                      FontWeight.w700,
-
-                      color:
-                      selectedTab == 0
+                      fontFamily: 'ClashDisplay',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: selectedTab == 0
                           ? Colors.white
-                          : Colors.black,
+                          : kTextDark,
                     ),
                   ),
                 ),
@@ -750,48 +713,39 @@ class _HomeScreenState
             ),
           ),
 
+          const SizedBox(width: 8),
+
           Expanded(
             child: GestureDetector(
-
               onTap: fetchOffers,
 
               child: AnimatedContainer(
-
-                duration:
-                const Duration(
-                  milliseconds: 220,
-                ),
+                duration: const Duration(milliseconds: 250),
 
                 decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
 
-                  gradient:
-                  selectedTab == 1
+                  gradient: selectedTab == 1
                       ? const LinearGradient(
                     colors: [
-                      Color(0xffFF6B6B),
-                      Color(0xffFF8E53),
+                      kPrimaryRed,
+                      kDarkRed,
                     ],
                   )
                       : null,
-
-                  borderRadius:
-                  BorderRadius.circular(22),
                 ),
 
                 child: Center(
-
                   child: Text(
                     "Offers",
 
                     style: TextStyle(
-                      fontSize: 17,
-                      fontWeight:
-                      FontWeight.w700,
-
-                      color:
-                      selectedTab == 1
+                      fontFamily: 'ClashDisplay',
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: selectedTab == 1
                           ? Colors.white
-                          : Colors.black,
+                          : kTextDark,
                     ),
                   ),
                 ),
@@ -808,46 +762,72 @@ class _HomeScreenState
   /// =====================================================
 
   Widget _buildResultHeader() {
-
     return Row(
-
-      mainAxisAlignment:
-      MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
       children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
 
-        Text(
-          selectedTab == 0
-              ? "Jobs"
-              : "Offers",
+          children: [
+            Text(
+              selectedTab == 0
+                  ? "Trending Jobs"
+                  : "Latest Offers",
 
-          style: const TextStyle(
-            fontSize: 24,
-            fontWeight:
-            FontWeight.w800,
-          ),
+              style: const TextStyle(
+                fontFamily: 'ClashDisplay',
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+                color: kTextDark,
+              ),
+            ),
+
+            const SizedBox(height: 2),
+
+            Text(
+              "${selectedTab == 0 ? jobs.length : offers.length} results available",
+
+              style: TextStyle(
+                fontFamily: 'HelveticaNeue',
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                color: kTextDark.withOpacity(.55),
+              ),
+            ),
+          ],
         ),
 
         GestureDetector(
-
           onTap: () {
-            _showFilterBottomSheet();
+            if (selectedTab == 0) {
+              _showFilterBottomSheet();
+            } else {
+              _showOfferFilterBottomSheet();
+            }
           },
 
           child: Container(
-
-            padding: const EdgeInsets.all(12),
+            height: 52,
+            width: 52,
 
             decoration: BoxDecoration(
               color: Colors.white,
+              borderRadius: BorderRadius.circular(18),
 
-              borderRadius:
-              BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(.05),
+                  blurRadius: 12,
+                  offset: const Offset(0, 6),
+                ),
+              ],
             ),
 
             child: const Icon(
               CupertinoIcons.slider_horizontal_3,
-              color: Color(0xff5B5FFF),
+              color: kPrimaryRed,
+              size: 24,
             ),
           ),
         ),
@@ -856,478 +836,628 @@ class _HomeScreenState
   }
 
   /// =====================================================
-  /// FILTER BOTTOM SHEET
+  /// FILTER SHEET
+  /// =====================================================
+
+  /// =====================================================
+  /// FILTER SHEET
   /// =====================================================
 
   void _showFilterBottomSheet() {
+    List<String> selectedCategories =
+    List.from(jobFilter.categories);
+
+    String? selectedExpiry = jobFilter.expiry;
+    String? selectedJobType = jobFilter.jobType;
+    String? selectedSalary = jobFilter.salary;
+
+    bool subCategoryExpanded = true;
+    bool expiryExpanded = true;
+    bool jobTypeExpanded = true;
+    bool salaryExpanded = true;
 
     showModalBottomSheet(
-
       context: context,
-
       isScrollControlled: true,
-
       backgroundColor: Colors.transparent,
-
       builder: (context) {
-
         return StatefulBuilder(
-
-          builder: (context, setModalState) {
-
+          builder: (context, setSheetState) {
             return Container(
-
               height:
               MediaQuery.of(context).size.height * .92,
 
               decoration: const BoxDecoration(
-
-                color: Color(0xffF6F7FB),
-
+                color: Color(0xffF5F5F5),
                 borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(28),
-                  topRight: Radius.circular(28),
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
                 ),
               ),
 
-              child: Column(
-
-                children: [
-
-                  const SizedBox(height: 18),
-
-                  Container(
-                    width: 70,
-                    height: 5,
-
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius:
-                      BorderRadius.circular(20),
-                    ),
-                  ),
-
-                  Padding(
-
-                    padding: const EdgeInsets.all(22),
-
-                    child: Row(
-
-                      children: [
-
-                        GestureDetector(
-
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-
-                          child: const Icon(
-                            CupertinoIcons.back,
-                            size: 28,
-                          ),
-                        ),
-
-                        const SizedBox(width: 14),
-
-                        const Text(
-                          "Filters",
-
-                          style: TextStyle(
-                            fontSize: 34,
-                            fontWeight:
-                            FontWeight.w900,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  Expanded(
-
-                    child: SingleChildScrollView(
-
-                      child: Column(
-
-                        children: [
-
-                          _filterHeader(
-                            title: "Sub Category",
-                            expanded:
-                            showSubCategory,
-
-                            onTap: () {
-
-                              setModalState(() {
-
-                                showSubCategory =
-                                !showSubCategory;
-                              });
-                            },
-                          ),
-
-                          if (showSubCategory)
-
-                            Column(
-
-                              children: [
-
-                                _checkItem(
-                                  "Retail and Shop Jobs",
-                                  setModalState,
-                                ),
-
-                                _checkItem(
-                                  "Food and Hospitality",
-                                  setModalState,
-                                ),
-
-                                _checkItem(
-                                  "Delivery and Logistics",
-                                  setModalState,
-                                ),
-
-                                _checkItem(
-                                  "Office and Admin",
-                                  setModalState,
-                                ),
-
-                                _checkItem(
-                                  "Skilled Workers",
-                                  setModalState,
-                                ),
-
-                                _checkItem(
-                                  "Creative and Digital",
-                                  setModalState,
-                                ),
-                              ],
-                            ),
-
-                          _filterHeader(
-                            title: "Expiry",
-                            expanded: showExpiry,
-
-                            onTap: () {
-
-                              setModalState(() {
-
-                                showExpiry =
-                                !showExpiry;
-                              });
-                            },
-                          ),
-
-                          if (showExpiry)
-
-                            Column(
-
-                              children: [
-
-                                _radioItem(
-                                  title:
-                                  "Within a day",
-
-                                  value:
-                                  "Within a day",
-
-                                  groupValue:
-                                  selectedExpiry,
-
-                                  onChanged: (v) {
-
-                                    setModalState(() {
-                                      selectedExpiry =
-                                      v!;
-                                    });
-                                  },
-                                ),
-
-                                _radioItem(
-                                  title:
-                                  "Within 3 days",
-
-                                  value:
-                                  "Within 3 days",
-
-                                  groupValue:
-                                  selectedExpiry,
-
-                                  onChanged: (v) {
-
-                                    setModalState(() {
-                                      selectedExpiry =
-                                      v!;
-                                    });
-                                  },
-                                ),
-
-                                _radioItem(
-                                  title:
-                                  "Within a week",
-
-                                  value:
-                                  "Within a week",
-
-                                  groupValue:
-                                  selectedExpiry,
-
-                                  onChanged: (v) {
-
-                                    setModalState(() {
-                                      selectedExpiry =
-                                      v!;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-
-                          _filterHeader(
-                            title: "Job Type",
-                            expanded:
-                            showJobType,
-
-                            onTap: () {
-
-                              setModalState(() {
-
-                                showJobType =
-                                !showJobType;
-                              });
-                            },
-                          ),
-
-                          if (showJobType)
-
-                            Padding(
-
-                              padding:
-                              const EdgeInsets.all(
-                                20,
-                              ),
-
-                              child: Row(
-
-                                children: [
-
-                                  _jobTypeButton(
-                                    "Full-time",
-                                    setModalState,
-                                  ),
-
-                                  _jobTypeButton(
-                                    "Part-time",
-                                    setModalState,
-                                  ),
-
-                                  _jobTypeButton(
-                                    "Temporary",
-                                    setModalState,
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                          _filterHeader(
-                            title: "Job Salary",
-                            expanded:
-                            showSalary,
-
-                            onTap: () {
-
-                              setModalState(() {
-
-                                showSalary =
-                                !showSalary;
-                              });
-                            },
-                          ),
-
-                          if (showSalary)
-
-                            Column(
-
-                              children: [
-
-                                _radioItem(
-                                  title: "0-10,000",
-
-                                  value:
-                                  "0-10,000",
-
-                                  groupValue:
-                                  selectedSalary,
-
-                                  onChanged: (v) {
-
-                                    setModalState(() {
-                                      selectedSalary =
-                                      v!;
-                                    });
-                                  },
-                                ),
-
-                                _radioItem(
-                                  title:
-                                  "10,001-20,000",
-
-                                  value:
-                                  "10,001-20,000",
-
-                                  groupValue:
-                                  selectedSalary,
-
-                                  onChanged: (v) {
-
-                                    setModalState(() {
-                                      selectedSalary =
-                                      v!;
-                                    });
-                                  },
-                                ),
-
-                                _radioItem(
-                                  title:
-                                  "20,000 and above",
-
-                                  value:
-                                  "20,000 and above",
-
-                                  groupValue:
-                                  selectedSalary,
-
-                                  onChanged: (v) {
-
-                                    setModalState(() {
-                                      selectedSalary =
-                                      v!;
-                                    });
-                                  },
-                                ),
-                              ],
-                            ),
-
-                          const SizedBox(height: 40),
-                        ],
+              child: SafeArea(
+                top: false,
+
+                child: Column(
+                  children: [
+
+                    /// HEADER
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        22,
+                        20,
+                        22,
+                        18,
                       ),
-                    ),
-                  ),
 
-                  Padding(
-
-                    padding: const EdgeInsets.all(20),
-
-                    child: Row(
-
-                      children: [
-
-                        Expanded(
-
-                          child: OutlinedButton(
-
-                            onPressed: () {
-
-                              setModalState(() {
-
-                                selectedSubCategories
-                                    .clear();
-
-                                selectedExpiry = '';
-
-                                selectedSalary = '';
-
-                                selectedJobType =
-                                'Full-time';
-                              });
-                            },
-
-                            style:
-                            OutlinedButton.styleFrom(
-
-                              minimumSize:
-                              const Size(
-                                double.infinity,
-                                62,
-                              ),
-
-                              shape:
-                              RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(
-                                  40,
-                                ),
-                              ),
-                            ),
-
-                            child: const Text(
-                              "Clear",
-
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: Colors.black,
-                                fontWeight:
-                                FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(width: 16),
-
-                        Expanded(
-
-                          flex: 2,
-
-                          child: ElevatedButton(
-
-                            onPressed: () {
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
                               Navigator.pop(context);
                             },
 
-                            style:
-                            ElevatedButton.styleFrom(
+                            child: const Icon(
+                              CupertinoIcons.back,
+                              size: 30,
+                              color: Colors.black,
+                            ),
+                          ),
 
-                              backgroundColor:
-                              const Color(
-                                0xffB9B6C5,
+                          const SizedBox(width: 14),
+
+                          const Text(
+                            "Filters",
+                            style: TextStyle(
+                              fontFamily: 'ClashDisplay',
+                              fontSize: 34,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+
+                            /// =====================================
+                            /// SUB CATEGORY
+                            /// =====================================
+
+                            _buildFilterHeader(
+                              title: "Sub Category",
+                              expanded: subCategoryExpanded,
+                              onTap: () {
+                                setSheetState(() {
+                                  subCategoryExpanded =
+                                  !subCategoryExpanded;
+                                });
+                              },
+                            ),
+
+                            if (subCategoryExpanded)
+                              Column(
+                                children:
+                                jobCategories.map((e) {
+                                  final selected =
+                                  selectedCategories
+                                      .contains(e);
+
+                                  return InkWell(
+                                    onTap: () {
+                                      setSheetState(() {
+                                        if (selected) {
+                                          selectedCategories
+                                              .remove(e);
+                                        } else {
+                                          selectedCategories
+                                              .add(e);
+                                        }
+                                      });
+                                    },
+
+                                    child: Container(
+                                      height: 70,
+                                      padding:
+                                      const EdgeInsets
+                                          .symmetric(
+                                        horizontal: 22,
+                                      ),
+
+                                      decoration:
+                                      const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color:
+                                            Colors.black12,
+                                          ),
+                                        ),
+                                      ),
+
+                                      child: Row(
+                                        children: [
+
+                                          /// CHECKBOX
+                                          Container(
+                                            height: 24,
+                                            width: 24,
+
+                                            decoration:
+                                            BoxDecoration(
+                                              color: selected
+                                                  ? Colors.black
+                                                  : Colors
+                                                  .transparent,
+
+                                              border:
+                                              Border.all(
+                                                color:
+                                                Colors.black54,
+                                                width: 1.5,
+                                              ),
+                                            ),
+
+                                            child: selected
+                                                ? const Icon(
+                                              Icons.check,
+                                              size: 16,
+                                              color: Colors
+                                                  .white,
+                                            )
+                                                : null,
+                                          ),
+
+                                          const SizedBox(
+                                              width: 18),
+
+                                          Expanded(
+                                            child: Text(
+                                              e,
+
+                                              style:
+                                              const TextStyle(
+                                                fontFamily:
+                                                'HelveticaNeue',
+                                                fontSize: 17,
+                                                fontWeight:
+                                                FontWeight
+                                                    .w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
 
-                              elevation: 0,
+                            /// =====================================
+                            /// EXPIRY
+                            /// =====================================
 
-                              minimumSize:
-                              const Size(
-                                double.infinity,
-                                62,
+                            _buildFilterHeader(
+                              title: "Expiry",
+                              expanded: expiryExpanded,
+                              onTap: () {
+                                setSheetState(() {
+                                  expiryExpanded =
+                                  !expiryExpanded;
+                                });
+                              },
+                            ),
+
+                            if (expiryExpanded)
+                              Column(
+                                children:
+                                expiryOptions.map((e) {
+                                  return InkWell(
+                                    onTap: () {
+                                      setSheetState(() {
+                                        selectedExpiry = e;
+                                      });
+                                    },
+
+                                    child: Container(
+                                      height: 80,
+                                      padding:
+                                      const EdgeInsets
+                                          .symmetric(
+                                        horizontal: 22,
+                                      ),
+
+                                      decoration:
+                                      const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color:
+                                            Colors.black12,
+                                          ),
+                                        ),
+                                      ),
+
+                                      child: Row(
+                                        children: [
+
+                                          /// RADIO
+                                          Container(
+                                            height: 28,
+                                            width: 28,
+
+                                            decoration:
+                                            BoxDecoration(
+                                              shape:
+                                              BoxShape.circle,
+
+                                              border:
+                                              Border.all(
+                                                color:
+                                                Colors.black45,
+                                              ),
+                                            ),
+
+                                            child: Center(
+                                              child: Container(
+                                                height: 16,
+                                                width: 16,
+
+                                                decoration:
+                                                BoxDecoration(
+                                                  shape: BoxShape
+                                                      .circle,
+
+                                                  color:
+                                                  selectedExpiry ==
+                                                      e
+                                                      ? Colors
+                                                      .grey
+                                                      : Colors
+                                                      .transparent,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+                                          const SizedBox(
+                                              width: 18),
+
+                                          Text(
+                                            e,
+
+                                            style:
+                                            const TextStyle(
+                                              fontFamily:
+                                              'HelveticaNeue',
+                                              fontSize: 17,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
                               ),
 
-                              shape:
-                              RoundedRectangleBorder(
-                                borderRadius:
-                                BorderRadius.circular(
-                                  40,
+                            /// =====================================
+                            /// JOB TYPE
+                            /// =====================================
+
+                            _buildFilterHeader(
+                              title: "Job Type",
+                              expanded: jobTypeExpanded,
+                              onTap: () {
+                                setSheetState(() {
+                                  jobTypeExpanded =
+                                  !jobTypeExpanded;
+                                });
+                              },
+                            ),
+
+                            if (jobTypeExpanded)
+                              Padding(
+                                padding:
+                                const EdgeInsets.all(20),
+
+                                child: Container(
+                                  height: 58,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade300,
+                                  ),
+
+                                  child: Row(
+                                    children: jobTypes.map((e) {
+                                      final selected =
+                                          selectedJobType ==
+                                              e;
+
+                                      return Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            setSheetState(() {
+                                              selectedJobType =
+                                                  e;
+                                            });
+                                          },
+
+                                          child:
+                                          AnimatedContainer(
+                                            duration:
+                                            const Duration(
+                                              milliseconds:
+                                              250,
+                                            ),
+
+                                            color: selected
+                                                ? Colors.black
+                                                : Colors
+                                                .transparent,
+
+                                            child: Center(
+                                              child: Text(
+                                                e,
+
+                                                style:
+                                                TextStyle(
+                                                  fontFamily:
+                                                  'HelveticaNeue',
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .w700,
+
+                                                  color: selected
+                                                      ? Colors
+                                                      .white
+                                                      : Colors
+                                                      .black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+
+                            /// =====================================
+                            /// SALARY
+                            /// =====================================
+
+                            _buildFilterHeader(
+                              title: "Job Salary",
+                              expanded: salaryExpanded,
+                              onTap: () {
+                                setSheetState(() {
+                                  salaryExpanded =
+                                  !salaryExpanded;
+                                });
+                              },
+                            ),
+
+                            if (salaryExpanded)
+                              Column(
+                                children:
+                                salaryOptions.map((e) {
+                                  return InkWell(
+                                    onTap: () {
+                                      setSheetState(() {
+                                        selectedSalary = e;
+                                      });
+                                    },
+
+                                    child: Container(
+                                      height: 80,
+                                      padding:
+                                      const EdgeInsets
+                                          .symmetric(
+                                        horizontal: 22,
+                                      ),
+
+                                      decoration:
+                                      const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color:
+                                            Colors.black12,
+                                          ),
+                                        ),
+                                      ),
+
+                                      child: Row(
+                                        children: [
+
+                                          /// RADIO
+                                          Container(
+                                            height: 28,
+                                            width: 28,
+
+                                            decoration:
+                                            BoxDecoration(
+                                              shape:
+                                              BoxShape.circle,
+
+                                              border:
+                                              Border.all(
+                                                color:
+                                                Colors.black45,
+                                              ),
+                                            ),
+
+                                            child: Center(
+                                              child: Container(
+                                                height: 16,
+                                                width: 16,
+
+                                                decoration:
+                                                BoxDecoration(
+                                                  shape: BoxShape
+                                                      .circle,
+
+                                                  color:
+                                                  selectedSalary ==
+                                                      e
+                                                      ? Colors
+                                                      .grey
+                                                      : Colors
+                                                      .transparent,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+                                          const SizedBox(
+                                              width: 18),
+
+                                          Text(
+                                            e,
+
+                                            style:
+                                            const TextStyle(
+                                              fontFamily:
+                                              'HelveticaNeue',
+                                              fontSize: 17,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+
+                            const SizedBox(height: 30),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    /// BOTTOM BUTTONS
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        20,
+                        12,
+                        20,
+                        24,
+                      ),
+
+                      child: Row(
+                        children: [
+
+                          /// CLEAR
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                setSheetState(() {
+                                  selectedCategories = [];
+                                  selectedExpiry = null;
+                                  selectedJobType = null;
+                                  selectedSalary = null;
+                                });
+                              },
+
+                              child: Container(
+                                height: 62,
+
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(
+                                      100),
+
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 1.5,
+                                  ),
+                                ),
+
+                                child: const Center(
+                                  child: Text(
+                                    "Clear",
+
+                                    style: TextStyle(
+                                      fontFamily:
+                                      'HelveticaNeue',
+                                      fontSize: 17,
+                                      fontWeight:
+                                      FontWeight.w700,
+                                      color: Colors.black,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
+                          ),
 
-                            child: Text(
+                          const SizedBox(width: 18),
 
-                              selectedTab == 0
-                                  ? "Show ${jobs.length} Jobs"
-                                  : "Show ${offers.length} Offers",
+                          /// APPLY
+                          Expanded(
+                            flex: 2,
 
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: Colors.white,
-                                fontWeight:
-                                FontWeight.w700,
+                            child: GestureDetector(
+                              onTap: () async {
+
+                                jobFilter =
+                                    JobFilterModel(
+                                      categories:
+                                      selectedCategories,
+                                      expiry:
+                                      selectedExpiry,
+                                      jobType:
+                                      selectedJobType,
+                                      salary:
+                                      selectedSalary,
+                                    );
+
+                                Navigator.pop(context);
+
+                                await fetchJobs();
+                              },
+
+                              child: Container(
+                                height: 62,
+
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius:
+                                  BorderRadius.circular(
+                                      100),
+                                ),
+
+                                child: Center(
+                                  child: Text(
+                                    "Show Jobs",
+
+                                    style: const TextStyle(
+                                      fontFamily:
+                                      'HelveticaNeue',
+                                      fontSize: 17,
+                                      fontWeight:
+                                      FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },
@@ -1336,49 +1466,48 @@ class _HomeScreenState
     );
   }
 
-  Widget _filterHeader({
+  /// =====================================================
+  /// FILTER HEADER
+  /// =====================================================
 
+  Widget _buildFilterHeader({
     required String title,
-
     required bool expanded,
-
     required VoidCallback onTap,
-
   }) {
-
     return InkWell(
-
       onTap: onTap,
 
       child: Container(
+        height: 76,
 
         padding: const EdgeInsets.symmetric(
           horizontal: 22,
-          vertical: 24,
         ),
 
         decoration: const BoxDecoration(
-
           border: Border(
-            top: BorderSide(color: Colors.black12),
-            bottom: BorderSide(color: Colors.black12),
+            top: BorderSide(
+              color: Colors.black12,
+            ),
+            bottom: BorderSide(
+              color: Colors.black12,
+            ),
           ),
         ),
 
         child: Row(
-
-          mainAxisAlignment:
-          MainAxisAlignment.spaceBetween,
-
           children: [
+            Expanded(
+              child: Text(
+                title,
 
-            Text(
-              title,
-
-              style: const TextStyle(
-                fontSize: 22,
-                fontWeight:
-                FontWeight.w800,
+                style: const TextStyle(
+                  fontFamily: 'HelveticaNeue',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black,
+                ),
               ),
             ),
 
@@ -1386,6 +1515,9 @@ class _HomeScreenState
               expanded
                   ? CupertinoIcons.chevron_up
                   : CupertinoIcons.chevron_down,
+
+              color: Colors.black,
+              size: 24,
             ),
           ],
         ),
@@ -1393,158 +1525,24 @@ class _HomeScreenState
     );
   }
 
-  Widget _checkItem(
-      String title,
-      StateSetter setModalState,
-      ) {
-
-    final isSelected =
-    selectedSubCategories.contains(title);
-
-    return CheckboxListTile(
-
-      value: isSelected,
-
-      activeColor: Colors.black,
-
-      title: Text(
-        title,
-
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight:
-          FontWeight.w500,
-        ),
-      ),
-
-      onChanged: (value) {
-
-        setModalState(() {
-
-          if (value == true) {
-
-            selectedSubCategories
-                .add(title);
-
-          } else {
-
-            selectedSubCategories
-                .remove(title);
-          }
-        });
-      },
-    );
-  }
-
-  Widget _radioItem({
-
-    required String title,
-
-    required String value,
-
-    required String groupValue,
-
-    required Function(String?) onChanged,
-
-  }) {
-
-    return RadioListTile<String>(
-
-      value: value,
-
-      groupValue: groupValue,
-
-      activeColor: Colors.grey,
-
-      title: Text(
-        title,
-
-        style: const TextStyle(
-          fontSize: 16,
-        ),
-      ),
-
-      onChanged: onChanged,
-    );
-  }
-
-  Widget _jobTypeButton(
-      String type,
-      StateSetter setModalState,
-      ) {
-
-    final isSelected =
-        selectedJobType == type;
-
-    return Expanded(
-
-      child: GestureDetector(
-
-        onTap: () {
-
-          setModalState(() {
-            selectedJobType = type;
-          });
-        },
-
-        child: Container(
-
-          height: 56,
-
-          alignment: Alignment.center,
-
-          decoration: BoxDecoration(
-
-            color:
-            isSelected
-                ? Colors.black
-                : const Color(
-              0xffE7E7E7,
-            ),
-          ),
-
-          child: Text(
-            type,
-
-            style: TextStyle(
-              color:
-              isSelected
-                  ? Colors.white
-                  : Colors.black,
-
-              fontWeight:
-              FontWeight.w700,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// =====================================================
-  /// JOB CARD
-  /// =====================================================
-
   /// =====================================================
   /// JOB CARD
   /// =====================================================
 
   Widget _buildJobCard(dynamic job) {
-
     Widget card;
 
     switch (job['temp_id']) {
-
       case 'T001':
-        card = JobTemplates.templateT001(job);
+        card = JobTemplatesSmall.templateT001(job);
         break;
 
       case 'T002':
-        card = JobTemplates.templateT002(job);
+        card = JobTemplatesSmall.templateT002(job);
         break;
 
       case 'T003':
-        card = JobTemplates.templateT003(job);
+        card = JobTemplatesSmall.templateT003(job);
         break;
 
       case 'T004':
@@ -1556,59 +1554,47 @@ class _HomeScreenState
     }
 
     return Stack(
-
       children: [
-
-        /// POSTER
         Positioned.fill(
-          child: card,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(1),
+            child: card,
+          ),
         ),
 
-        /// VIEW COUNT
         Positioned(
-
-          top: 10,
-          right: 10,
+          top: 7,
+          right: 7,
 
           child: Container(
-
             padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 6,
+              horizontal: 7,
+              vertical: 3,
             ),
 
             decoration: BoxDecoration(
-
-              color: Colors.black.withOpacity(.55),
-
-              borderRadius:
-              BorderRadius.circular(30),
-
-              border: Border.all(
-                color: Colors.white24,
-              ),
+              color: Colors.black.withOpacity(.50),
+              borderRadius: BorderRadius.circular(20),
             ),
 
             child: Row(
-
               mainAxisSize: MainAxisSize.min,
 
               children: [
-
                 const Icon(
                   CupertinoIcons.eye_fill,
+                  size: 10,
                   color: Colors.white,
-                  size: 14,
                 ),
 
-                const SizedBox(width: 5),
+                const SizedBox(width: 3),
 
                 Text(
                   "${job['view_count'] ?? 0}",
 
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 9,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1619,17 +1605,14 @@ class _HomeScreenState
       ],
     );
   }
-
   /// =====================================================
   /// OFFER CARD
   /// =====================================================
 
   Widget _buildOfferCard(dynamic offer) {
-
     Widget card;
 
     switch (offer['temp_id']) {
-
       case 'T001':
         card = OfferTemplates.templateT001(offer);
         break;
@@ -1651,59 +1634,47 @@ class _HomeScreenState
     }
 
     return Stack(
-
       children: [
-
-        /// POSTER
         Positioned.fill(
-          child: card,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(1),
+            child: card,
+          ),
         ),
 
-        /// VIEW COUNT
         Positioned(
-
-          top: 10,
-          right: 10,
+          top: 7,
+          right: 7,
 
           child: Container(
-
             padding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 6,
+              horizontal: 7,
+              vertical: 3,
             ),
 
             decoration: BoxDecoration(
-
-              color: Colors.black.withOpacity(.55),
-
-              borderRadius:
-              BorderRadius.circular(30),
-
-              border: Border.all(
-                color: Colors.white24,
-              ),
+              color: Colors.black.withOpacity(.50),
+              borderRadius: BorderRadius.circular(20),
             ),
 
             child: Row(
-
               mainAxisSize: MainAxisSize.min,
 
               children: [
-
                 const Icon(
                   CupertinoIcons.eye_fill,
+                  size: 10,
                   color: Colors.white,
-                  size: 14,
                 ),
 
-                const SizedBox(width: 5),
+                const SizedBox(width: 3),
 
                 Text(
                   "${offer['view_count'] ?? 0}",
 
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 12,
+                    fontSize: 9,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -1716,64 +1687,76 @@ class _HomeScreenState
   }
 
   /// =====================================================
-  /// BOTTOM BAR
+  /// BOTTOM NAVIGATION
   /// =====================================================
 
   Widget _buildBottomBar() {
+    return Container(
+      height: 82,
 
-    return BottomAppBar(
 
-      height: 88,
 
-      color: const Color(0xff1E1E2D),
+      decoration: BoxDecoration(
+        color: kPrimaryRed,
+        borderRadius: BorderRadius.circular(2),
 
-      shape:
-      const CircularNotchedRectangle(),
+        boxShadow: [
+          BoxShadow(
+            color: kPrimaryRed.withOpacity(.25),
+            blurRadius: 24,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
 
-      notchMargin: 10,
+      child: Stack(
+        clipBehavior: Clip.none,
 
-      child: Row(
-
-        mainAxisAlignment:
-        MainAxisAlignment.spaceAround,
+        alignment: Alignment.topCenter,
 
         children: [
+          Positioned(
+            top: -38,
 
-          Row(
-            children: [
+            child: Container(
+              width: 103,
+              height: 85,
 
-              _navItem(
-                icon: CupertinoIcons.house_fill,
-                title: "Home",
-                active: true,
+              decoration: BoxDecoration(
+                color: kCream,
+                shape: BoxShape.circle,
               ),
-
-              const SizedBox(width: 30),
-
-              _navItem(
-                icon:
-                CupertinoIcons.location_solid,
-                title: "Location",
-              ),
-            ],
+            ),
           ),
 
-          const SizedBox(width: 50),
-
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+
             children: [
+              _navItem(
+                index: 0,
+                icon: CupertinoIcons.house_fill,
+                title: "Home",
+              ),
 
               _navItem(
-                icon:
-                CupertinoIcons.heart_fill,
+                index: 1,
+                icon: CupertinoIcons.location_fill,
+                title: "Location",
+              ),
+
+              const SizedBox(width: 70),
+
+
+              _navItem(
+                index: 2,
+                icon: CupertinoIcons.heart_fill,
                 title: "Liked",
               ),
 
-              const SizedBox(width: 30),
-
               _navItem(
-                icon:
-                CupertinoIcons.doc_text_fill,
+                index: 3,
+                icon: CupertinoIcons.doc_text_fill,
                 title: "MyPoster",
               ),
             ],
@@ -1784,57 +1767,612 @@ class _HomeScreenState
   }
 
   Widget _navItem({
-
+    required int index,
     required IconData icon,
-
     required String title,
-
-    bool active = false,
-
   }) {
+    final isSelected = selectedBottomIndex == index;
 
     return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedBottomIndex = index;
+        });
+      },
 
-      onTap: () {},
+      child: SizedBox(
+        width: 72,
 
-      child: Column(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
 
-        mainAxisSize: MainAxisSize.min,
+          children: [
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
 
-        children: [
+              height: 4,
+              width: isSelected ? 28 : 0,
 
-          Icon(
-            icon,
-
-            color:
-            active
-                ? const Color(0xff8E7BFF)
-                : Colors.white,
-
-            size: 26,
-          ),
-
-          const SizedBox(height: 4),
-
-          Text(
-            title,
-
-            style: TextStyle(
-              color:
-              active
-                  ? const Color(
-                0xff8E7BFF,
-              )
-                  : Colors.white,
-
-              fontSize: 12,
-
-              fontWeight:
-              FontWeight.w600,
+              decoration: BoxDecoration(
+                color: kGolden,
+                borderRadius: BorderRadius.circular(100),
+              ),
             ),
-          ),
-        ],
+
+            const SizedBox(height: 10),
+
+            Icon(
+              icon,
+              color: isSelected
+                  ? Colors.white
+                  : Colors.white.withOpacity(.7),
+              size: 25,
+            ),
+
+            const SizedBox(height: 4),
+
+            Text(
+              title,
+
+              style: TextStyle(
+                fontFamily: 'HelveticaNeue',
+                color: isSelected
+                    ? Colors.white
+                    : Colors.white.withOpacity(.7),
+                fontSize: 11,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ),
       ),
+    );
+  }
+
+  /// =====================================================
+  /// OFFER FILTER SHEET
+  /// =====================================================
+
+  void _showOfferFilterBottomSheet() {
+
+    bool categoryExpanded = true;
+    bool discountExpanded = true;
+    bool validityExpanded = true;
+
+    String selectedDiscount = "50% Off";
+    String selectedValidity = "Today";
+
+    List<String> selectedCategories = [
+      "Food",
+    ];
+
+    final List<String> offerCategories = [
+      "Food",
+      "Fashion",
+      "Salon",
+      "Electronics",
+      "Grocery",
+      "Travel",
+      "Cafe",
+      "Gym",
+    ];
+
+    final List<String> discounts = [
+      "10% Off",
+      "25% Off",
+      "50% Off",
+      "Flat ₹100",
+    ];
+
+    final List<String> validity = [
+      "Today",
+      "This Week",
+      "This Month",
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setSheetState) {
+
+            return Container(
+              height:
+              MediaQuery.of(context).size.height * .92,
+
+              decoration: const BoxDecoration(
+                color: Color(0xffF5F5F5),
+
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(30),
+                  topRight: Radius.circular(30),
+                ),
+              ),
+
+              child: SafeArea(
+                top: false,
+
+                child: Column(
+                  children: [
+
+                    /// HEADER
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        22,
+                        20,
+                        22,
+                        18,
+                      ),
+
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+
+                            child: const Icon(
+                              CupertinoIcons.back,
+                              size: 30,
+                              color: Colors.black,
+                            ),
+                          ),
+
+                          const SizedBox(width: 14),
+
+                          const Text(
+                            "Offer Filters",
+
+                            style: TextStyle(
+                              fontFamily: 'ClashDisplay',
+                              fontSize: 34,
+                              fontWeight: FontWeight.w700,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+
+                            /// =====================================
+                            /// CATEGORY
+                            /// =====================================
+
+                            _buildFilterHeader(
+                              title: "Offer Category",
+                              expanded: categoryExpanded,
+
+                              onTap: () {
+                                setSheetState(() {
+                                  categoryExpanded =
+                                  !categoryExpanded;
+                                });
+                              },
+                            ),
+
+                            if (categoryExpanded)
+                              Column(
+                                children:
+                                offerCategories.map((e) {
+
+                                  final selected =
+                                  selectedCategories
+                                      .contains(e);
+
+                                  return InkWell(
+                                    onTap: () {
+
+                                      setSheetState(() {
+
+                                        if (selected) {
+                                          selectedCategories
+                                              .remove(e);
+                                        } else {
+                                          selectedCategories
+                                              .add(e);
+                                        }
+                                      });
+                                    },
+
+                                    child: Container(
+                                      height: 70,
+
+                                      padding:
+                                      const EdgeInsets
+                                          .symmetric(
+                                        horizontal: 22,
+                                      ),
+
+                                      decoration:
+                                      const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color:
+                                            Colors.black12,
+                                          ),
+                                        ),
+                                      ),
+
+                                      child: Row(
+                                        children: [
+
+                                          /// CHECKBOX
+                                          Container(
+                                            height: 24,
+                                            width: 24,
+
+                                            decoration:
+                                            BoxDecoration(
+                                              color: selected
+                                                  ? Colors.black
+                                                  : Colors
+                                                  .transparent,
+
+                                              border:
+                                              Border.all(
+                                                color:
+                                                Colors.black54,
+                                                width: 1.5,
+                                              ),
+                                            ),
+
+                                            child: selected
+                                                ? const Icon(
+                                              Icons.check,
+                                              size: 16,
+                                              color: Colors
+                                                  .white,
+                                            )
+                                                : null,
+                                          ),
+
+                                          const SizedBox(
+                                              width: 18),
+
+                                          Expanded(
+                                            child: Text(
+                                              e,
+
+                                              style:
+                                              const TextStyle(
+                                                fontFamily:
+                                                'HelveticaNeue',
+                                                fontSize: 17,
+                                                fontWeight:
+                                                FontWeight
+                                                    .w500,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+
+                            /// =====================================
+                            /// DISCOUNT
+                            /// =====================================
+
+                            _buildFilterHeader(
+                              title: "Discount",
+                              expanded: discountExpanded,
+
+                              onTap: () {
+                                setSheetState(() {
+                                  discountExpanded =
+                                  !discountExpanded;
+                                });
+                              },
+                            ),
+
+                            if (discountExpanded)
+                              Column(
+                                children:
+                                discounts.map((e) {
+
+                                  return InkWell(
+                                    onTap: () {
+
+                                      setSheetState(() {
+                                        selectedDiscount = e;
+                                      });
+                                    },
+
+                                    child: Container(
+                                      height: 80,
+
+                                      padding:
+                                      const EdgeInsets
+                                          .symmetric(
+                                        horizontal: 22,
+                                      ),
+
+                                      decoration:
+                                      const BoxDecoration(
+                                        border: Border(
+                                          bottom: BorderSide(
+                                            color:
+                                            Colors.black12,
+                                          ),
+                                        ),
+                                      ),
+
+                                      child: Row(
+                                        children: [
+
+                                          /// RADIO
+                                          Container(
+                                            height: 28,
+                                            width: 28,
+
+                                            decoration:
+                                            BoxDecoration(
+                                              shape:
+                                              BoxShape.circle,
+
+                                              border:
+                                              Border.all(
+                                                color:
+                                                Colors.black45,
+                                              ),
+                                            ),
+
+                                            child: Center(
+                                              child: Container(
+                                                height: 16,
+                                                width: 16,
+
+                                                decoration:
+                                                BoxDecoration(
+                                                  shape: BoxShape
+                                                      .circle,
+
+                                                  color:
+                                                  selectedDiscount ==
+                                                      e
+                                                      ? Colors
+                                                      .grey
+                                                      : Colors
+                                                      .transparent,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+                                          const SizedBox(
+                                              width: 18),
+
+                                          Text(
+                                            e,
+
+                                            style:
+                                            const TextStyle(
+                                              fontFamily:
+                                              'HelveticaNeue',
+                                              fontSize: 17,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w500,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+
+                            /// =====================================
+                            /// VALIDITY
+                            /// =====================================
+
+                            _buildFilterHeader(
+                              title: "Offer Validity",
+                              expanded: validityExpanded,
+
+                              onTap: () {
+                                setSheetState(() {
+                                  validityExpanded =
+                                  !validityExpanded;
+                                });
+                              },
+                            ),
+
+                            if (validityExpanded)
+                              Padding(
+                                padding:
+                                const EdgeInsets.all(20),
+
+                                child: Container(
+                                  height: 58,
+
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade300,
+                                  ),
+
+                                  child: Row(
+                                    children:
+                                    validity.map((e) {
+
+                                      final selected =
+                                          selectedValidity ==
+                                              e;
+
+                                      return Expanded(
+                                        child: GestureDetector(
+                                          onTap: () {
+
+                                            setSheetState(() {
+                                              selectedValidity =
+                                                  e;
+                                            });
+                                          },
+
+                                          child:
+                                          AnimatedContainer(
+                                            duration:
+                                            const Duration(
+                                              milliseconds:
+                                              250,
+                                            ),
+
+                                            color: selected
+                                                ? Colors.black
+                                                : Colors
+                                                .transparent,
+
+                                            child: Center(
+                                              child: Text(
+                                                e,
+
+                                                style:
+                                                TextStyle(
+                                                  fontFamily:
+                                                  'HelveticaNeue',
+                                                  fontSize: 15,
+                                                  fontWeight:
+                                                  FontWeight
+                                                      .w700,
+
+                                                  color: selected
+                                                      ? Colors
+                                                      .white
+                                                      : Colors
+                                                      .black,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              ),
+
+                            const SizedBox(height: 30),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    /// BOTTOM BUTTONS
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        20,
+                        12,
+                        20,
+                        24,
+                      ),
+
+                      child: Row(
+                        children: [
+
+                          /// CLEAR
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+
+                                setSheetState(() {
+                                  selectedCategories = [];
+                                  selectedDiscount = "";
+                                  selectedValidity = "";
+                                });
+                              },
+
+                              child: Container(
+                                height: 62,
+
+                                decoration: BoxDecoration(
+                                  borderRadius:
+                                  BorderRadius.circular(
+                                      100),
+
+                                  border: Border.all(
+                                    color: Colors.black,
+                                    width: 1.5,
+                                  ),
+                                ),
+
+                                child: const Center(
+                                  child: Text(
+                                    "Clear",
+
+                                    style: TextStyle(
+                                      fontFamily:
+                                      'HelveticaNeue',
+                                      fontSize: 17,
+                                      fontWeight:
+                                      FontWeight.w700,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 18),
+
+                          /// APPLY
+                          Expanded(
+                            flex: 2,
+
+                            child: GestureDetector(
+                              onTap: () {
+
+                                Navigator.pop(context);
+
+                                /// later call offer api
+                              },
+
+                              child: Container(
+                                height: 62,
+
+                                decoration: BoxDecoration(
+                                  color: Colors.grey,
+                                  borderRadius:
+                                  BorderRadius.circular(
+                                      100),
+                                ),
+
+                                child: const Center(
+                                  child: Text(
+                                    "Show Offers",
+
+                                    style: TextStyle(
+                                      fontFamily:
+                                      'HelveticaNeue',
+                                      fontSize: 17,
+                                      fontWeight:
+                                      FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

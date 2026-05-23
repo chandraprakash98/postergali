@@ -26,7 +26,6 @@ class _FilterScreenState
   String salary = "0-10,000";
 
   final categories = [
-
     "Retail and Shop Jobs",
     "Food and Hospitality",
     "Delivery and Logistics",

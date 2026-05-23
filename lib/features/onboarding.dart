@@ -20,9 +20,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // ONLY 2 SCREENS NOW
   final List<Map<String, String>> _slides = [
     {
-      'title': 'PosterGali\npelagao\naamdani\nbadhao',
+      'title': 'PosterGali pe\nlagao aamdani\nbadhao',
       'subtitle':
-      '1 minute se kam samay mein\nwoh bhi kifayati daam mein..',
+      ' minute se kam samay mein\nwoh bhi kifayati daam mein..',
       'button': 'Next',
     },
 
@@ -95,7 +95,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       fontSize: index == 1 ? 40 : 42,
                       height: 1.08,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
+                      color: primaryYellow,
 
                       // OUTLINE EFFECT
                       shadows: const [
@@ -113,10 +113,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   /// SUBTITLE
                   Text(
                     slide['subtitle']!,
-                    style: const TextStyle(
+                    style:  TextStyle(
                       fontSize: 18,
                       height: 1.35,
-                      color: Colors.black87,
+                      color: primaryRed,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
@@ -124,12 +124,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const SizedBox(height: 34),
 
                   /// IMAGE BOX
+
                   Expanded(
                     child: Container(
                       width: double.infinity,
 
                       decoration: BoxDecoration(
-                        color: Colors.grey.shade300,
                         borderRadius: BorderRadius.circular(38),
 
                         boxShadow: [
@@ -141,16 +141,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ],
                       ),
 
-                      child: Center(
-                        child: Text(
-                          index == 0
-                              ? "Poster Preview"
-                              : "Illustration",
-                          style: const TextStyle(
-                            fontSize: 22,
-                            color: Colors.black54,
-                          ),
-                        ),
+                      clipBehavior: Clip.antiAlias,
+
+                      child: Image.asset(
+                        index == 0
+                            ? 'assets/images/intro1.png'
+                            : 'assets/images/intro1.png',
+
+                        fit: BoxFit.cover,
                       ),
                     ),
                   ),
