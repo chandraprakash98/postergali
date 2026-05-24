@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'onboarding.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_assets.dart';
+import 'onboarding_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -9,22 +11,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  // Theme Colors
-  final Color primaryColor = const Color(0xFFF2AD36);
-  final Color secondaryColor = const Color(0xFFCF5C4C);
-  final Color accentColor = const Color(0xFF448655);
-
   @override
   void initState() {
     super.initState();
 
     Future.delayed(const Duration(seconds: 2), () {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const OnboardingScreen(),
-        ),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (_) => const OnboardingScreen(),
+          ),
+        );
+      }
     });
   }
 
@@ -38,7 +37,7 @@ class _SplashScreenState extends State<SplashScreen> {
           children: [
             // Logo Image
             Image.asset(
-              'assets/images/plogo.png',
+              AppAssets.appLogo,
               height: 140,
               width: 140,
             ),
@@ -46,12 +45,12 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 24),
 
             // App Name
-            Text(
+            const Text(
               'PosterGali',
               style: TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
-                color: primaryColor,
+                color: AppColors.golden,
                 letterSpacing: 1,
               ),
             ),
@@ -59,20 +58,20 @@ class _SplashScreenState extends State<SplashScreen> {
             const SizedBox(height: 8),
 
             // Tagline
-            Text(
+            const Text(
               'Your Local Ads Marketplace',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w500,
-                color: accentColor,
+                color: AppColors.green,
               ),
             ),
 
             const SizedBox(height: 40),
 
             // Loader
-            CircularProgressIndicator(
-              color: secondaryColor,
+            const CircularProgressIndicator(
+              color: AppColors.primaryRed,
               strokeWidth: 3,
             ),
           ],

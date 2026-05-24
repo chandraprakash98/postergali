@@ -1,67 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../constants/app_assets.dart';
 
 class OfferTemplates {
-
-  /// =====================================================
-  /// T001
-  /// =====================================================
-
   static Widget templateT001(dynamic offer) {
-
     return Stack(
-
       fit: StackFit.expand,
-
       children: [
-
-        /// BACKGROUND
-
-        Image.asset(
-          "assets/images/img_1.png",
-          fit: BoxFit.cover,
-        ),
-
-        /// CONTENT
-
+        Image.asset(AppAssets.offerImg1, fit: BoxFit.cover),
         Padding(
-
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
-            vertical: 14,
-          ),
-
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
           child: Column(
-
-            crossAxisAlignment:
-            CrossAxisAlignment.center,
-
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-
-              /// TOP SPACE
-
               const SizedBox(height: 30),
-
-              /// BUSINESS NAME
-
               Align(
-
                 alignment: Alignment.center,
-
                 child: Padding(
-
-                  padding: const EdgeInsets.only(
-                    left: 2,
-                  ),
-
+                  padding: const EdgeInsets.only(left: 2),
                   child: Text(
-                    (offer['business_name'] ?? '')
-                        .toString(),
-
+                    (offer['business_name'] ?? '').toString(),
                     maxLines: 1,
-
                     overflow: TextOverflow.ellipsis,
-
                     style: GoogleFonts.yesevaOne(
                       color: const Color(0xffF5B32C),
                       fontSize: 16,
@@ -71,16 +31,10 @@ class OfferTemplates {
                   ),
                 ),
               ),
-
               const SizedBox(height: 26),
-
-              /// SPECIAL OFFER
-
               const Text(
                 "SPECIAL OFFER",
-
                 textAlign: TextAlign.center,
-
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 21,
@@ -89,57 +43,27 @@ class OfferTemplates {
                   letterSpacing: -.5,
                 ),
               ),
-
               const SizedBox(height: 14),
-
-              /// BIG OFFER TEXT
-
               Expanded(
-
                 child: Align(
-
                   alignment: Alignment.topCenter,
-
                   child: FittedBox(
-
                     fit: BoxFit.scaleDown,
-
                     child: ConstrainedBox(
-
-                      constraints:
-                      const BoxConstraints(
-                        maxWidth: 210,
-                      ),
-
+                      constraints: const BoxConstraints(maxWidth: 210),
                       child: Text(
-                        (offer['offer_details'] ?? '')
-                            .toString()
-                            .toUpperCase(),
-
+                        (offer['offer_details'] ?? '').toString().toUpperCase(),
                         textAlign: TextAlign.center,
-
                         softWrap: true,
-
-                        overflow:
-                        TextOverflow.visible,
-
+                        overflow: TextOverflow.visible,
                         style: const TextStyle(
                           color: Color(0xff6CF6F2),
                           fontSize: 40,
                           fontWeight: FontWeight.w900,
-
-                          /// SPACE BETWEEN NEW LINES
                           height: 1.08,
-
-                          /// SPACE BETWEEN LETTERS
                           letterSpacing: -1.5,
-
                           shadows: [
-                            Shadow(
-                              color: Colors.black45,
-                              blurRadius: 6,
-                              offset: Offset(2, 3),
-                            ),
+                            Shadow(color: Colors.black45, blurRadius: 6, offset: Offset(2, 3)),
                           ],
                         ),
                       ),
@@ -147,7 +71,6 @@ class OfferTemplates {
                   ),
                 ),
               ),
-
               const SizedBox(height: 8),
             ],
           ),
@@ -155,47 +78,21 @@ class OfferTemplates {
       ],
     );
   }
-  /// =====================================================
-  /// T002
-  /// =====================================================
 
   static Widget templateT002(dynamic offer) {
-
     return Stack(
-
       fit: StackFit.expand,
-
       children: [
-
-        /// BACKGROUND
-
-        Image.asset(
-          "assets/images/img_2.png",
-          fit: BoxFit.cover,
-        ),
-
-        /// CONTENT
-
+        Image.asset(AppAssets.offerImg2, fit: BoxFit.cover),
         Padding(
-
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 20,
-          ),
-
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
-
             children: [
-
               Text(
                 offer['business_name'] ?? '',
-
                 textAlign: TextAlign.center,
-
                 maxLines: 1,
-
                 overflow: TextOverflow.ellipsis,
-
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
@@ -203,18 +100,12 @@ class OfferTemplates {
                   fontStyle: FontStyle.italic,
                 ),
               ),
-
               const Spacer(),
-
               const FittedBox(
-
                 fit: BoxFit.scaleDown,
-
                 child: Text(
                   "SALE\nSALE\nSALE",
-
                   textAlign: TextAlign.center,
-
                   style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
@@ -224,25 +115,14 @@ class OfferTemplates {
                   ),
                 ),
               ),
-
               const Spacer(),
-
               Padding(
-
-                padding:
-                const EdgeInsets.symmetric(
-                  horizontal: 8,
-                ),
-
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
                   offer['offer_details'] ?? '',
-
                   textAlign: TextAlign.center,
-
                   maxLines: 3,
-
                   overflow: TextOverflow.ellipsis,
-
                   style: const TextStyle(
                     color: Color(0xffFFF04A),
                     fontWeight: FontWeight.w900,
@@ -251,7 +131,6 @@ class OfferTemplates {
                   ),
                 ),
               ),
-
               const SizedBox(height: 10),
             ],
           ),
@@ -260,47 +139,20 @@ class OfferTemplates {
     );
   }
 
-  /// =====================================================
-  /// T003
-  /// =====================================================
-
   static Widget templateT003(dynamic offer) {
-
     return Stack(
-
       fit: StackFit.expand,
-
       children: [
-
-        /// BACKGROUND
-
-        Image.asset(
-          "assets/images/img_3.png",
-          fit: BoxFit.cover,
-        ),
-
-        /// CONTENT
-
+        Image.asset(AppAssets.offerImg3, fit: BoxFit.cover),
         Padding(
-
-          padding: const EdgeInsets.symmetric(
-            horizontal: 22,
-            vertical: 22,
-          ),
-
+          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
           child: Column(
-
             children: [
-
               Text(
                 offer['business_name'] ?? '',
-
                 textAlign: TextAlign.center,
-
                 maxLines: 2,
-
                 overflow: TextOverflow.ellipsis,
-
                 style: const TextStyle(
                   color: Color(0xffFFD08A),
                   fontWeight: FontWeight.w900,
@@ -308,41 +160,20 @@ class OfferTemplates {
                   height: .95,
                 ),
               ),
-
               const Spacer(),
-
               const Text(
                 "GRAND\nOPENING\nOFFER",
-
                 textAlign: TextAlign.center,
-
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 28,
-                  height: .88,
-                ),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 28, height: .88),
               ),
-
               const Spacer(),
-
               Text(
                 offer['offer_details'] ?? '',
-
                 textAlign: TextAlign.center,
-
                 maxLines: 3,
-
                 overflow: TextOverflow.ellipsis,
-
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontStyle: FontStyle.italic,
-                  height: 1,
-                ),
+                style: const TextStyle(color: Colors.white, fontSize: 24, fontStyle: FontStyle.italic, height: 1),
               ),
-
               const SizedBox(height: 12),
             ],
           ),
@@ -351,87 +182,36 @@ class OfferTemplates {
     );
   }
 
-  /// =====================================================
-  /// T004
-  /// =====================================================
-
   static Widget templateT004(dynamic offer) {
-
     return Stack(
-
       fit: StackFit.expand,
-
       children: [
-
-        /// BACKGROUND
-
-        Image.asset(
-          "assets/images/img_4.png",
-          fit: BoxFit.cover,
-        ),
-
-        /// CONTENT
-
+        Image.asset(AppAssets.offerImg4, fit: BoxFit.cover),
         Padding(
-
-          padding: const EdgeInsets.symmetric(
-            horizontal: 18,
-            vertical: 22,
-          ),
-
+          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
           child: Column(
-
             children: [
-
               Text(
                 offer['business_name'] ?? '',
-
                 textAlign: TextAlign.center,
-
                 maxLines: 2,
-
                 overflow: TextOverflow.ellipsis,
-
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 16,
-                ),
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
               ),
-
               const SizedBox(height: 18),
-
               const Text(
                 "NEW ARRIVALS",
-
                 textAlign: TextAlign.center,
-
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
-                  fontSize: 26,
-                ),
+                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 26),
               ),
-
               const Spacer(),
-
               Text(
                 offer['offer_details'] ?? '',
-
                 textAlign: TextAlign.center,
-
                 maxLines: 4,
-
                 overflow: TextOverflow.ellipsis,
-
-                style: const TextStyle(
-                  color: Color(0xffFFF04A),
-                  fontWeight: FontWeight.w900,
-                  fontSize: 22,
-                  height: .95,
-                ),
+                style: const TextStyle(color: Color(0xffFFF04A), fontWeight: FontWeight.w900, fontSize: 22, height: .95),
               ),
-
               const Spacer(),
             ],
           ),
@@ -440,51 +220,25 @@ class OfferTemplates {
     );
   }
 
-  /// =====================================================
-  /// DEFAULT
-  /// =====================================================
-
   static Widget defaultTemplate(dynamic offer) {
-
     return Container(
-
       color: Colors.white,
-
       padding: const EdgeInsets.all(16),
-
       child: Column(
-
-        crossAxisAlignment:
-        CrossAxisAlignment.start,
-
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Text(
             offer['business_name'] ?? '',
-
             maxLines: 2,
-
             overflow: TextOverflow.ellipsis,
-
-            style: const TextStyle(
-              fontWeight: FontWeight.w900,
-              fontSize: 22,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
           ),
-
           const Spacer(),
-
           Text(
             offer['offer_details'] ?? '',
-
             maxLines: 4,
-
             overflow: TextOverflow.ellipsis,
-
-            style: const TextStyle(
-              fontWeight: FontWeight.w700,
-              fontSize: 20,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
           ),
         ],
       ),

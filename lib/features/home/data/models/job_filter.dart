@@ -1,12 +1,8 @@
-/// =======================================================
-/// FILTER MODEL
-/// =======================================================
-
 class JobFilterModel {
-  List<String> categories;
-  String? expiry;
-  String? jobType;
-  String? salary;
+  final List<String> categories;
+  final String? expiry;
+  final String? jobType;
+  final String? salary;
 
   JobFilterModel({
     this.categories = const [],
@@ -27,5 +23,19 @@ class JobFilterModel {
       "job_type": jobType ?? '',
       "salary": salary ?? '',
     };
+  }
+
+  JobFilterModel copyWith({
+    List<String>? categories,
+    String? expiry,
+    String? jobType,
+    String? salary,
+  }) {
+    return JobFilterModel(
+      categories: categories ?? this.categories,
+      expiry: expiry ?? this.expiry,
+      jobType: jobType ?? this.jobType,
+      salary: salary ?? this.salary,
+    );
   }
 }

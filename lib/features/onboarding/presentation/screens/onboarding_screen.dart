@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'language_selection_screen.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../../core/constants/app_assets.dart';
+import '../../../language/presentation/screens/language_selection_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -10,23 +12,14 @@ class OnboardingScreen extends StatefulWidget {
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
-
   int _currentPage = 0;
 
-  // APP COLORS
-  final Color primaryYellow = const Color(0xFFF2AD36);
-  final Color primaryRed = const Color(0xFFCF5C4C);
-
-  // ONLY 2 SCREENS NOW
   final List<Map<String, String>> _slides = [
     {
       'title': 'PosterGali pe\nlagao aamdani\nbadhao',
-      'subtitle':
-      ' minute se kam samay mein\nwoh bhi kifayati daam mein..',
+      'subtitle': ' minute se kam samay mein\nwoh bhi kifayati daam mein..',
       'button': 'Next',
     },
-
-    // FINAL SCREEN
     {
       'title': 'Offers ya job\nchahiye?',
       'subtitle': 'PosterGali jaiye..',
@@ -62,18 +55,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: PageView.builder(
           controller: _pageController,
           itemCount: _slides.length,
-
           onPageChanged: (value) {
             setState(() {
               _currentPage = value;
             });
           },
-
           itemBuilder: (context, index) {
             final slide = _slides[index];
 
@@ -82,22 +72,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 horizontal: 28,
                 vertical: 18,
               ),
-
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 12),
-
-                  /// TITLE
                   Text(
                     slide['title']!,
                     style: TextStyle(
                       fontSize: index == 1 ? 40 : 42,
                       height: 1.08,
                       fontWeight: FontWeight.w900,
-                      color: primaryYellow,
-
-                      // OUTLINE EFFECT
+                      color: AppColors.golden,
                       shadows: const [
                         Shadow(
                           offset: Offset(2.5, 2.5),
@@ -107,31 +92,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ],
                     ),
                   ),
-
                   const SizedBox(height: 20),
-
-                  /// SUBTITLE
                   Text(
                     slide['subtitle']!,
-                    style:  TextStyle(
+                    style: const TextStyle(
                       fontSize: 18,
                       height: 1.35,
-                      color: primaryRed,
+                      color: AppColors.primaryRed,
                       fontWeight: FontWeight.w400,
                     ),
                   ),
-
                   const SizedBox(height: 34),
-
-                  /// IMAGE BOX
-
                   Expanded(
                     child: Container(
                       width: double.infinity,
-
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(38),
-
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.10),
@@ -140,25 +116,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                         ],
                       ),
-
                       clipBehavior: Clip.antiAlias,
-
                       child: Image.asset(
-                        index == 0
-                            ? 'assets/images/intro1.png'
-                            : 'assets/images/intro1.png',
-
+                        AppAssets.onboarding1,
                         fit: BoxFit.cover,
                       ),
                     ),
                   ),
-
                   const SizedBox(height: 34),
-
-                  /// BOTTOM AREA
                   Row(
                     children: [
-                      /// SKIP BUTTON
                       if (index == 0)
                         GestureDetector(
                           onTap: _skip,
@@ -176,33 +143,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         )
                       else
                         const SizedBox(width: 20),
-
                       const Spacer(),
-
-                      /// BUTTON
                       Expanded(
                         flex: index == 1 ? 1 : 0,
                         child: GestureDetector(
                           onTap: _goToNextPage,
-
                           child: Container(
                             height: 68,
-
-                            width:
-                            index == 1 ? double.infinity : 190,
-
+                            width: index == 1 ? double.infinity : 190,
                             decoration: BoxDecoration(
                               color: index == 0
-                                  ? primaryYellow
-                                  : primaryRed,
+                                  ? AppColors.golden
+                                  : AppColors.primaryRed,
                               borderRadius: BorderRadius.circular(40),
                             ),
-
                             alignment: Alignment.center,
-
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
@@ -213,10 +170,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     fontWeight: FontWeight.w700,
                                   ),
                                 ),
-
                                 if (index == 0) ...[
                                   const SizedBox(width: 10),
-
                                   const Icon(
                                     Icons.arrow_forward_ios,
                                     color: Colors.white,
@@ -230,7 +185,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       ),
                     ],
                   ),
-
                   const SizedBox(height: 12),
                 ],
               ),

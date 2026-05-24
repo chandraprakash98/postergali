@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'home.dart';
-import 'location_selector_screen.dart';
+import '../../../../core/constants/app_colors.dart';
+import '../../../location/presentation/screens/location_selector_screen.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -12,11 +12,7 @@ class LanguageSelectionScreen extends StatefulWidget {
 
 class _LanguageSelectionScreenState
     extends State<LanguageSelectionScreen> {
-
   String selectedLanguage = "English";
-
-  // APP COLORS
-  final Color primaryYellow = const Color(0xFFF2AD36);
 
   void _goToLocationSelector() {
     Navigator.push(
@@ -38,27 +34,22 @@ class _LanguageSelectionScreenState
           selectedLanguage = title;
         });
       },
-
       child: Container(
         height: 78,
         margin: const EdgeInsets.only(bottom: 24),
-
         padding: const EdgeInsets.symmetric(
           horizontal: 22,
         ),
-
         decoration: BoxDecoration(
           color: Colors.grey.shade300,
           borderRadius: BorderRadius.circular(40),
         ),
-
         child: Row(
           children: [
             /// RADIO BUTTON
             Container(
               width: 38,
               height: 38,
-
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -66,24 +57,20 @@ class _LanguageSelectionScreenState
                   width: 2,
                 ),
               ),
-
               child: isSelected
                   ? Center(
-                child: Container(
-                  width: 22,
-                  height: 22,
-
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.grey.shade600,
-                  ),
-                ),
-              )
+                      child: Container(
+                        width: 22,
+                        height: 22,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey.shade600,
+                        ),
+                      ),
+                    )
                   : null,
             ),
-
             const SizedBox(width: 22),
-
             /// LANGUAGE TEXT
             Text(
               title,
@@ -103,19 +90,16 @@ class _LanguageSelectionScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 28,
             vertical: 20,
           ),
-
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 80),
-
               /// SMALL TEXT
               const Text(
                 "Welcome to PosterGali..",
@@ -125,9 +109,7 @@ class _LanguageSelectionScreenState
                   color: Colors.black,
                 ),
               ),
-
               const SizedBox(height: 12),
-
               /// BIG TITLE
               const Text(
                 "Choose your\nLanguage",
@@ -138,36 +120,27 @@ class _LanguageSelectionScreenState
                   color: Colors.black,
                 ),
               ),
-
               const SizedBox(height: 46),
-
               /// ENGLISH
               buildLanguageTile(
                 title: "English",
               ),
-
               /// HINDI
               buildLanguageTile(
                 title: "हिंदी",
               ),
-
               const Spacer(),
-
               /// PROCEED BUTTON
               GestureDetector(
                 onTap: _goToLocationSelector,
-
                 child: Container(
                   height: 72,
                   width: double.infinity,
-
                   decoration: BoxDecoration(
-                    color: primaryYellow,
+                    color: AppColors.golden,
                     borderRadius: BorderRadius.circular(45),
                   ),
-
                   alignment: Alignment.center,
-
                   child: const Text(
                     "Proceed",
                     style: TextStyle(
@@ -178,7 +151,6 @@ class _LanguageSelectionScreenState
                   ),
                 ),
               ),
-
               const SizedBox(height: 18),
             ],
           ),
