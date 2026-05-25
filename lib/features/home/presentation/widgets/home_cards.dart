@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/widgets/job_templates.dart';
+import '../../../../core/widgets/job_templates_full.dart';
 import '../../../../core/widgets/job_templates_small.dart';
 import '../../../../core/widgets/offer_templates.dart';
 

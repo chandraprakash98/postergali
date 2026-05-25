@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../core/widgets/job_templates.dart';
+import '../../../../core/widgets/job_templates_full.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class JobDetailScreen extends StatefulWidget {
