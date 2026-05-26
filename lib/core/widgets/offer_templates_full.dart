@@ -40,7 +40,7 @@ class OfferTemplatesFull {
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 42,
+                  fontSize: 40,
                   fontWeight: FontWeight.w900,
                   letterSpacing: -1,
                 ),
@@ -57,7 +57,7 @@ class OfferTemplatesFull {
                     textAlign: TextAlign.center,
                     style: const TextStyle(
                       color: Color(0xff6CF6F2),
-                      fontSize: 60,
+                      fontSize: 45,
                       fontWeight: FontWeight.w900,
                       height: 1,
                       letterSpacing: -2,
