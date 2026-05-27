@@ -31,11 +31,11 @@ class JobTemplatesSmall {
                   "JOB\nVACANCY",
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 28,
-                    height: .88,
+                    fontSize: 30,
+                    height: .85,
                     fontWeight: FontWeight.w900,
                     color: Colors.white,
-                    letterSpacing: -1,
+                    letterSpacing: -1.5,
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -44,7 +44,7 @@ class JobTemplatesSmall {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w700),
+                  style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w800),
                 ),
                 Expanded(
                   child: Center(
@@ -53,22 +53,22 @@ class JobTemplatesSmall {
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 24, height: .92, color: Colors.white, fontWeight: FontWeight.w900),
+                      style: const TextStyle(fontSize: 28, height: .9, color: Colors.white, fontWeight: FontWeight.w900),
                     ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
                   child: Text(
                     "₹${job['salary'] ?? '25,000'}",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xff7AA933)),
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xff7AA933)),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Text(
                   (job['job_type'] ?? 'FULL TIME').toUpperCase(),
-                  style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w700),
+                  style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -111,7 +111,7 @@ class JobTemplatesSmall {
                   "WE ARE\nHIRING",
                   textAlign: TextAlign.center,
                   maxLines: 2,
-                  style: TextStyle(fontSize: 26, height: .9, color: Colors.white, fontWeight: FontWeight.w900),
+                  style: TextStyle(fontSize: 27, height: .85, color: Colors.white, fontWeight: FontWeight.w900),
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -119,7 +119,7 @@ class JobTemplatesSmall {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w700),
+                  style: const TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w900),
                 ),
                 Expanded(
                   child: Center(
@@ -128,22 +128,22 @@ class JobTemplatesSmall {
                       textAlign: TextAlign.center,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 24, height: .92, color: Colors.white, fontWeight: FontWeight.w900),
+                      style: const TextStyle(fontSize: 20, height: .9, color: Colors.white, fontWeight: FontWeight.w900),
                     ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(100)),
                   child: Text(
                     "₹${job['salary'] ?? '15,000'}",
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Color(0xffA02AB4)),
+                    style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w900, color: Color(0xffA02AB4)),
                   ),
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: 10),
                 Text(
                   (job['job_type'] ?? 'FULL TIME').toUpperCase(),
-                  style: const TextStyle(fontSize: 12, color: Colors.white, fontWeight: FontWeight.w700),
+                  style: const TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w700),
                 ),
               ],
             ),
@@ -178,7 +178,7 @@ class JobTemplatesSmall {
               child: const Text(
                 "URGENTLY\nHIRING",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 22, height: .9, color: Colors.white, fontWeight: FontWeight.w900),
+                style: TextStyle(fontSize: 30, height: .85, color: Colors.white, fontWeight: FontWeight.w900),
               ),
             ),
             const SizedBox(height: 14),
@@ -187,7 +187,7 @@ class JobTemplatesSmall {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 14, color: Color(0xff5F0B75), fontWeight: FontWeight.w800),
+              style: const TextStyle(fontSize: 18, color: Color(0xff5F0B75), fontWeight: FontWeight.w800),
             ),
             Expanded(
               child: Center(
@@ -196,18 +196,19 @@ class JobTemplatesSmall {
                   textAlign: TextAlign.center,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 24, height: .9, color: Color(0xff5F0B75), fontWeight: FontWeight.w900),
+                  style: const TextStyle(fontSize: 20, height: .85, color: Color(
+                      0xff130217), fontWeight: FontWeight.w900),
                 ),
               ),
             ),
             Text(
               "₹${job['salary'] ?? '20,000'}",
-              style: const TextStyle(fontSize: 18, color: Color(0xff5F0B75), fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 24, color: Color(0xff5F0B75), fontWeight: FontWeight.w900),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Text(
               (job['job_type'] ?? 'PART TIME').toUpperCase(),
-              style: const TextStyle(fontSize: 12, color: Color(0xff5F0B75), fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 16, color: Color(0xff5F0B75), fontWeight: FontWeight.w700),
             ),
           ],
         ),
@@ -235,7 +236,7 @@ class JobTemplatesSmall {
           children: [
             const Text(
               "WE'RE",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.black),
+              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.black),
             ),
             const SizedBox(height: 6),
             Container(
@@ -245,7 +246,7 @@ class JobTemplatesSmall {
               child: const Text(
                 "HIRING",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w900, color: Colors.black),
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.black),
               ),
             ),
             const SizedBox(height: 14),
@@ -254,7 +255,7 @@ class JobTemplatesSmall {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 14, color: Colors.black87, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w800),
             ),
             Expanded(
               child: Center(
@@ -263,18 +264,18 @@ class JobTemplatesSmall {
                   textAlign: TextAlign.center,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 24, height: .92, color: Colors.black, fontWeight: FontWeight.w900),
+                  style: const TextStyle(fontSize: 34, height: .9, color: Colors.black, fontWeight: FontWeight.w900),
                 ),
               ),
             ),
             Text(
               "₹${job['salary'] ?? '18,000'}",
-              style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w900),
+              style: const TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.w900),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(height: 8),
             Text(
               (job['job_type'] ?? 'FULL TIME').toUpperCase(),
-              style: const TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w700),
+              style: const TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w700),
             ),
           ],
         ),

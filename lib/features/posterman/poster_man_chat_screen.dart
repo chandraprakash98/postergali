@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:postergali/core/job_request.dart';
+import 'package:postergali/core/widgets/job_templates_small.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'api_service.dart';
 import 'location_service.dart';
@@ -194,7 +195,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         break;
 
       case ChatStep.layoutSelect:
-        controller.tempId = text;
+        // controller.tempId is already set in _layoutSelection onTap
         await bot("Ready to display the poster?");
         await bot("👉 Tap the button below to post");
         addFinalConfirmation();
@@ -304,7 +305,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
         ),
-        child: const Text("Typing...", style: TextStyle(color: Colors.grey)),
+        child: const Text("Typing...", style: TextStyle(color: Colors.grey, fontSize: 14)),
       ),
     );
   }
@@ -338,7 +339,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
           m["text"] ?? "",
           style: TextStyle(
             color: isBot ? Colors.black : Colors.white,
-            fontSize: 15,
+            fontSize: 16,
           ),
         ),
       ),
@@ -404,7 +405,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         children: [
           const Text(
             "📍 Your business location",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
@@ -511,7 +512,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
             const SizedBox(height: 8),
             Text(
               p.duration,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             Text(
               "₹${p.price}/-",
@@ -524,6 +525,20 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _layoutSelection() {
+    final jobData = {
+      'business_name': controller.businessName,
+      'job_role': controller.jobRole,
+      'salary': controller.salary.toString(),
+      'job_type': controller.jobType,
+    };
+
+    final templates = [
+      {'id': 'T001', 'widget': JobTemplatesSmall.templateT001(jobData)},
+      {'id': 'T002', 'widget': JobTemplatesSmall.templateT002(jobData)},
+      {'id': 'T003', 'widget': JobTemplatesSmall.templateT003(jobData)},
+      {'id': 'T004', 'widget': JobTemplatesSmall.templateT004(jobData)},
+    ];
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -537,7 +552,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         children: [
           const Text(
             "🖼️ Your poster layouts!",
-            style: TextStyle(fontWeight: FontWeight.bold),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(height: 12),
           GridView.builder(
@@ -547,19 +562,32 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 0.8,
+              childAspectRatio: 0.75,
             ),
-            itemCount: 4,
+            itemCount: templates.length,
             itemBuilder: (context, i) {
+              final t = templates[i];
               return GestureDetector(
-                onTap: () => next("Layout ${i + 1}"),
+                onTap: () {
+                  controller.tempId = t['id'] as String;
+                  next("Layout ${i + 1}");
+                },
                 child: Container(
+                  clipBehavior: Clip.antiAlias,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade100,
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade300),
                   ),
-                  child: const Center(child: Icon(Icons.image, color: Colors.grey)),
+                  child: AbsorbPointer(
+                    child: FittedBox(
+                      fit: BoxFit.contain,
+                      child: SizedBox(
+                        width: 300,
+                        height: 400,
+                        child: t['widget'] as Widget,
+                      ),
+                    ),
+                  ),
                 ),
               );
             },
@@ -570,6 +598,31 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _finalConfirmation() {
+    final jobData = {
+      'business_name': controller.businessName,
+      'job_role': controller.jobRole,
+      'salary': controller.salary.toString(),
+      'job_type': controller.jobType,
+    };
+
+    Widget preview;
+    switch (controller.tempId) {
+      case 'T001':
+        preview = JobTemplatesSmall.templateT001(jobData);
+        break;
+      case 'T002':
+        preview = JobTemplatesSmall.templateT002(jobData);
+        break;
+      case 'T003':
+        preview = JobTemplatesSmall.templateT003(jobData);
+        break;
+      case 'T004':
+        preview = JobTemplatesSmall.templateT004(jobData);
+        break;
+      default:
+        preview = const Center(child: Icon(Icons.insert_photo_outlined, size: 50, color: Colors.grey));
+    }
+
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(vertical: 8),
@@ -581,13 +634,21 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       child: Column(
         children: [
           Container(
-            height: 200,
+            height: 350,
             width: double.infinity,
+            clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Center(child: Icon(Icons.insert_photo_outlined, size: 50, color: Colors.grey)),
+            child: FittedBox(
+              fit: BoxFit.contain,
+              child: SizedBox(
+                width: 300,
+                height: 400,
+                child: preview,
+              ),
+            ),
           ),
           const SizedBox(height: 16),
           SizedBox(
