@@ -5,15 +5,12 @@ import 'package:postergali/features/posterman/plan.dart';
 import '../../core/job_request.dart';
 
 class ApiService {
-
-  static const String baseUrl =
-      "https://postergali.com/api/v1/jobs";
+  static const String baseUrl = "https://postergali.com/api/v1";
 
   Future<bool> submitJob(JobRequest request) async {
-
     try {
       final res = await http.post(
-        Uri.parse(baseUrl),
+        Uri.parse("$baseUrl/jobs"),
         headers: {
           "Content-Type": "application/json",
         },
@@ -27,14 +24,17 @@ class ApiService {
   }
 
   Future<List<PlanModel>> fetchPlans() async {
-    final res = await http.get(Uri.parse("$baseUrl/plans"));
+    try {
+      final res = await http.get(Uri.parse("$baseUrl/plans"));
 
-    if (res.statusCode == 200) {
-      final List data = jsonDecode(res.body);
-      return data.map((e) => PlanModel.fromJson(e)).toList();
-    } else {
-      throw Exception("Failed to load plans");
+      if (res.statusCode == 200) {
+        final List data = jsonDecode(res.body);
+        return data.map((e) => PlanModel.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      return [];
     }
   }
-
 }

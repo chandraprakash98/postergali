@@ -3,9 +3,9 @@
 import '../../core/job_request.dart';
 import 'api_service.dart';
 import 'location_service.dart';
+import 'plan.dart';
 
 class PosterManController {
-
   final LocationService locationService;
   final ApiService apiService;
 
@@ -18,10 +18,15 @@ class PosterManController {
   String jobRole = "";
   String jobType = "";
   String phone = "";
+  int salary = 0;
+  String planId = "";
+  String tempId = "";
 
   double lat = 0;
   double lng = 0;
   String city = "";
+
+  List<PlanModel> plans = [];
 
   Future<void> fetchLocation() async {
     final data = await locationService.getCurrentLocation();
@@ -29,6 +34,10 @@ class PosterManController {
     lat = data["lat"];
     lng = data["lng"];
     city = data["city"];
+  }
+
+  Future<void> loadPlans() async {
+    plans = await apiService.fetchPlans();
   }
 
   JobRequest buildRequest() {
@@ -40,13 +49,13 @@ class PosterManController {
       businessName: businessName,
       jobRole: jobRole,
       jobType: jobType,
-      salary: 50000,
+      salary: salary,
       phoneNumber: phone,
       latitude: lat,
       longitude: lng,
       city: city,
-      planId: "P001",
-      tempId: "T003",
+      planId: planId,
+      tempId: tempId,
     );
   }
 }
