@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../../core/constants/app_colors.dart';
+import '../../../posterman/bot_splash_screen.dart';
 import '../../data/models/job_filter.dart';
 import '../widgets/home_bottom_bar.dart';
 import '../widgets/home_cards.dart';
@@ -271,7 +272,18 @@ class _HomeScreenState extends State<HomeScreen>
 
   Widget _buildFAB() {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => BotSplashScreen(
+              location: widget.location,
+              latitude: widget.latitude,
+              longitude: widget.longitude,
+            ),
+          ),
+        );
+      },
       child: Container(
         height: 78,
         width: 78,
@@ -282,17 +294,13 @@ class _HomeScreenState extends State<HomeScreen>
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
-          border: Border.all(color: AppColors.cream, width: 7),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.golden.withOpacity(.45),
-              blurRadius: 20,
-              spreadRadius: 2,
-              offset: const Offset(0, 6),
-            ),
-          ],
+          border: Border.all(color: AppColors.primaryRed, width: 2),
         ),
-        child: const Icon(CupertinoIcons.add, size: 36, color: AppColors.primaryRed),
+        child: const Icon(
+          CupertinoIcons.add,
+          size: 36,
+          color: AppColors.primaryRed,
+        ),
       ),
     );
   }
