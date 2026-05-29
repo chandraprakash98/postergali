@@ -57,7 +57,7 @@ class _LanguageSelectionScreenState
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: const Color(0xFFB6402C),
-                  width: 2,
+                  width: 1.5,
                 ),
               ),
               child: isSelected
@@ -74,7 +74,7 @@ class _LanguageSelectionScreenState
                   : null,
             ),
 
-            const SizedBox(width: 26),
+            const SizedBox(width: 20),
 
             /// TEXT
             Text(
@@ -146,7 +146,7 @@ class _LanguageSelectionScreenState
                   const Text(
                     "Choose your\nlanguage",
                     style: TextStyle(
-                      fontSize: 66,
+                      fontSize: 50,
                       height: 1.0,
                       fontWeight: FontWeight.w900,
                       color: AppColors.golden,
