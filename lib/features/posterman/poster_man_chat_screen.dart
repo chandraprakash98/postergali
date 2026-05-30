@@ -4,6 +4,7 @@ import 'package:postergali/core/job_request.dart';
 import 'package:postergali/core/widgets/job_templates_small.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'api_service.dart';
+import 'edit_poster.dart';
 import 'location_service.dart';
 import 'plan.dart';
 
@@ -662,7 +663,31 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              onPressed: () {},
+              onPressed: () async {
+                final result = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => EditPosterScreen(
+                      shopName: controller.businessName,
+                      jobRole: controller.jobRole,
+                      jobType: controller.jobType,
+                      salary: controller.salary.toString(),
+                      phone: controller.phone,
+                    ),
+                  ),
+                );
+
+                if (result != null) {
+                  setState(() {
+                    controller.businessName = result["shopName"];
+                    controller.jobRole = result["jobRole"];
+                    controller.jobType = result["jobType"];
+                    controller.salary =
+                        int.tryParse(result["salary"].toString()) ?? controller.salary;
+                    controller.phone = result["phone"];
+                  });
+                }
+              },
             ),
           ),
           const SizedBox(height: 8),

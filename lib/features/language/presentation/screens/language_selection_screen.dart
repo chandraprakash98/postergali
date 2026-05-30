@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+
 import '../../../../core/constants/app_colors.dart';
+import '../../../location/location_permission_screen.dart';
 import '../../../location/presentation/screens/location_selector_screen.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
@@ -12,13 +15,37 @@ class LanguageSelectionScreen extends StatefulWidget {
 
 class _LanguageSelectionScreenState
     extends State<LanguageSelectionScreen> {
+
   String selectedLanguage = "English";
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkLocationStatus();
+    });
+  }
+
+  Future<void> _checkLocationStatus() async {
+    bool locationEnabled =
+    await Geolocator.isLocationServiceEnabled();
+
+    if (!locationEnabled && mounted) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const LocationPermissionScreen(),
+        ),
+      );
+    }
+  }
 
   void _goToLocationSelector() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const LocationSelectorScreen(),
+        builder: (_) => const LocationPermissionScreen(),
       ),
     );
   }
@@ -49,7 +76,6 @@ class _LanguageSelectionScreenState
         ),
         child: Row(
           children: [
-            /// RADIO
             Container(
               width: 38,
               height: 38,
@@ -76,7 +102,6 @@ class _LanguageSelectionScreenState
 
             const SizedBox(width: 20),
 
-            /// TEXT
             Text(
               title,
               style: const TextStyle(
@@ -95,10 +120,8 @@ class _LanguageSelectionScreenState
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF6F1E7),
-
       body: Stack(
         children: [
-          /// BACKGROUND IMAGE
           Positioned.fill(
             child: Image.asset(
               'assets/images/img_6.png',
@@ -111,14 +134,12 @@ class _LanguageSelectionScreenState
             ),
           ),
 
-          /// LIGHT OVERLAY
           Positioned.fill(
             child: Container(
               color: const Color(0xFFF6F1E7).withOpacity(0.84),
             ),
           ),
 
-          /// MAIN CONTENT
           SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(
@@ -130,7 +151,6 @@ class _LanguageSelectionScreenState
                 children: [
                   const SizedBox(height: 26),
 
-                  /// TOP TEXT
                   const Text(
                     "Welcome to PosterGali",
                     style: TextStyle(
@@ -142,7 +162,6 @@ class _LanguageSelectionScreenState
 
                   const SizedBox(height: 22),
 
-                  /// BIG TITLE
                   const Text(
                     "Choose your\nlanguage",
                     style: TextStyle(
@@ -162,19 +181,11 @@ class _LanguageSelectionScreenState
 
                   const SizedBox(height: 54),
 
-                  /// ENGLISH
-                  buildLanguageTile(
-                    title: "English",
-                  ),
-
-                  /// HINDI
-                  buildLanguageTile(
-                    title: "हिंदी",
-                  ),
+                  buildLanguageTile(title: "English"),
+                  buildLanguageTile(title: "हिंदी"),
 
                   const Spacer(),
 
-                  /// BUTTON
                   GestureDetector(
                     onTap: _goToLocationSelector,
                     child: Container(
@@ -183,13 +194,6 @@ class _LanguageSelectionScreenState
                       decoration: BoxDecoration(
                         color: AppColors.golden,
                         borderRadius: BorderRadius.circular(45),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.15),
-                            blurRadius: 12,
-                            offset: const Offset(0, 6),
-                          ),
-                        ],
                       ),
                       alignment: Alignment.center,
                       child: const Text(
