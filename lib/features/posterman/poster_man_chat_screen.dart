@@ -1,7 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:postergali/core/job_request.dart';
 import 'package:postergali/core/widgets/job_templates_small.dart';
+import 'package:postergali/core/widgets/offer_templates.dart';
+import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'api_service.dart';
 import 'edit_poster.dart';
@@ -29,27 +33,40 @@ enum ChatStep {
   chooseType,
   businessName,
   locationConfirm,
+  // Job specific
   jobRole,
   jobTypeSelect,
   salary,
+  // Offer specific
+  offerSubCategory,
+  offerDetails,
+  offerMedia,
+  // Common
   phone,
   planSelect,
   layoutSelect,
   done
 }
 
+enum FlowType { job, offer }
+
 class _PosterManChatScreenState extends State<PosterManChatScreen> {
   late PosterManController controller;
+  late OfferController offerController;
 
   final TextEditingController input = TextEditingController();
   final ScrollController scroll = ScrollController();
 
   ChatStep step = ChatStep.welcome;
+  FlowType flowType = FlowType.job;
 
   List<Map<String, dynamic>> messages = [];
   bool isBotTyping = false;
 
   LatLng? selectedLatLng;
+
+  // Warmer theme color
+  final Color primaryColor = const Color(0xFFE67E22);
 
   @override
   void initState() {
@@ -60,10 +77,19 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       apiService: ApiService(),
     );
 
+    offerController = OfferController(
+      locationService: LocationService(),
+      apiService: ApiService(),
+    );
+
     selectedLatLng = LatLng(widget.latitude, widget.longitude);
     controller.lat = widget.latitude;
     controller.lng = widget.longitude;
     controller.city = widget.location;
+
+    offerController.lat = widget.latitude;
+    offerController.lng = widget.longitude;
+    offerController.city = widget.location;
 
     _startFlow();
   }
@@ -96,6 +122,18 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
 
   void addTypeChips() {
     messages.add({"bot": true, "type": "type_chips"});
+    setState(() {});
+    scrollToBottom();
+  }
+
+  void addOfferSubCategoryChips() {
+    messages.add({"bot": true, "type": "offer_subcategory_chips"});
+    setState(() {});
+    scrollToBottom();
+  }
+
+  void addOfferMediaCard() {
+    messages.add({"bot": true, "type": "offer_media"});
     setState(() {});
     scrollToBottom();
   }
@@ -135,11 +173,27 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
 
     user(text);
 
+    if (flowType == FlowType.job) {
+      await _handleJobFlow(text);
+    } else {
+      await _handleOfferFlow(text);
+    }
+
+    input.clear();
+    scrollToBottom();
+  }
+
+  Future<void> _handleJobFlow(String text) async {
     switch (step) {
       case ChatStep.chooseType:
         if (text.toLowerCase().contains("hiring")) {
+          flowType = FlowType.job;
           step = ChatStep.businessName;
           await bot("What is your business name &\naddress where you want job?");
+        } else {
+          flowType = FlowType.offer;
+          step = ChatStep.businessName;
+          await bot("Great! Please tell us about your business");
         }
         break;
 
@@ -188,7 +242,6 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         break;
 
       case ChatStep.planSelect:
-        // planId is set in _planCard onTap
         await bot("📍 Your poster layouts!");
         await bot("All you have to do is select any one layout below and we'll create a poster for you style ✨");
         addLayoutSelection();
@@ -196,22 +249,91 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         break;
 
       case ChatStep.layoutSelect:
-        // controller.tempId is already set in _layoutSelection onTap
         await bot("Ready to display the poster?");
         await bot("👉 Tap the button below to post");
         addFinalConfirmation();
         setState(() => step = ChatStep.done);
         break;
 
-      case ChatStep.done:
+      default:
+        break;
+    }
+  }
+
+  Future<void> _handleOfferFlow(String text) async {
+    switch (step) {
+      case ChatStep.chooseType:
+        if (text.toLowerCase().contains("hiring")) {
+          flowType = FlowType.job;
+          step = ChatStep.businessName;
+          await bot("What is your business name &\naddress where you want job?");
+        } else {
+          flowType = FlowType.offer;
+          step = ChatStep.businessName;
+          await bot("Great! Please tell us about your business");
+        }
+        break;
+
+      case ChatStep.businessName:
+        offerController.businessName = text;
+        await bot("📍 Your business location");
+        addLocationMap();
+        setState(() => step = ChatStep.locationConfirm);
+        break;
+
+      case ChatStep.locationConfirm:
+        await bot("Please tell us what kind of offer you're having?");
+        addOfferSubCategoryChips();
+        setState(() => step = ChatStep.offerSubCategory);
+        break;
+
+      case ChatStep.offerSubCategory:
+        offerController.subCategory = text;
+        offerController.offerType = text;
+        await bot("Great! 😊 Now tell us about your offer in detail...\nExample: Buy 1 Get 1 Free, flat 50% discount on all cakes");
+        setState(() => step = ChatStep.offerDetails);
+        break;
+
+      case ChatStep.offerDetails:
+        offerController.offerDetails = text;
+        await bot("Upload some images or videos of your offer... \nSelect photos of products or shop");
+        addOfferMediaCard();
+        setState(() => step = ChatStep.offerMedia);
+        break;
+
+      case ChatStep.offerMedia:
+        await bot("Please enter mobile number on which seekers can call you 📞");
+        setState(() => step = ChatStep.phone);
+        break;
+
+      case ChatStep.phone:
+        offerController.mobile = text;
+        await bot("Please select your plan below 👇");
+        await bot("Select how long you want to display your post.");
+        setState(() => isBotTyping = true);
+        await offerController.loadPlans();
+        setState(() => isBotTyping = false);
+        addPlanSelection();
+        setState(() => step = ChatStep.planSelect);
+        break;
+
+      case ChatStep.planSelect:
+        await bot("📍 Your poster layouts!");
+        await bot("All you have to do is select any one layout below and we'll create a poster for you style ✨");
+        addLayoutSelection();
+        setState(() => step = ChatStep.layoutSelect);
+        break;
+
+      case ChatStep.layoutSelect:
+        await bot("Ready to display the poster?");
+        await bot("👉 Tap the button below to post");
+        addFinalConfirmation();
+        setState(() => step = ChatStep.done);
         break;
 
       default:
         break;
     }
-
-    input.clear();
-    scrollToBottom();
   }
 
   void scrollToBottom() {
@@ -274,6 +396,10 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 switch (m["type"]) {
                   case "type_chips":
                     return _typeChips();
+                  case "offer_subcategory_chips":
+                    return _offerSubCategoryChips();
+                  case "offer_media":
+                    return _offerMediaCard();
                   case "job_type_chips":
                     return _jobTypeChips();
                   case "location_map":
@@ -320,7 +446,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isBot ? Colors.white : const Color(0xFF9EA0A7),
+          color: isBot ? Colors.white : primaryColor,
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -354,7 +480,165 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         spacing: 10,
         children: [
           _chip("Job Hiring", () => next("Job Hiring")),
-          _chip("Hire Others", () => next("Hire Others")),
+          _chip("Offer Others", () => next("Offer Others")),
+        ],
+      ),
+    );
+  }
+
+  Widget _offerSubCategoryChips() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Wrap(
+        spacing: 10,
+        runSpacing: 10,
+        children: [
+          _chip("Sale on Daily", () => next("Sale on Daily")),
+          _chip("Special Offer", () => next("Special Offer")),
+          _chip("Grand Opening Offer", () => next("Grand Opening Offer")),
+          _chip("Inauguration Sale", () => next("Inauguration Sale")),
+          _chip("Up to % Sale", () => next("Up to % Sale")),
+        ],
+      ),
+    );
+  }
+
+  Widget _offerMediaCard() {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            "📸 Upload Media",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          ),
+          const SizedBox(height: 8),
+          const Text(
+            "Select images or video for your offer poster",
+            style: TextStyle(color: Colors.grey),
+          ),
+          const SizedBox(height: 16),
+          if (offerController.images.isNotEmpty || offerController.video != null)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ...offerController.images.map((f) => Stack(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: Image.file(f, width: 70, height: 70, fit: BoxFit.cover),
+                          ),
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            child: GestureDetector(
+                              onTap: () => setState(() => offerController.images.remove(f)),
+                              child: Container(
+                                color: Colors.black54,
+                                child: const Icon(Icons.close, color: Colors.white, size: 16),
+                              ),
+                            ),
+                          ),
+                        ],
+                      )),
+                  if (offerController.video != null)
+                    Stack(
+                      children: [
+                        Container(
+                          width: 70,
+                          height: 70,
+                          decoration: BoxDecoration(
+                            color: Colors.black87,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(Icons.videocam, color: Colors.white),
+                        ),
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          child: GestureDetector(
+                            onTap: () => setState(() => offerController.video = null),
+                            child: Container(
+                              color: Colors.black54,
+                              child: const Icon(Icons.close, color: Colors.white, size: 16),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+          Row(
+            children: [
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    final picker = ImagePicker();
+                    final List<XFile> pickedFiles = await picker.pickMultiImage();
+                    if (pickedFiles.isNotEmpty) {
+                      setState(() {
+                        offerController.images.addAll(pickedFiles.map((x) => File(x.path)));
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.image),
+                  label: const Text("Images"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade100,
+                    foregroundColor: Colors.black,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    final picker = ImagePicker();
+                    final XFile? pickedFile = await picker.pickVideo(source: ImageSource.gallery);
+                    if (pickedFile != null) {
+                      setState(() {
+                        offerController.video = File(pickedFile.path);
+                      });
+                    }
+                  },
+                  icon: const Icon(Icons.videocam),
+                  label: const Text("Video"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.grey.shade100,
+                    foregroundColor: Colors.black,
+                    elevation: 0,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: () => next("Media uploaded ✅"),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryColor,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ),
+              child: const Text("Continue"),
+            ),
+          ),
         ],
       ),
     );
@@ -445,7 +729,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
               icon: const Icon(Icons.my_location, size: 18),
               label: const Text("Use current location"),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF9EA0A7),
+                backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 elevation: 0,
@@ -472,12 +756,13 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _planSelection() {
+    final plans = flowType == FlowType.job ? controller.plans : offerController.plans;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 8),
       child: Wrap(
         spacing: 12,
         runSpacing: 12,
-        children: controller.plans.map((p) => _planCard(p)).toList(),
+        children: plans.map((p) => _planCard(p)).toList(),
       ),
     );
   }
@@ -485,7 +770,11 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   Widget _planCard(PlanModel p) {
     return GestureDetector(
       onTap: () {
-        controller.planId = p.id.toString();
+        if (flowType == FlowType.job) {
+          controller.planId = p.id.toString();
+        } else {
+          offerController.planId = p.id.toString();
+        }
         next(p.duration);
       },
       child: Container(
@@ -526,19 +815,32 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _layoutSelection() {
-    final jobData = {
-      'business_name': controller.businessName,
-      'job_role': controller.jobRole,
-      'salary': controller.salary.toString(),
-      'job_type': controller.jobType,
-    };
+    final data = flowType == FlowType.job
+        ? {
+            'business_name': controller.businessName,
+            'job_role': controller.jobRole,
+            'salary': controller.salary.toString(),
+            'job_type': controller.jobType,
+          }
+        : {
+            'business_name': offerController.businessName,
+            'offer_details': offerController.offerDetails,
+            'subcategory': offerController.subCategory,
+          };
 
-    final templates = [
-      {'id': 'T001', 'widget': JobTemplatesSmall.templateT001(jobData)},
-      {'id': 'T002', 'widget': JobTemplatesSmall.templateT002(jobData)},
-      {'id': 'T003', 'widget': JobTemplatesSmall.templateT003(jobData)},
-      {'id': 'T004', 'widget': JobTemplatesSmall.templateT004(jobData)},
-    ];
+    final templates = flowType == FlowType.job
+        ? [
+            {'id': 'T001', 'widget': JobTemplatesSmall.templateT001(data)},
+            {'id': 'T002', 'widget': JobTemplatesSmall.templateT002(data)},
+            {'id': 'T003', 'widget': JobTemplatesSmall.templateT003(data)},
+            {'id': 'T004', 'widget': JobTemplatesSmall.templateT004(data)},
+          ]
+        : [
+            {'id': 'T001', 'widget': OfferTemplates.templateT001(data)},
+            {'id': 'T002', 'widget': OfferTemplates.templateT002(data)},
+            {'id': 'T003', 'widget': OfferTemplates.templateT003(data)},
+            {'id': 'T004', 'widget': OfferTemplates.templateT004(data)},
+          ];
 
     return Container(
       width: double.infinity,
@@ -570,7 +872,11 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
               final t = templates[i];
               return GestureDetector(
                 onTap: () {
-                  controller.tempId = t['id'] as String;
+                  if (flowType == FlowType.job) {
+                    controller.tempId = t['id'] as String;
+                  } else {
+                    offerController.tempId = t['id'] as String;
+                  }
                   next("Layout ${i + 1}");
                 },
                 child: Container(
@@ -599,29 +905,56 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _finalConfirmation() {
-    final jobData = {
-      'business_name': controller.businessName,
-      'job_role': controller.jobRole,
-      'salary': controller.salary.toString(),
-      'job_type': controller.jobType,
-    };
+    final data = flowType == FlowType.job
+        ? {
+            'business_name': controller.businessName,
+            'job_role': controller.jobRole,
+            'salary': controller.salary.toString(),
+            'job_type': controller.jobType,
+          }
+        : {
+            'business_name': offerController.businessName,
+            'offer_details': offerController.offerDetails,
+            'subcategory': offerController.subCategory,
+          };
 
     Widget preview;
-    switch (controller.tempId) {
-      case 'T001':
-        preview = JobTemplatesSmall.templateT001(jobData);
-        break;
-      case 'T002':
-        preview = JobTemplatesSmall.templateT002(jobData);
-        break;
-      case 'T003':
-        preview = JobTemplatesSmall.templateT003(jobData);
-        break;
-      case 'T004':
-        preview = JobTemplatesSmall.templateT004(jobData);
-        break;
-      default:
-        preview = const Center(child: Icon(Icons.insert_photo_outlined, size: 50, color: Colors.grey));
+    if (flowType == FlowType.job) {
+      switch (controller.tempId) {
+        case 'T001':
+          preview = JobTemplatesSmall.templateT001(data);
+          break;
+        case 'T002':
+          preview = JobTemplatesSmall.templateT002(data);
+          break;
+        case 'T003':
+          preview = JobTemplatesSmall.templateT003(data);
+          break;
+        case 'T004':
+          preview = JobTemplatesSmall.templateT004(data);
+          break;
+        default:
+          preview = const Center(
+              child: Icon(Icons.insert_photo_outlined, size: 50, color: Colors.grey));
+      }
+    } else {
+      switch (offerController.tempId) {
+        case 'T001':
+          preview = OfferTemplates.templateT001(data);
+          break;
+        case 'T002':
+          preview = OfferTemplates.templateT002(data);
+          break;
+        case 'T003':
+          preview = OfferTemplates.templateT003(data);
+          break;
+        case 'T004':
+          preview = OfferTemplates.templateT004(data);
+          break;
+        default:
+          preview = const Center(
+              child: Icon(Icons.insert_photo_outlined, size: 50, color: Colors.grey));
+      }
     }
 
     return Container(
@@ -652,44 +985,45 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              icon: const Icon(Icons.edit_note),
-              label: const Text("Edit Poster"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF9EA0A7),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                padding: const EdgeInsets.symmetric(vertical: 12),
-              ),
-              onPressed: () async {
-                final result = await Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => EditPosterScreen(
-                      shopName: controller.businessName,
-                      jobRole: controller.jobRole,
-                      jobType: controller.jobType,
-                      salary: controller.salary.toString(),
-                      phone: controller.phone,
+          if (flowType == FlowType.job)
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.edit_note),
+                label: const Text("Edit Poster"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditPosterScreen(
+                        shopName: controller.businessName,
+                        jobRole: controller.jobRole,
+                        jobType: controller.jobType,
+                        salary: controller.salary.toString(),
+                        phone: controller.phone,
+                      ),
                     ),
-                  ),
-                );
+                  );
 
-                if (result != null) {
-                  setState(() {
-                    controller.businessName = result["shopName"];
-                    controller.jobRole = result["jobRole"];
-                    controller.jobType = result["jobType"];
-                    controller.salary =
-                        int.tryParse(result["salary"].toString()) ?? controller.salary;
-                    controller.phone = result["phone"];
-                  });
-                }
-              },
+                  if (result != null) {
+                    setState(() {
+                      controller.businessName = result["shopName"];
+                      controller.jobRole = result["jobRole"];
+                      controller.jobType = result["jobType"];
+                      controller.salary =
+                          int.tryParse(result["salary"].toString()) ?? controller.salary;
+                      controller.phone = result["phone"];
+                    });
+                  }
+                },
+              ),
             ),
-          ),
           const SizedBox(height: 8),
           SizedBox(
             width: double.infinity,
@@ -703,9 +1037,18 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               onPressed: () async {
-                final success = await controller.apiService.submitJob(
-                  controller.buildRequest() as JobRequest,
-                );
+                bool success;
+                if (flowType == FlowType.job) {
+                  success = await controller.apiService.submitJob(
+                    controller.buildRequest(),
+                  );
+                } else {
+                  success = await offerController.apiService.submitOffer(
+                    request: offerController.buildRequest(),
+                    images: offerController.images,
+                    video: offerController.video,
+                  );
+                }
                 await bot(success ? "🎉 Posted successfully!" : "❌ Failed to post");
               },
             ),
@@ -745,8 +1088,8 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
             ),
             const SizedBox(width: 8),
             Container(
-              decoration: const BoxDecoration(
-                color: Color(0xFF9EA0A7),
+              decoration: BoxDecoration(
+                color: primaryColor,
                 shape: BoxShape.circle,
               ),
               child: IconButton(

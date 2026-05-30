@@ -42,7 +42,7 @@ class PosterManController {
 
   JobRequest buildRequest() {
     return JobRequest(
-      deviceId: "AUTO_DEVICE_ID",
+      deviceId: "12345",
       deviceOs: "android",
       masterCategory: "jobs",
       subcategory: "IT",
