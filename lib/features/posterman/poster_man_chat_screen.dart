@@ -9,6 +9,7 @@ import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'api_service.dart';
 import 'edit_poster.dart';
+import 'edit_offer_poster.dart';
 import 'location_service.dart';
 import 'plan.dart';
 
@@ -1019,6 +1020,44 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                       controller.salary =
                           int.tryParse(result["salary"].toString()) ?? controller.salary;
                       controller.phone = result["phone"];
+                    });
+                  }
+                },
+              ),
+            ),
+          if (flowType == FlowType.offer)
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.edit_note),
+                label: const Text("Edit Poster"),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                onPressed: () async {
+                  final result = await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => EditOfferPosterScreen(
+                        shopName: offerController.businessName,
+                        offerDetails: offerController.offerDetails,
+                        phone: offerController.mobile,
+                        images: offerController.images,
+                        video: offerController.video,
+                      ),
+                    ),
+                  );
+
+                  if (result != null) {
+                    setState(() {
+                      offerController.businessName = result["shopName"];
+                      offerController.offerDetails = result["offerDetails"];
+                      offerController.mobile = result["phone"];
+                      offerController.images = result["images"];
+                      offerController.video = result["video"];
                     });
                   }
                 },
