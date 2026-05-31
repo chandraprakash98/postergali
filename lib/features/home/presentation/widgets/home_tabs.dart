@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../../core/constants/app_colors.dart';
 
 class HomeTabs extends StatelessWidget {
   final int selectedTab;
@@ -16,67 +15,91 @@ class HomeTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 68,
-      padding: const EdgeInsets.all(5),
+      height: 78,
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        color: const Color(0xffB5402C),
+        borderRadius: BorderRadius.circular(50),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
-            blurRadius: 18,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(.18),
+            blurRadius: 12,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
       child: Row(
         children: [
-          _buildTabItem(
-            title: "Jobs",
-            isSelected: selectedTab == 0,
-            onTap: onJobsTap,
-          ),
-          const SizedBox(width: 8),
-          _buildTabItem(
-            title: "Offers",
-            isSelected: selectedTab == 1,
-            onTap: onOffersTap,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabItem({
-    required String title,
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: onTap,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            gradient: isSelected
-                ? const LinearGradient(
-                    colors: [AppColors.primaryRed, AppColors.darkRed],
-                  )
-                : null,
-          ),
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontFamily: 'ClashDisplay',
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: isSelected ? Colors.white : AppColors.textDark,
+          Expanded(
+            child: GestureDetector(
+              onTap: onJobsTap,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                decoration: BoxDecoration(
+                  color: selectedTab == 0
+                      ? const Color(0xffEFE2C9)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(45),
+                  boxShadow: selectedTab == 0
+                      ? [
+                    BoxShadow(
+                      color: const Color(0xffFFB08C).withOpacity(.7),
+                      blurRadius: 18,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                      : [],
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  "Jobs",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: selectedTab == 0
+                        ? const Color(0xffB5402C)
+                        : Colors.white,
+                  ),
+                ),
               ),
             ),
           ),
-        ),
+
+          Expanded(
+            child: GestureDetector(
+              onTap: onOffersTap,
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                decoration: BoxDecoration(
+                  color: selectedTab == 1
+                      ? const Color(0xffEFE2C9)
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(45),
+                  boxShadow: selectedTab == 1
+                      ? [
+                    BoxShadow(
+                      color: const Color(0xffFFB08C).withOpacity(.7),
+                      blurRadius: 18,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                      : [],
+                ),
+                alignment: Alignment.center,
+                child: Text(
+                  "Offers",
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: selectedTab == 1
+                        ? const Color(0xffB5402C)
+                        : Colors.white,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

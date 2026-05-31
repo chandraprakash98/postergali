@@ -15,7 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (mounted) {
         Navigator.pushReplacement(
           context,
@@ -30,51 +30,57 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo Image
-            Image.asset(
-              AppAssets.appLogo,
-              height: 140,
-              width: 140,
-            ),
-
-            const SizedBox(height: 24),
-
-            // App Name
-            const Text(
-              'PosterGali',
-              style: TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: AppColors.golden,
-                letterSpacing: 1,
+      backgroundColor: const Color(0xFFFFF1C4), // Gold
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // Logo
+              Image.asset(
+                AppAssets.appLogo,
+                height: 240,
+                width: 340,
+                fit: BoxFit.contain,
               ),
-            ),
 
-            const SizedBox(height: 8),
-
-            // Tagline
-            const Text(
-              'Your Local Ads Marketplace',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-                color: AppColors.green,
+              // Remove gap between logo and text
+              Transform.translate(
+                offset: const Offset(0, -35),
+                child: const Text(
+                  'PosterGali',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 37,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.golden,
+                    letterSpacing: 1,
+                  ),
+                ),
               ),
-            ),
 
-            const SizedBox(height: 40),
+              Transform.translate(
+                offset: const Offset(0, -28),
+                child: const Text(
+                  'Yahan dukaan wale kamaate hain aur grahak bachaate hain',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.green,
+                  ),
+                ),
+              ),
 
-            // Loader
-            const CircularProgressIndicator(
-              color: AppColors.primaryRed,
-              strokeWidth: 3,
-            ),
-          ],
+              const SizedBox(height: 15),
+
+              const CircularProgressIndicator(
+                color: AppColors.primaryRed,
+                strokeWidth: 3,
+              ),
+            ],
+          ),
         ),
       ),
     );

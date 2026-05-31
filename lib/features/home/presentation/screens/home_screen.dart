@@ -179,24 +179,23 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.cream,
+    return Scaffold(backgroundColor: Colors.transparent,
       extendBody: true,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: _buildFAB(),
-      bottomNavigationBar: HomeBottomBar(
-        selectedIndex: selectedBottomIndex,
-        onItemTapped: (index) {
-          setState(() => selectedBottomIndex = index);
-        },
+      bottomNavigationBar: Container(
+        color: Colors.transparent,
+        child: HomeBottomBar(
+          selectedIndex: selectedBottomIndex,
+          onItemTapped: (index) {
+            setState(() => selectedBottomIndex = index);
+          },
+        ),
       ),
+
       body: Container(
         decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0xffFFF9F2), Color(0xffFCEEDF)],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+          color: Color(0xfff6e2af),
         ),
         child: SafeArea(
           child: CustomScrollView(
@@ -290,16 +289,27 @@ class _HomeScreenState extends State<HomeScreen>
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: const LinearGradient(
-            colors: [AppColors.golden, Color(0xffF7C767)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+            colors: [
+              Color(0xffF2C96B),
+              Color(0xffE8B84F),
+            ],
           ),
-          border: Border.all(color: AppColors.primaryRed, width: 2),
+          border: Border.all(
+            color: Color(0xffB5402C),
+            width: 3,
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black12,
+              blurRadius: 12,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
         child: const Icon(
           CupertinoIcons.add,
           size: 36,
-          color: AppColors.primaryRed,
+          color: Color(0xffB5402C),
         ),
       ),
     );

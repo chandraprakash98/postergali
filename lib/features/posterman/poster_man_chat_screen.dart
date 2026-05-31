@@ -7,6 +7,7 @@ import 'package:postergali/core/widgets/job_templates_small.dart';
 import 'package:postergali/core/widgets/offer_templates.dart';
 import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
+import '../otp/otp_verification.dart';
 import 'api_service.dart';
 import 'edit_poster.dart';
 import 'edit_offer_poster.dart';
@@ -194,7 +195,8 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         } else {
           flowType = FlowType.offer;
           step = ChatStep.businessName;
-          await bot("Great! Please tell us about your business");
+          await bot("Let’s start with your business name 🏪\n"
+              "What is the name of your business?");
         }
         break;
 
@@ -283,7 +285,8 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         break;
 
       case ChatStep.locationConfirm:
-        await bot("Please tell us what kind of offer you're having?");
+        await bot("🎯 What type of offer would you like to create? \n"
+            "Choose one that matches your business 👇");
         addOfferSubCategoryChips();
         setState(() => step = ChatStep.offerSubCategory);
         break;
@@ -291,7 +294,13 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       case ChatStep.offerSubCategory:
         offerController.subCategory = text;
         offerController.offerType = text;
-        await bot("Great! 😊 Now tell us about your offer in detail...\nExample: Buy 1 Get 1 Free, flat 50% discount on all cakes");
+        await bot("Great! 👍\n"
+        "What would you like to showcase in your offer? \n"
+
+    "Examples:\n"
+    "• 50% off on all items \n"
+    "• Fresh homemade tiffin available\n"
+    "• Opening offer for the new salon");
         setState(() => step = ChatStep.offerDetails);
         break;
 
@@ -447,7 +456,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         margin: const EdgeInsets.symmetric(vertical: 4),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         decoration: BoxDecoration(
-          color: isBot ? Colors.white : primaryColor,
+          color: isBot
+              ? const Color(0xFF2F590F) // Bot green
+              : const Color(0xFFCC501C), // Terracotta 700
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -466,7 +477,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         child: Text(
           m["text"] ?? "",
           style: TextStyle(
-            color: isBot ? Colors.black : Colors.white,
+            color: isBot ? Colors.white : Colors.white,
             fontSize: 16,
           ),
         ),
@@ -491,14 +502,14 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Wrap(
-        spacing: 10,
-        runSpacing: 10,
+        spacing: 5,
+        runSpacing: 5,
         children: [
-          _chip("Sale on Daily", () => next("Sale on Daily")),
+          _chip("Sale Sale Sale", () => next("Sale Sale Sale")),
           _chip("Special Offer", () => next("Special Offer")),
           _chip("Grand Opening Offer", () => next("Grand Opening Offer")),
           _chip("Inauguration Sale", () => next("Inauguration Sale")),
-          _chip("Up to % Sale", () => next("Up to % Sale")),
+          _chip("New Arrivals", () => next("New Arrivals")),
         ],
       ),
     );
@@ -662,7 +673,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
 
   Widget _chip(String label, VoidCallback onPressed) {
     return ActionChip(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFBED6A5),
       label: Text(label, style: const TextStyle(color: Colors.black)),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       side: const BorderSide(color: Colors.grey, width: 0.5),
@@ -676,7 +687,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       margin: const EdgeInsets.symmetric(vertical: 8),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFF32600D),
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
@@ -691,12 +702,12 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         children: [
           const Text(
             "📍 Your business location",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
             widget.location,
-            style: const TextStyle(color: Colors.grey),
+            style: const TextStyle(color: Colors.white),
           ),
           const SizedBox(height: 16),
           Container(
@@ -744,7 +755,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
             child: OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                foregroundColor: Colors.black,
+                foregroundColor: Colors.white,
                 side: const BorderSide(color: Colors.grey),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
@@ -769,6 +780,42 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _planCard(PlanModel p) {
+    String planName = p.title.toLowerCase();
+
+    Color bgColor;
+    Color borderColor;
+    Color textColor;
+    Color chipColor;
+    String bgImage;
+
+    switch (planName) {
+      case "standerd":
+        bgColor = const Color(0xFFFFEBEE); // Light Red
+        borderColor = const Color(0xFFD32F2F);
+        textColor = const Color(0xFFB71C1C);
+        chipColor = const Color(0xFFFFCDD2);
+        break;
+
+      case "starter":
+        bgColor = const Color(0xFFFFF8E1); // Light Amber
+        borderColor = const Color(0xFFF19A05);
+        textColor = const Color(0xFFEF6C00);
+        chipColor = const Color(0xFFFFE082);
+        break;
+
+      case "basic":
+        bgColor = const Color(0xFFE8F5E9); // Light Green
+        borderColor = const Color(0xFF2E7D32);
+        textColor = const Color(0xFF1B5E20);
+        chipColor = const Color(0xFFA5D6A7);
+        break;
+
+      default: // Premium / Advanced
+        bgColor = const Color(0xFFE3F2FD); // Light Blue
+        borderColor = const Color(0xFF1565C0);
+        textColor = const Color(0xFF0D47A1);
+        chipColor = const Color(0xFF90CAF9);
+    }
     return GestureDetector(
       onTap: () {
         if (flowType == FlowType.job) {
@@ -776,38 +823,84 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         } else {
           offerController.planId = p.id.toString();
         }
+
         next(p.duration);
       },
       child: Container(
-        width: MediaQuery.of(context).size.width * 0.43,
-        padding: const EdgeInsets.all(12),
+        width: MediaQuery.of(context).size.width * .44,
+        height: 180,
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.grey.shade300),
+          color: bgColor,
+
+          // Use image instead of color if you want
+          image: const DecorationImage(
+            image: AssetImage("assets/images/plan_bg.png"),
+            fit: BoxFit.cover,
+            opacity: 0.15,
+          ),
+
+          borderRadius: BorderRadius.circular(28),
+          border: Border.all(color: borderColor, width: 1.5),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade200,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Text(
-                p.title.toUpperCase(),
-                style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
-              ),
+            Row(
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: chipColor,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  child: Text(
+                    p.title.toUpperCase(),
+                    style: TextStyle(
+                      color: textColor,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 14,
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                Container(
+                  width: 28,
+                  height: 28,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: borderColor,
+                      width: 2,
+                    ),
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
+
+            const Spacer(),
+
             Text(
               p.duration,
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: textColor,
+                fontSize: 32,
+                fontWeight: FontWeight.w700,
+              ),
             ),
+
+            const SizedBox(height: 8),
+
             Text(
               "₹${p.price}/-",
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                color: textColor,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),
@@ -1075,20 +1168,15 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              onPressed: () async {
-                bool success;
-                if (flowType == FlowType.job) {
-                  success = await controller.apiService.submitJob(
-                    controller.buildRequest(),
-                  );
-                } else {
-                  success = await offerController.apiService.submitOffer(
-                    request: offerController.buildRequest(),
-                    images: offerController.images,
-                    video: offerController.video,
-                  );
-                }
-                await bot(success ? "🎉 Posted successfully!" : "❌ Failed to post");
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const OtpVerificationScreen(
+                      mobileNumber: "+91 928349XXXX",
+                    ),
+                  ),
+                );
               },
             ),
           ),

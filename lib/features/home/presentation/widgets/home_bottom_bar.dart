@@ -189,7 +189,9 @@ import '../../../posterman/poster_man_chat_screen.dart';
                 child: Icon(
                   icon,
                   size: 29,
-                  color: const Color(0xffF3C35D),
+                  color: selected
+                      ? const Color(0xffF2C96B)
+                      : const Color(0xffE7C46A),
                   shadows: selected
                       ? [
                     Shadow(
@@ -213,8 +215,8 @@ import '../../../posterman/poster_man_chat_screen.dart';
                   shadows: selected
                       ? [
                     Shadow(
-                      color: Colors.orange.withOpacity(.9),
-                      blurRadius: 20,
+                      color: const Color(0xffF2C96B).withOpacity(.8),
+                      blurRadius: 18,
                     ),
                   ]
                       : [],
@@ -232,7 +234,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
     @override
     void paint(Canvas canvas, Size size) {
       final paint = Paint()
-        ..color = const Color(0xffA53A2E)
+        ..color = const Color(0xffB5402C)
         ..style = PaintingStyle.fill;
 
       var path = Path();
@@ -241,7 +243,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
       path.addRect(Rect.fromLTWH(0, 0, size.width, size.height));
 
       // CENTER CUT (REAL MASK FIX)
-      final cutRadius = 46.0;
+      final cutRadius = 50.0;
 
       final cutPath = Path()
         ..addOval(
@@ -254,12 +256,12 @@ import '../../../posterman/poster_man_chat_screen.dart';
       // THIS IS KEY (removes background properly)
       path = Path.combine(PathOperation.difference, path, cutPath);
 
-      canvas.drawShadow(
-        path,
-        Colors.black.withOpacity(0.25),
-        12,
-        false,
-      );
+        // canvas.drawShadow(
+        //   path,
+        //   Colors.black.withOpacity(0.25),
+        //   12,
+        //   false,
+        // );
 
       canvas.drawPath(path, paint);
     }

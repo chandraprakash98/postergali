@@ -110,14 +110,7 @@ class HomeHeader extends StatelessWidget {
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.primaryRed.withOpacity(.35),
-                      blurRadius: 18,
-                      spreadRadius: 1,
-                      offset: const Offset(0, 10),
-                    ),
-                  ],
+
                 ),
                 child: const Icon(
                   CupertinoIcons.globe,
@@ -132,33 +125,32 @@ class HomeHeader extends StatelessWidget {
         /// 3D MATERIAL BANNER
         GestureDetector(
           onTap: onBannerTap,
-          child: Container(
-            height: 189,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-              image: const DecorationImage(
-                image: AssetImage(AppAssets.bannerHome),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: borderRadius,
+          child: ClipRRect(
+            borderRadius: borderRadius,
+            child: Container(
+              width: double.infinity,
+              color: Colors.transparent,
               child: Stack(
                 children: [
-                  /// LIGHT REFLECTION
-                  Positioned(
-                    top: -40,
-                    right: -20,
-                    child: Container(
-                      height: 140,
-                      width: 140,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(.10),
-                      ),
-                    ),
+                  Image.asset(
+                    AppAssets.bannerHome,
+                    width: double.infinity,
+                    fit: BoxFit.contain, // Shows complete image
                   ),
+
+                  /// LIGHT REFLECTION
+                  // Positioned(
+                  //   top: -40,
+                  //   right: -20,
+                  //   child: Container(
+                  //     height: 140,
+                  //     width: 140,
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: Colors.white.withOpacity(0.10),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
