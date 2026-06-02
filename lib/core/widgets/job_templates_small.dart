@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import '../constants/app_assets.dart';
 
 class JobTemplatesSmall {
+
+
+  static BoxDecoration _bgDecoration(String image) {
+    return BoxDecoration(
+      image: DecorationImage(
+        image: AssetImage(image),
+        fit: BoxFit.cover,
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(.12),
+          blurRadius: 14,
+          spreadRadius: 1,
+          offset: const Offset(0, 6),
+        ),
+      ],
+    );
+  }
+
+
   static Widget templateT001(dynamic job) {
     return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xff8DBF42),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.12),
-            blurRadius: 14,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
+      decoration: _bgDecoration('assets/images/T001.png'),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -80,22 +89,7 @@ class JobTemplatesSmall {
 
   static Widget templateT002(dynamic job) {
     return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(18),
-        gradient: const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xffD46ACB), Color(0xff9730A7)],
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.12),
-            blurRadius: 14,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
+      decoration: _bgDecoration('assets/images/T002.png'),
       child: Stack(
         fit: StackFit.expand,
         children: [
@@ -155,18 +149,7 @@ class JobTemplatesSmall {
 
   static Widget templateT003(dynamic job) {
     return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xffF0E02D),
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.12),
-            blurRadius: 14,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
+      decoration: _bgDecoration('assets/images/T003.png'),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
         child: Column(
@@ -218,18 +201,7 @@ class JobTemplatesSmall {
 
   static Widget templateT004(dynamic job) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(18),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(.12),
-            blurRadius: 14,
-            spreadRadius: 1,
-            offset: const Offset(0, 6),
-          ),
-        ],
-      ),
+      decoration: _bgDecoration('assets/images/T004.png'),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
         child: Column(

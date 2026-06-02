@@ -23,7 +23,7 @@ class ResultHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              selectedTab == 0 ? "Trending Jobs" : "Latest Offers",
+              selectedTab == 0 ? "Total results(20)" : "Latest Offers",
               style: const TextStyle(
                 fontFamily: 'ClashDisplay',
                 fontSize: 24,

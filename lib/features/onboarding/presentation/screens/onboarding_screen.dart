@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -23,7 +25,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'button': 'Next',
 
       /// FIRST SLIDER IMAGE
-      'image': 'assets/images/onboarding_1.png',
+      'image': 'assets/images/img_7.png',
     },
     {
       'title': 'Offers ya job\nchahiye?',
@@ -31,7 +33,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       'button': 'Let’s Go',
 
       /// SECOND SLIDER IMAGE
-      'image': 'assets/images/onboarding_2.png',
+      'image': 'assets/images/img_11.png',
     },
   ];
 
@@ -66,23 +68,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
       body: Stack(
         children: [
-          /// BACKGROUND IMAGE
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/img_6.png',
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) {
-                return Container(
-                  color: const Color(0xFFF6F1E7),
-                );
-              },
-            ),
-          ),
 
           /// LIGHT OVERLAY
           Positioned.fill(
             child: Container(
-              color: const Color(0xFFF3DFB3).withOpacity(0.78),
+              color: const Color(0xFFF3E5B4).withOpacity(0.78),
             ),
           ),
 
@@ -99,6 +89,129 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               itemBuilder: (context, index) {
                 final slide = _slides[index];
 
+                /// SECOND SCREEN
+                if (index == 1) {
+                  return Stack(
+                    children: [
+                      /// FULL PAGE BACKGROUND
+                      Positioned.fill(
+                        child: Image.asset(
+                          slide['image']!,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+
+                      /// DARK OVERLAY
+                      Positioned.fill(
+                        child: Container(
+                          color: Colors.black.withOpacity(0.15),
+                        ),
+                      ),
+
+                      /// BOTTOM GRADIENT
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        child: ClipRect(
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(
+                              sigmaX: 6,
+                              sigmaY: 6,
+                            ),
+                            child: Container(
+                              height: 310,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                  colors: [
+                                    Colors.transparent,
+                                    Colors.black.withOpacity(.10),
+                                    Colors.black.withOpacity(.30),
+                                    Colors.black.withOpacity(.70),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      SafeArea(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 28,
+                            vertical: 20,
+                          ),
+                          child: Column(
+                            children: [
+                              const Spacer(),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  slide['title']!,
+                                  style: const TextStyle(
+                                    fontSize: 46,
+                                    fontWeight: FontWeight.w900,
+                                    color: Colors.amber,
+                                    height: 1,
+                                    shadows: [
+                                      Shadow(offset: Offset(-2, -2), color: Colors.black),
+                                      Shadow(offset: Offset(2, -2), color: Colors.black),
+                                      Shadow(offset: Offset(-2, 2), color: Colors.black),
+                                      Shadow(offset: Offset(2, 2), color: Colors.black),
+                                      Shadow(offset: Offset(-2, 0), color: Colors.black),
+                                      Shadow(offset: Offset(2, 0), color: Colors.black),
+                                      Shadow(offset: Offset(0, -2), color: Colors.black),
+                                      Shadow(offset: Offset(0, 2), color: Colors.black),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 14),
+
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  slide['subtitle']!,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+
+                              const SizedBox(height: 35),
+
+                              SizedBox(
+                                width: double.infinity,
+                                height: 68,
+                                child: ElevatedButton(
+                                  onPressed: _goToNextPage,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.primaryRed,
+                                    elevation: 0,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
+                                  ),
+                                  child: const Text("Let's Go"),
+                                ),
+                              ),
+
+                              const SizedBox(height: 20),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  );
+                }
+
+                /// FIRST SCREEN (YOUR CURRENT UI)
                 return Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 28,
@@ -109,29 +222,50 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: [
                       const SizedBox(height: 12),
 
-                      /// TITLE
-                      Text(
-                        slide['title'] ?? '',
-                        style: TextStyle(
-                          fontSize: index == 1 ? 40 : 42,
-                          height: 1.08,
-                          fontWeight: FontWeight.w900,
-                          color: AppColors.golden,
-
-                          /// SAME SHADOW STYLE
-                          shadows: const [
-                            Shadow(
-                              offset: Offset(2.5, 2.5),
-                              blurRadius: 0,
-                              color: Colors.black,
-                            ),
-                          ],
+                      Expanded(
+                        child: Container(
+                          width: double.infinity,
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(24),
+                          ),
+                          child: Image.asset(
+                            slide['image'] ?? '',
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
-                      /// SUBTITLE
+                      Stack(
+                        children: [
+                          Text(
+                            slide['title'] ?? '',
+                            style: TextStyle(
+                              fontSize: 42,
+                              height: 1.08,
+                              fontWeight: FontWeight.w900,
+                              foreground: Paint()
+                                ..style = PaintingStyle.stroke
+                                ..strokeWidth = 5
+                                ..color = Colors.black,
+                            ),
+                          ),
+                          Text(
+                            slide['title'] ?? '',
+                            style: TextStyle(
+                              fontSize: 42,
+                              height: 1.08,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.golden,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 14),
+
+
                       Text(
                         slide['subtitle'] ?? '',
                         style: const TextStyle(
@@ -142,96 +276,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ),
                       ),
 
-                      const SizedBox(height: 20),
-
-                      /// IMAGE CARD
-                      Expanded(
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-
-
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Image.asset(
-                            slide['image'] ?? '',
-                            fit: BoxFit.cover,
-                            errorBuilder: (_, __, ___) {
-                              return Image.asset(
-                                AppAssets.onboarding1,
-                                fit: BoxFit.cover,
-                              );
-                            },
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 34),
-
-                      /// BUTTONS
                       Row(
                         children: [
-                          if (index == 0)
-                            GestureDetector(
-                              onTap: _skip,
-                              child: const Padding(
-                                padding: EdgeInsets.only(left: 6),
-                                child: Text(
-                                  "Skip",
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
+                          GestureDetector(
+                            onTap: _skip,
+                            child: const Padding(
+                              padding: EdgeInsets.only(left: 6),
+                              child: Text(
+                                "Skip",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
                                 ),
                               ),
-                            )
-                          else
-                            const SizedBox(width: 20),
+                            ),
+                          ),
 
                           const Spacer(),
 
-                          Expanded(
-                            flex: index == 1 ? 1 : 0,
-                            child: GestureDetector(
-                              onTap: _goToNextPage,
-                              child: Container(
-                                height: 68,
-                                width:
-                                index == 1 ? double.infinity : 190,
-                                decoration: BoxDecoration(
-                                  color: index == 0
-                                      ? AppColors.golden
-                                      : AppColors.primaryRed,
-                                  borderRadius:
-                                  BorderRadius.circular(40),
-                                ),
-                                alignment: Alignment.center,
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      slide['button'] ?? '',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                      ),
+                          GestureDetector(
+                            onTap: _goToNextPage,
+                            child: Container(
+                              height: 68,
+                              width: 190,
+                              decoration: BoxDecoration(
+                                color: AppColors.golden,
+                                borderRadius: BorderRadius.circular(40),
+                              ),
+                              alignment: Alignment.center,
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Next",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
                                     ),
-
-                                    if (index == 0) ...[
-                                      const SizedBox(width: 10),
-
-                                      const Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white,
-                                        size: 18,
-                                      ),
-                                    ],
-                                  ],
-                                ),
+                                  ),
+                                  SizedBox(width: 10),
+                                  Icon(
+                                    Icons.arrow_forward_ios,
+                                    color: Colors.white,
+                                    size: 18,
+                                  ),
+                                ],
                               ),
                             ),
                           ),

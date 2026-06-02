@@ -81,7 +81,7 @@ class _LocationPermissionScreenState
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(40),
                   child: Image.asset(
-                    "assets/images/location_permission.png",
+                    "assets/images/location.png",
                     fit: BoxFit.cover,
                     width: double.infinity,
                   ),
@@ -117,7 +117,7 @@ class _LocationPermissionScreenState
                 child: ElevatedButton(
                   onPressed: _enableLocation,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey,
+                    backgroundColor: Colors.pink,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(40),
                     ),
@@ -127,6 +127,7 @@ class _LocationPermissionScreenState
                     style: TextStyle(
                       fontSize: 18,
                       color: Colors.white,
+
                     ),
                   ),
                 ),

@@ -15,8 +15,8 @@ class HomeTabs extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 78,
-      padding: const EdgeInsets.all(6),
+      height: 70,
+      padding: const EdgeInsets.all(7),
       decoration: BoxDecoration(
         color: const Color(0xffB5402C),
         borderRadius: BorderRadius.circular(50),

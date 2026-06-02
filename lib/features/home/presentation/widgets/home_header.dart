@@ -17,7 +17,7 @@ class HomeHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final borderRadius = BorderRadius.circular(34);
+    final borderRadius = BorderRadius.circular(16);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,19 +37,12 @@ class HomeHeader extends StatelessWidget {
                       fontFamily: 'ClashDisplay',
                       fontSize: 40,
                       height: 1,
-                      letterSpacing: -1.5,
+                      letterSpacing: -1.1,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primaryRed,
-                      shadows: [
-                        Shadow(
-                          color: Colors.black.withOpacity(.08),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
-                        ),
-                      ],
                     ),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 6),
                   /// LOCATION
                   Row(
                     children: [
@@ -71,13 +64,14 @@ class HomeHeader extends StatelessWidget {
                             color: AppColors.golden.withOpacity(.18),
                           ),
                         ),
-                        child: const Icon(
-                          CupertinoIcons.location_solid,
-                          size: 14,
-                          color: AppColors.primaryRed,
+                        child: Image.asset(
+                          'assets/images/img_12.png', // your image path
+                          width: 16,
+                          height: 16,
+                          fit: BoxFit.contain,
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 7),
                       /// LOCATION TEXT
                       Expanded(
                         child: Text(
@@ -98,30 +92,35 @@ class HomeHeader extends StatelessWidget {
               ),
             ),
             /// LANGUAGE BUTTON
-            GestureDetector(
-              onTap: onLanguageTap,
-              child: Container(
-                height: 58,
-                width: 58,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: const LinearGradient(
-                    colors: [AppColors.primaryRed, AppColors.darkRed],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+            Transform.translate(
+              offset: const Offset(0, -16), // move up by 10 pixels
+              child: GestureDetector(
+                onTap: onLanguageTap,
+                child: Container(
+                  height: 45,
+                  width: 45,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: LinearGradient(
+                      colors: [AppColors.primaryRed, AppColors.darkRed],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
                   ),
-
-                ),
-                child: const Icon(
-                  CupertinoIcons.globe,
-                  color: Colors.white,
-                  size: 26,
+                  child: Center(
+                    child: Image.asset(
+                      'assets/images/language.png',
+                      width: 40,
+                      height: 40,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
                 ),
               ),
             ),
           ],
         ),
-        const SizedBox(height: 18),
+        const SizedBox(height: 10),
         /// 3D MATERIAL BANNER
         GestureDetector(
           onTap: onBannerTap,
@@ -129,7 +128,6 @@ class HomeHeader extends StatelessWidget {
             borderRadius: borderRadius,
             child: Container(
               width: double.infinity,
-              color: Colors.transparent,
               child: Stack(
                 children: [
                   Image.asset(

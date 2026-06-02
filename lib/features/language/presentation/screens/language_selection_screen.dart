@@ -77,8 +77,8 @@ class _LanguageSelectionScreenState
         child: Row(
           children: [
             Container(
-              width: 38,
-              height: 38,
+              width: 24,
+              height: 24,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
@@ -89,8 +89,8 @@ class _LanguageSelectionScreenState
               child: isSelected
                   ? Center(
                 child: Container(
-                  width: 20,
-                  height: 20,
+                  width: 12,
+                  height: 12,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xFFB6402C),

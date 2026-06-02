@@ -5,7 +5,7 @@ class AppAssets {
   static const String onboarding1 = '$_images/img_7.png';
 
   static const String bannerHome = '$_images/img_5.png';
-  static const String defaultJobImage = '$_images/img.png';
+  static const String defaultJobImage = '$_images/T001.png';
   
   static const String offerImg1 = '$_images/img_1.png';
   static const String offerImg2 = '$_images/img_2.png';

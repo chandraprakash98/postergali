@@ -195,7 +195,7 @@ class _HomeScreenState extends State<HomeScreen>
 
       body: Container(
         decoration: const BoxDecoration(
-          color: Color(0xfff6e2af),
+          color: Color(0xfffff3d5),
         ),
         child: SafeArea(
           child: CustomScrollView(
@@ -316,36 +316,36 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildJobsGrid() {
-    return SliverPadding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
-      sliver: SliverGrid(
-        delegate: SliverChildBuilderDelegate(
-          (context, index) {
-            final job = jobs[index];
-            return _buildGridItemWrapper(
-              index: index,
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => JobDetailScreen(jobId: job['id']),
-                  ),
-                );
-              },
-              child: HomeJobCard(job: job),
-              isJob: true,
-            );
-          },
-          childCount: jobs.length,
+      return SliverPadding(
+        padding: const EdgeInsets.only(left: 15, right: 10, top: 1),
+        sliver: SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final job = jobs[index];
+              return _buildGridItemWrapper(
+                index: index,
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => JobDetailScreen(jobId: job['id']),
+                    ),
+                  );
+                },
+                child: HomeJobCard(job: job),
+                isJob: true,
+              );
+            },
+            childCount: jobs.length,
+          ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 1,
+            childAspectRatio: 0.62,
+          ),
         ),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          crossAxisSpacing: 5,
-          mainAxisSpacing: 8,
-          childAspectRatio: 0.62,
-        ),
-      ),
-    );
+      );
   }
 
   Widget _buildOffersGrid() {
