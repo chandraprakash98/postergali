@@ -23,6 +23,7 @@ class LocalNotificationService {
     required String title,
     required String body,
   }) async {
+    final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     const AndroidNotificationDetails androidDetails =
     AndroidNotificationDetails(
       'postergali_channel',
@@ -30,6 +31,7 @@ class LocalNotificationService {
       channelDescription: 'PosterGali push notifications',
       importance: Importance.max,
       priority: Priority.high,
+      ticker: 'ticker',
       playSound: true,
     );
 
@@ -39,7 +41,7 @@ class LocalNotificationService {
     );
 
     await flutterLocalNotificationsPlugin.show(
-      id: 0,
+      id: id,
       title: title,
       body: body,
       notificationDetails: details,

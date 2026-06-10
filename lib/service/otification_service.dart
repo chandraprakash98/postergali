@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'local_notification_service.dart';
 
 class NotificationService {
   static Future<void> initialize() async {
@@ -20,6 +21,13 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print("Title: ${message.notification?.title}");
       print("Body: ${message.notification?.body}");
+
+      if (message.notification != null) {
+        LocalNotificationService.showNotification(
+          title: message.notification!.title ?? '',
+          body: message.notification!.body ?? '',
+        );
+      }
     });
 
     // User taps notification

@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:postergali/service/local_notification_service.dart';
+import 'package:postergali/service/otification_service.dart';
 import 'features/onboarding/presentation/screens/splash_screen.dart';
 import 'core/constants/app_colors.dart';
 
@@ -42,14 +43,15 @@ Future<void> main() async {
     firebaseMessagingBackgroundHandler,
   );
 
+  // Initialize Local Notifications first
+  await LocalNotificationService.initialize();
+
   await initNotification();
 
   String? token =
   await FirebaseMessaging.instance.getToken();
 
   print("FCM TOKEN: $token");
-
-  await LocalNotificationService.initialize();
 
   await NotificationService.initialize();
 
