@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "804719727408",
+    "project_id": "postergali-a09d5",
+    "storage_bucket": "postergali-a09d5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:804719727408:android:6e807e84342cf50dcf2ef5",
+        "android_client_info": {
+          "package_name": "com.postergali.postergali"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBD7Ka4bz6q_UoGQtW02S41gQNANHf0tBU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
