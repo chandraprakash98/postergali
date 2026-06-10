@@ -14,24 +14,45 @@ Future<void> firebaseMessagingBackgroundHandler(
   print("Background Message: ${message.messageId}");
 }
 
-  Future<void> main() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp();
-    await initNotification();
+  // Future<void> main() async {
+  //   WidgetsFlutterBinding.ensureInitialized();
+  //   await Firebase.initializeApp();
+  //   await initNotification();
+  //
+  //   String? token =
+  //   await FirebaseMessaging.instance.getToken();
+  //
+  //   print("++++++++++++++");
+  //   print(token);
+  //
+  //   runApp(const PosterGaliApp());
+  //
+  //   FirebaseMessaging.onBackgroundMessage(
+  //     firebaseMessagingBackgroundHandler,
+  //   );
+  //   await NotificationService.initialize();
+  // }
 
-    String? token =
-    await FirebaseMessaging.instance.getToken();
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
 
-    print("++++++++++++++");
-    print(token);
+  await Firebase.initializeApp();
 
-    runApp(const PosterGaliApp());
+  FirebaseMessaging.onBackgroundMessage(
+    firebaseMessagingBackgroundHandler,
+  );
 
-    FirebaseMessaging.onBackgroundMessage(
-      firebaseMessagingBackgroundHandler,
-    );
-    await NotificationService.initialize();
-  }
+  await initNotification();
+
+  String? token =
+  await FirebaseMessaging.instance.getToken();
+
+  print("FCM TOKEN: $token");
+
+  await NotificationService.initialize();
+
+  runApp(const PosterGaliApp());
+}
 
 Future<void> initNotification() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
