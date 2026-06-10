@@ -10,14 +10,6 @@ class JobTemplatesSmall {
         image: AssetImage(image),
         fit: BoxFit.cover,
       ),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(.12),
-          blurRadius: 14,
-          spreadRadius: 1,
-          offset: const Offset(0, 6),
-        ),
-      ],
     );
   }
 
@@ -202,33 +194,77 @@ class JobTemplatesSmall {
   static Widget templateT004(dynamic job) {
     return Container(
       decoration: _bgDecoration('assets/images/T004.png'),
+
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
         child: Column(
           children: [
             const Text(
               "WE'RE",
-              style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.black),
-            ),
-            const SizedBox(height: 6),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(color: const Color(0xffFFE600), borderRadius: BorderRadius.circular(10)),
-              child: const Text(
-                "HIRING",
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 28, fontWeight: FontWeight.w900, color: Colors.black),
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
               ),
             ),
-            const SizedBox(height: 14),
+
+            const SizedBox(height: 8),
+
+            Transform.rotate(
+              angle: -0.08, // tilt effect
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xffFFE600),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Text(
+                  "HIRING",
+                  style: TextStyle(
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    letterSpacing: 1.5,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
             Text(
               (job['business_name'] ?? '').toUpperCase(),
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(fontSize: 18, color: Colors.black87, fontWeight: FontWeight.w800),
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                color: Color(0xffFFE600),
+                shadows: [
+                  Shadow(
+                    offset: Offset(-1.5, -1.5),
+                    color: Colors.black,
+                  ),
+                  Shadow(
+                    offset: Offset(1.5, -1.5),
+                    color: Colors.black,
+                  ),
+                  Shadow(
+                    offset: Offset(-1.5, 1.5),
+                    color: Colors.black,
+                  ),
+                  Shadow(
+                    offset: Offset(1.5, 1.5),
+                    color: Colors.black,
+                  ),
+                ],
+              ),
             ),
+
             Expanded(
               child: Center(
                 child: Text(
@@ -236,18 +272,52 @@ class JobTemplatesSmall {
                   textAlign: TextAlign.center,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 34, height: .9, color: Colors.black, fontWeight: FontWeight.w900),
+                  style: const TextStyle(
+                    fontSize: 15,
+                    height: 0.95,
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    shadows: [
+                      Shadow(
+                        offset: Offset(-2, -2),
+                        color: Colors.black,
+                      ),
+                      Shadow(
+                        offset: Offset(2, -2),
+                        color: Colors.black,
+                      ),
+                      Shadow(
+                        offset: Offset(-2, 2),
+                        color: Colors.black,
+                      ),
+                      Shadow(
+                        offset: Offset(2, 2),
+                        color: Colors.black,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
-            Text(
-              "₹${job['salary'] ?? '18,000'}",
-              style: const TextStyle(fontSize: 24, color: Colors.black, fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 8),
+
             Text(
               (job['job_type'] ?? 'FULL TIME').toUpperCase(),
-              style: const TextStyle(fontSize: 16, color: Colors.black87, fontWeight: FontWeight.w700),
+              style: const TextStyle(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+
+            const SizedBox(height: 4),
+
+            Text(
+              "₹${job['salary'] ?? '18,000'}",
+              style: const TextStyle(
+                fontSize: 26,
+                color: Colors.black,
+                fontWeight: FontWeight.w900,
+              ),
             ),
           ],
         ),

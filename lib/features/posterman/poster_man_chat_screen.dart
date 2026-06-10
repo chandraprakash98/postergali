@@ -66,6 +66,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   bool isBotTyping = false;
 
   LatLng? selectedLatLng;
+  PlanModel? selectedPlan;
 
   // Warmer theme color
   final Color primaryColor = const Color(0xFFE67E22);
@@ -818,6 +819,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     }
     return GestureDetector(
       onTap: () {
+        setState(() {
+          selectedPlan = p;
+        });
         if (flowType == FlowType.job) {
           controller.planId = p.id.toString();
         } else {
@@ -1169,11 +1173,18 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
               onPressed: () {
+                if (selectedPlan == null) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text("Please select a plan first")),
+                  );
+                  return;
+                }
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) => const OtpVerificationScreen(
-                      mobileNumber: "+91 928349XXXX",
+                    builder: (_) => OtpVerificationScreen(
+                      mobileNumber: flowType == FlowType.job ? controller.phone : offerController.mobile,
+                      plan: selectedPlan!,
                     ),
                   ),
                 );

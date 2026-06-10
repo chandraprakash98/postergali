@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:postergali/features/posterman/plan.dart';
+
+import '../posterman/plan_selection.dart';
 
 class CheckoutScreen extends StatefulWidget {
-  const CheckoutScreen({super.key});
+  final PlanModel plan;
+  const CheckoutScreen({
+    super.key,
+    required this.plan,
+  });
+
 
   @override
   State<CheckoutScreen> createState() => _CheckoutScreenState();
@@ -125,15 +133,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
                   Divider(height: 1, color: Colors.black26),
 
-                  _row("Poster Plan", "3 Days"),
-                  _row("Amount", "₹49.99"),
-                  _row("Estimated Tax", "₹9"),
+                  _row("Poster Plan", widget.plan.duration),
+                  _row("Amount", "₹${amount.toStringAsFixed(2)}"),
+                  _row("Estimated Tax", "₹${getGstAmount().toStringAsFixed(2)}"),
 
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(22, 18, 22, 22),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(22, 18, 22, 22),
                     child: Row(
                       children: [
-                        Expanded(
+                        const Expanded(
                           child: Text(
                             "Grand Total",
                             style: TextStyle(
@@ -143,8 +151,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           ),
                         ),
                         Text(
-                          "₹58.99",
-                          style: TextStyle(
+                          "₹${getGrandTotal().toStringAsFixed(2)}",
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w700,
                           ),
@@ -163,7 +171,20 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               child: Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    final PlanModel? plan = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const PlanSelectionScreen(),
+                      ),
+                    );
+
+                    if (plan != null) {
+                      setState(() {
+                        var selectedPlan = plan;
+                      });
+                    }
+                  },
                   child: const Text(
                     "Change Plan",
                     style: TextStyle(
@@ -407,4 +428,33 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       ),
     );
   }
+
+  double get amount {
+    return double.tryParse(widget.plan.price.toString()) ?? 0;
+  }
+
+  double getGstPercent(int planId) {
+    // Static values for now
+    switch (planId) {
+      case 1:
+        return 10; // 10%
+      case 2:
+        return 9; // 9%
+      case 3:
+        return 12; // 12%
+      default:
+        return 18; // default GST
+    }
+  }
+
+  double getGstAmount() {
+    return amount * (getGstPercent(widget.plan.id) / 100);
+  }
+
+  double getGrandTotal() {
+    return amount + getGstAmount();
+  }
+
+
+
 }

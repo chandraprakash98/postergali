@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import '../../../../core/widgets/job_templates_full.dart';
 import '../../../../core/widgets/job_templates_small.dart';
 import '../../../../core/widgets/offer_templates.dart';
@@ -7,7 +8,10 @@ import '../../../../core/widgets/offer_templates.dart';
 class HomeJobCard extends StatelessWidget {
   final dynamic job;
 
-  const HomeJobCard({super.key, required this.job});
+  const HomeJobCard({
+    super.key,
+    required this.job,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,40 +28,50 @@ class HomeJobCard extends StatelessWidget {
         card = JobTemplatesSmall.templateT003(job);
         break;
       case 'T004':
-        card = JobTemplates.templateT004(job);
+        card = JobTemplatesSmall.templateT004(job);
         break;
       default:
         card = JobTemplates.defaultTemplate(job);
     }
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(1),
-            child: card,
+    return AspectRatio(
+      aspectRatio: 0.65,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: card,
+            ),
           ),
-        ),
-        Positioned(
-          top: 7,
-          right: 7,
-          child: _buildViewCount(job['view_count']),
-        ),
-      ],
+          Positioned(
+            top: 7,
+            right: 7,
+            child: _buildViewCount(job['view_count']),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildViewCount(dynamic count) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 7,
+        vertical: 3,
+      ),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.50),
+        color: Colors.black.withOpacity(.5),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(CupertinoIcons.eye_fill, size: 10, color: Colors.white),
+          const Icon(
+            CupertinoIcons.eye_fill,
+            size: 10,
+            color: Colors.white,
+          ),
           const SizedBox(width: 3),
           Text(
             "${count ?? 0}",
@@ -76,7 +90,10 @@ class HomeJobCard extends StatelessWidget {
 class HomeOfferCard extends StatelessWidget {
   final dynamic offer;
 
-  const HomeOfferCard({super.key, required this.offer});
+  const HomeOfferCard({
+    super.key,
+    required this.offer,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -99,34 +116,44 @@ class HomeOfferCard extends StatelessWidget {
         card = OfferTemplates.defaultTemplate(offer);
     }
 
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(1),
-            child: card,
+    return AspectRatio(
+      aspectRatio: 0.65,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(4),
+              child: card,
+            ),
           ),
-        ),
-        Positioned(
-          top: 7,
-          right: 7,
-          child: _buildViewCount(offer['view_count']),
-        ),
-      ],
+          Positioned(
+            top: 7,
+            right: 7,
+            child: _buildViewCount(offer['view_count']),
+          ),
+        ],
+      ),
     );
   }
 
   Widget _buildViewCount(dynamic count) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 3),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 7,
+        vertical: 3,
+      ),
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(.50),
+        color: Colors.black.withOpacity(.5),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(CupertinoIcons.eye_fill, size: 10, color: Colors.white),
+          const Icon(
+            CupertinoIcons.eye_fill,
+            size: 10,
+            color: Colors.white,
+          ),
           const SizedBox(width: 3),
           Text(
             "${count ?? 0}",
