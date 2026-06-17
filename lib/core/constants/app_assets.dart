@@ -1,7 +1,8 @@
 class AppAssets {
   static const String _images = 'assets/images';
 
-  static const String appLogo = '$_images/plogo.png';
+  static const String appLogo = '$_images/applogo.png';
+  static const String splashLogo = '$_images/img_logo.png';
   static const String onboarding1 = '$_images/img_7.png';
 
   static const String bannerHome = '$_images/img_5.png';
