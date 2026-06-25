@@ -107,13 +107,13 @@ class OfferTemplatesFull {
 
               const Spacer(),
 
-              const Text(
-                "SALE\nSALE\nSALE",
+              Text(
+                offer['offer_type'] ?? '',
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
-                  fontSize: 70,
+                  fontSize: 43,
                   height: .86,
                 ),
               ),

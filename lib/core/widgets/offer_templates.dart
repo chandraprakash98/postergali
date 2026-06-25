@@ -100,25 +100,24 @@ class OfferTemplates {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
-                  fontSize: 32,
+                  fontSize: 18,
                   fontStyle: FontStyle.italic,
                 ),
               ),
               const SizedBox(height: 84),
-              FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  (offer['offer_type'] ?? 'SALE').toString().toUpperCase(),
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 40,
-                    height: .86,
-                    letterSpacing: -1,
-                  ),
+              Text(
+                offer['offer_type'] ?? '',
+                textAlign: TextAlign.center,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  height: .96,
                 ),
               ),
+
               const SizedBox(height: 54),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
