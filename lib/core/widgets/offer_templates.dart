@@ -13,7 +13,7 @@ class OfferTemplates {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 30),
+              const SizedBox(height: 50),
               Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -24,26 +24,29 @@ class OfferTemplates {
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.yesevaOne(
                       color: const Color(0xffF5B32C),
-                      fontSize: 16,
+                      fontSize: 19,
                       fontWeight: FontWeight.w700,
                       height: 1,
                     ),
                   ),
                 ),
               ),
-              const SizedBox(height: 26),
-              const Text(
-                "SPECIAL OFFER",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 21,
-                  fontWeight: FontWeight.w900,
-                  height: 1,
-                  letterSpacing: -.5,
+              const SizedBox(height: 44),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  (offer['offer_type'] ?? 'SPECIAL OFFER').toString().toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w900,
+                    height: 1,
+                    letterSpacing: -.5,
+                  ),
                 ),
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 44),
               Expanded(
                 child: Align(
                   alignment: Alignment.topCenter,
@@ -58,7 +61,7 @@ class OfferTemplates {
                         overflow: TextOverflow.visible,
                         style: const TextStyle(
                           color: Color(0xff6CF6F2),
-                          fontSize: 40,
+                          fontSize: 32,
                           fontWeight: FontWeight.w900,
                           height: 1.08,
                           letterSpacing: -1.5,
@@ -88,6 +91,7 @@ class OfferTemplates {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
           child: Column(
             children: [
+              const SizedBox(height: 34),
               Text(
                 offer['business_name'] ?? '',
                 textAlign: TextAlign.center,
@@ -96,17 +100,17 @@ class OfferTemplates {
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w900,
-                  fontSize: 15,
+                  fontSize: 32,
                   fontStyle: FontStyle.italic,
                 ),
               ),
-              const Spacer(),
-              const FittedBox(
+              const SizedBox(height: 84),
+              FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
-                  "SALE\nSALE\nSALE",
+                  (offer['offer_type'] ?? 'SALE').toString().toUpperCase(),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.w900,
                     fontSize: 40,
@@ -115,7 +119,7 @@ class OfferTemplates {
                   ),
                 ),
               ),
-              const Spacer(),
+              const SizedBox(height: 54),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Text(
@@ -148,6 +152,7 @@ class OfferTemplates {
           padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 22),
           child: Column(
             children: [
+              const SizedBox(height: 34),
               Text(
                 offer['business_name'] ?? '',
                 textAlign: TextAlign.center,
@@ -156,15 +161,18 @@ class OfferTemplates {
                 style: const TextStyle(
                   color: Color(0xffFFD08A),
                   fontWeight: FontWeight.w900,
-                  fontSize: 16,
+                  fontSize: 27,
                   height: .95,
                 ),
               ),
               const Spacer(),
-              const Text(
-                "GRAND\nOPENING\nOFFER",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 28, height: .88),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  (offer['offer_type'] ?? 'OFFER').toString().toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 28, height: .88),
+                ),
               ),
               const Spacer(),
               Text(
@@ -191,6 +199,7 @@ class OfferTemplates {
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 22),
           child: Column(
             children: [
+              const SizedBox(height: 34),
               Text(
                 offer['business_name'] ?? '',
                 textAlign: TextAlign.center,
@@ -198,11 +207,14 @@ class OfferTemplates {
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
               ),
-              const SizedBox(height: 18),
-              const Text(
-                "NEW ARRIVALS",
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 26),
+              const SizedBox(height: 64),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  (offer['offer_type'] ?? 'NEW ARRIVALS').toString().toUpperCase(),
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 26),
+                ),
               ),
               const Spacer(),
               Text(

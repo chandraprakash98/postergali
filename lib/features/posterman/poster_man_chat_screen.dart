@@ -922,8 +922,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
           }
         : {
             'business_name': offerController.businessName,
+            'offer_type': offerController.offerType,
             'offer_details': offerController.offerDetails,
-            'subcategory': offerController.subCategory,
+            'mobile_number': offerController.mobile,
           };
 
     final templates = flowType == FlowType.job
@@ -1012,8 +1013,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
           }
         : {
             'business_name': offerController.businessName,
+            'offer_type': offerController.offerType,
             'offer_details': offerController.offerDetails,
-            'subcategory': offerController.subCategory,
+            'mobile_number': offerController.mobile,
           };
 
     Widget preview;
