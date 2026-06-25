@@ -7,6 +7,7 @@ import 'package:postergali/core/widgets/job_templates_small.dart';
 import 'package:postergali/core/widgets/offer_templates.dart';
 import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
+import 'package:postergali/features/checkout/checkout_screen.dart';
 import '../otp/otp_verification.dart';
 import 'api_service.dart';
 import 'edit_poster.dart';
@@ -1181,12 +1182,17 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                   );
                   return;
                 }
+                
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => OtpVerificationScreen(
                       mobileNumber: flowType == FlowType.job ? controller.phone : offerController.mobile,
                       plan: selectedPlan!,
+                      flowType: flowType == FlowType.job ? CheckoutFlowType.job : CheckoutFlowType.offer,
+                      request: flowType == FlowType.job ? controller.buildRequest() : offerController.buildRequest(),
+                      images: flowType == FlowType.offer ? offerController.images : null,
+                      video: flowType == FlowType.offer ? offerController.video : null,
                     ),
                   ),
                 );

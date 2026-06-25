@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../posterman/plan.dart';
 import '../checkout/checkout_screen.dart';
@@ -6,11 +7,19 @@ import '../checkout/checkout_screen.dart';
 class OtpVerificationScreen extends StatefulWidget {
   final String mobileNumber;
   final PlanModel plan;
+  final CheckoutFlowType flowType;
+  final dynamic request;
+  final List<File>? images;
+  final File? video;
 
   const OtpVerificationScreen({
     super.key,
     required this.mobileNumber,
     required this.plan,
+    required this.flowType,
+    required this.request,
+    this.images,
+    this.video,
   });
 
   @override
@@ -263,7 +272,13 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => CheckoutScreen(plan: widget.plan,),
+                          builder: (_) => CheckoutScreen(
+                            plan: widget.plan,
+                            flowType: widget.flowType,
+                            request: widget.request,
+                            images: widget.images,
+                            video: widget.video,
+                          ),
                         ),
                       );
                     },
