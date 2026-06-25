@@ -63,34 +63,34 @@ class _LanguageSelectionScreenState
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-        height: 102,
-        margin: const EdgeInsets.only(bottom: 26),
-        padding: const EdgeInsets.symmetric(horizontal: 18),
+        height: 70, // reduced from 102
+        margin: const EdgeInsets.only(bottom: 16), // reduced from 26
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: const Color(0xFFF2EFE4).withOpacity(0.78),
-          borderRadius: BorderRadius.circular(42),
+          borderRadius: BorderRadius.circular(30), // reduced from 42
           border: Border.all(
             color: const Color(0xFFB6402C),
-            width: 1.6,
+            width: 1.4,
           ),
         ),
         child: Row(
           children: [
             Container(
-              width: 24,
-              height: 24,
+              width: 20, // reduced from 24
+              height: 20,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: const Color(0xFFB6402C),
-                  width: 1.5,
+                  width: 1.3,
                 ),
               ),
               child: isSelected
                   ? Center(
                 child: Container(
-                  width: 12,
-                  height: 12,
+                  width: 10,
+                  height: 10,
                   decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: Color(0xFFB6402C),
@@ -99,13 +99,11 @@ class _LanguageSelectionScreenState
               )
                   : null,
             ),
-
-            const SizedBox(width: 20),
-
+            const SizedBox(width: 14),
             Text(
               title,
               style: const TextStyle(
-                fontSize: 24,
+                fontSize: 18, // reduced from 24
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
               ),
@@ -154,7 +152,7 @@ class _LanguageSelectionScreenState
                   const Text(
                     "Welcome to PosterGali",
                     style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF8B2D24),
                     ),
@@ -165,7 +163,7 @@ class _LanguageSelectionScreenState
                   const Text(
                     "Choose your\nlanguage",
                     style: TextStyle(
-                      fontSize: 50,
+                      fontSize: 36,
                       height: 1.0,
                       fontWeight: FontWeight.w900,
                       color: AppColors.golden,
@@ -189,7 +187,7 @@ class _LanguageSelectionScreenState
                   GestureDetector(
                     onTap: _goToLocationSelector,
                     child: Container(
-                      height: 74,
+                      height: 58,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         color: AppColors.golden,
@@ -200,7 +198,7 @@ class _LanguageSelectionScreenState
                         "Proceed",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 22,
+                          fontSize: 18,
                           fontWeight: FontWeight.w700,
                         ),
                       ),

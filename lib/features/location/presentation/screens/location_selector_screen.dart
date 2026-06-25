@@ -14,7 +14,9 @@ import '../../../home/presentation/screens/home_screen.dart';
 const String googleApiKey = "AIzaSyAHAA9CKUyB0P1WebEUrBPQj-ExwpIgz7k";
 
 class LocationSelectorScreen extends StatefulWidget {
-  const LocationSelectorScreen({super.key});
+  final double? initialLat;
+  final double? initialLng;
+  const LocationSelectorScreen({super.key, this.initialLat, this.initialLng});
 
   @override
   State<LocationSelectorScreen> createState() => _LocationSelectorScreenState();
@@ -26,9 +28,9 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
   final Completer<GoogleMapController> _mapController = Completer();
   Timer? _debounce;
 
-  LatLng _currentLatLng = const LatLng(28.6139, 77.2090);
-  String _city = "New Delhi";
-  String _address = "L-72, Block H, Sarojini Nagar, New Delhi";
+  late LatLng _currentLatLng;
+  String _city = "Loading...";
+  String _address = "Fetching address...";
   bool _isLoadingLocation = false;
   bool _isMovingBySearch = false;
   List<Map<String, dynamic>> _savedLocations = [];
@@ -47,9 +49,17 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
   @override
   void initState() {
     super.initState();
+    _currentLatLng = LatLng(
+      widget.initialLat ?? 28.6139,
+      widget.initialLng ?? 77.2090,
+    );
     _loadSavedLocations();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _getCurrentLocation();
+      if (widget.initialLat != null && widget.initialLng != null) {
+        _moveToLocation(lat: widget.initialLat!, lng: widget.initialLng!);
+      } else {
+        _getCurrentLocation();
+      }
     });
   }
 

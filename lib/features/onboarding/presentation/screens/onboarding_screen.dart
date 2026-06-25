@@ -64,15 +64,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFD583),
-
       body: Stack(
         children: [
-
-          /// LIGHT OVERLAY
+          /// BACKGROUND (Same as Splash)
           Positioned.fill(
             child: Container(
-              color: const Color(0xFFF3E5B4).withOpacity(0.78),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xFFEDCE9B), // Light Cream
+                    Color(0xFFF6DE95), // Cream
+                    Color(0xFFEFDFAE), // Warm Beige
+                  ],
+                ),
+                image: const DecorationImage(
+                  image: AssetImage(
+                    'assets/images/img.png',
+                  ),
+                  fit: BoxFit.cover,
+                  opacity: 0.10,
+                ),
+              ),
             ),
           ),
 
@@ -89,132 +103,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               itemBuilder: (context, index) {
                 final slide = _slides[index];
 
-                /// SECOND SCREEN
-                if (index == 1) {
-                  return Stack(
-                    children: [
-                      /// FULL PAGE BACKGROUND
-                      Positioned.fill(
-                        child: Image.asset(
-                          slide['image']!,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-
-                      /// DARK OVERLAY
-                      Positioned.fill(
-                        child: Container(
-                          color: Colors.black.withOpacity(0.15),
-                        ),
-                      ),
-
-                      /// BOTTOM GRADIENT
-                      Positioned(
-                        left: 0,
-                        right: 0,
-                        bottom: 0,
-                        child: ClipRect(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(
-                              sigmaX: 6,
-                              sigmaY: 6,
-                            ),
-                            child: Container(
-                              height: 310,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                  colors: [
-                                    Colors.transparent,
-                                    Colors.black.withOpacity(.10),
-                                    Colors.black.withOpacity(.30),
-                                    Colors.black.withOpacity(.70),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      SafeArea(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 28,
-                            vertical: 20,
-                          ),
-                          child: Column(
-                            children: [
-                              const Spacer(),
-
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  slide['title']!,
-                                  style: const TextStyle(
-                                    fontSize: 46,
-                                    fontWeight: FontWeight.w900,
-                                    color: Colors.amber,
-                                    height: 1,
-                                    shadows: [
-                                      Shadow(offset: Offset(-2, -2), color: Colors.black),
-                                      Shadow(offset: Offset(2, -2), color: Colors.black),
-                                      Shadow(offset: Offset(-2, 2), color: Colors.black),
-                                      Shadow(offset: Offset(2, 2), color: Colors.black),
-                                      Shadow(offset: Offset(-2, 0), color: Colors.black),
-                                      Shadow(offset: Offset(2, 0), color: Colors.black),
-                                      Shadow(offset: Offset(0, -2), color: Colors.black),
-                                      Shadow(offset: Offset(0, 2), color: Colors.black),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 14),
-
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Text(
-                                  slide['subtitle']!,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 35),
-
-                              SizedBox(
-                                width: double.infinity,
-                                height: 68,
-                                child: ElevatedButton(
-                                  onPressed: _goToNextPage,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.primaryRed,
-                                    elevation: 0,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(40),
-                                    ),
-                                  ),
-                                  child: const Text("Let's Go"),
-                                ),
-                              ),
-
-                              const SizedBox(height: 20),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  );
-                }
-
-                /// FIRST SCREEN (YOUR CURRENT UI)
                 return Padding(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 28,
+                    horizontal: 24,
                     vertical: 18,
                   ),
                   child: Column(
@@ -222,89 +113,99 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     children: [
                       const SizedBox(height: 12),
 
+                      /// IMAGE CARD
                       Expanded(
                         child: Container(
                           width: double.infinity,
-                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: AppColors.golden,
+                              width: 2,
+                            ),
                           ),
-                          child: Image.asset(
-                            slide['image'] ?? '',
-                            fit: BoxFit.cover,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(22),
+                            child: Image.asset(
+                              slide['image'] ?? '',
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
                       ),
 
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 24),
 
+                      /// TITLE
                       Stack(
                         children: [
                           Text(
                             slide['title'] ?? '',
                             style: TextStyle(
-                              fontSize: 42,
-                              height: 1.08,
+                              fontSize: 44,
+                              height: 1.05,
                               fontWeight: FontWeight.w900,
                               foreground: Paint()
                                 ..style = PaintingStyle.stroke
-                                ..strokeWidth = 5
+                                ..strokeWidth = 6
                                 ..color = Colors.black,
                             ),
                           ),
                           Text(
                             slide['title'] ?? '',
-                            style: TextStyle(
-                              fontSize: 42,
-                              height: 1.08,
+                            style: const TextStyle(
+                              fontSize: 44,
+                              height: 1.05,
                               fontWeight: FontWeight.w900,
                               color: AppColors.golden,
                             ),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 14),
 
+                      const SizedBox(height: 16),
 
+                      /// SUBTITLE
                       Text(
                         slide['subtitle'] ?? '',
                         style: const TextStyle(
                           fontSize: 18,
                           height: 1.35,
-                          color: AppColors.primaryRed,
-                          fontWeight: FontWeight.w400,
+                          color: Color(0xFF83382D),
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
 
+                      const SizedBox(height: 30),
+
+                      /// NAVIGATION
                       Row(
                         children: [
-                          GestureDetector(
-                            onTap: _skip,
-                            child: const Padding(
-                              padding: EdgeInsets.only(left: 6),
-                              child: Text(
-                                "Skip",
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
+                          if (_currentPage == 0)
+                            GestureDetector(
+                              onTap: _skip,
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 8),
+                                child: Text(
+                                  "Skip",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-
                           const Spacer(),
-
                           GestureDetector(
                             onTap: _goToNextPage,
                             child: Container(
-                              height: 68,
-                              width: 190,
+                              height: 64,
+                              width: 160,
                               decoration: BoxDecoration(
-                                color: AppColors.golden,
+                                color: const Color(0xFFB34233),
                                 borderRadius: BorderRadius.circular(40),
                               ),
-                              alignment: Alignment.center,
                               child: const Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -312,15 +213,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     "Next",
                                     style: TextStyle(
                                       color: Colors.white,
-                                      fontSize: 20,
+                                      fontSize: 18,
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
-                                  SizedBox(width: 10),
+                                  SizedBox(width: 8),
                                   Icon(
                                     Icons.arrow_forward_ios,
                                     color: Colors.white,
-                                    size: 18,
+                                    size: 16,
                                   ),
                                 ],
                               ),
