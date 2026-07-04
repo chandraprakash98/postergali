@@ -194,8 +194,21 @@
         ),
   
         body: Container(
-          decoration: const BoxDecoration(
-            color: Color(0xfffff3d5),
+          decoration: BoxDecoration(
+            gradient: const LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [
+                Color(0xFFFAE2BC),
+                Color(0xFFFFF2CC),
+                Color(0xFFEFDFAE),
+              ],
+            ),
+            image: const DecorationImage(
+              image: AssetImage('assets/images/img.png'),
+              fit: BoxFit.cover,
+              opacity: 0.10,
+            ),
           ),
           child: SafeArea(
             child: CustomScrollView(

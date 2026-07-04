@@ -67,7 +67,7 @@ class _LanguageSelectionScreenState
         margin: const EdgeInsets.only(bottom: 16), // reduced from 26
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFF2EFE4).withOpacity(0.78),
+          color: const Color(0xFFF4EAC7).withOpacity(0.78),
           borderRadius: BorderRadius.circular(30), // reduced from 42
           border: Border.all(
             color: const Color(0xFFB6402C),
@@ -117,24 +117,27 @@ class _LanguageSelectionScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F1E7),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/img_6.png',
-              fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) {
-                return Container(
-                  color: const Color(0xFFF6F1E7),
-                );
-              },
-            ),
-          ),
-
+          // Background (Same as Onboarding Slide 1)
           Positioned.fill(
             child: Container(
-              color: const Color(0xFFF6F1E7).withOpacity(0.84),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xFFFAE2BC),
+                    Color(0xFFFFF2CC),
+                    Color(0xFFEFDFAE),
+                  ],
+                ),
+                image: const DecorationImage(
+                  image: AssetImage('assets/images/img.png'),
+                  fit: BoxFit.cover,
+                  opacity: 0.10,
+                ),
+              ),
             ),
           ),
 
