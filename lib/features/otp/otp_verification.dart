@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import '../posterman/plan.dart';
 import '../checkout/checkout_screen.dart';
 
@@ -121,9 +122,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
               const SizedBox(width: 12),
 
-              const Text(
-                "OTP Verification",
-                style: TextStyle(
+              Text(
+                context.tr('otp_verification'),
+                style: const TextStyle(
                   color: Color(0xff4A1711),
                   fontSize: 28,
                   fontWeight: FontWeight.w800,
@@ -139,7 +140,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
         decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage(
-              "assets/images/otp_bg.png", // change to your image
+              "assets/images/otp_bg.png",
             ),
             fit: BoxFit.cover,
             opacity: 0.08,
@@ -153,7 +154,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 const SizedBox(height: 70),
 
                 Text(
-                  "We have sent you an SMS with a code to number\n${widget.mobileNumber}",
+                  "${context.tr('otp_sent')}\n${widget.mobileNumber}",
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 16,
@@ -164,9 +165,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                 const SizedBox(height: 70),
 
-                const Text(
-                  "Enter your OTP here",
-                  style: TextStyle(
+                Text(
+                  context.tr('enter_otp'),
+                  style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w700,
                     color: Color(0xff333333),
@@ -229,7 +230,7 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                 const SizedBox(height: 55),
 
                 Text(
-                  "OTP expires in $timerText",
+                  "${context.tr('otp_expires')} $timerText",
                   style: const TextStyle(
                     fontSize: 16,
                     color: Color(0xff2F6D4D),
@@ -239,9 +240,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                 const SizedBox(height: 10),
 
-                const Text(
-                  "Didn't get the OTP?",
-                  style: TextStyle(
+                Text(
+                  context.tr('didnt_get_otp'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                     color: Color(0xff2F6D4D),
@@ -252,9 +253,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
 
                 GestureDetector(
                   onTap: startTimer,
-                  child: const Text(
-                    "Resend OTP",
-                    style: TextStyle(
+                  child: Text(
+                    context.tr('resend_otp'),
+                    style: const TextStyle(
                       fontSize: 16,
                       color: Color(0xff2F6D4D),
                       decoration: TextDecoration.underline,
@@ -290,9 +291,9 @@ class _OtpVerificationScreenState extends State<OtpVerificationScreen> {
                         borderRadius: BorderRadius.circular(50),
                       ),
                     ),
-                    child: const Text(
-                      "Confirm",
-                      style: TextStyle(
+                    child: Text(
+                      context.tr('confirm'),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 22,
                         fontWeight: FontWeight.w700,

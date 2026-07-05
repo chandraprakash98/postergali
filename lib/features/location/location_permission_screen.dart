@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/features/location/presentation/screens/location_selector_screen.dart';
 
 class LocationPermissionScreen extends StatefulWidget {
@@ -141,20 +142,19 @@ class _LocationPermissionScreenState
                     ),
                   ),
                   const SizedBox(height: 30),
-                  const Text(
-                    "Your device location is off",
-                    textAlign: TextAlign
-                        .center,
-                    style: TextStyle(
+                  Text(
+                    context.tr('location_off'),
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
                       fontSize: 24,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
                   const SizedBox(height: 10),
-                  const Text(
-                    "Enabling location helps us to find\nposters near you",
+                  Text(
+                    context.tr('location_desc'),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 16,
                     ),
                   ),
@@ -172,9 +172,9 @@ class _LocationPermissionScreenState
                       ),
                       child: _isloading
                           ? const CircularProgressIndicator(color: Colors.white)
-                          : const Text(
-                              "Enable device location",
-                              style: TextStyle(
+                          : Text(
+                              context.tr('enable_location'),
+                              style: const TextStyle(
                                 fontSize: 18,
                                 color: Colors.white,
                               ),
@@ -192,9 +192,9 @@ class _LocationPermissionScreenState
                           borderRadius: BorderRadius.circular(40),
                         ),
                       ),
-                      child: const Text(
-                        "Select location manually",
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('manual_location'),
+                        style: const TextStyle(
                           fontSize: 18,
                           color: Colors.black,
                         ),

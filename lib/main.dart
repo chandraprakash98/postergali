@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/service/local_notification_service.dart';
 import 'package:postergali/service/otification_service.dart';
 import 'features/onboarding/presentation/screens/splash_screen.dart';
@@ -15,27 +16,11 @@ Future<void> firebaseMessagingBackgroundHandler(
   print("Background Message: ${message.messageId}");
 }
 
-  // Future<void> main() async {
-  //   WidgetsFlutterBinding.ensureInitialized();
-  //   await Firebase.initializeApp();
-  //   await initNotification();
-  //
-  //   String? token =
-  //   await FirebaseMessaging.instance.getToken();
-  //
-  //   print("++++++++++++++");
-  //   print(token);
-  //
-  //   runApp(const PosterGaliApp());
-  //
-  //   FirebaseMessaging.onBackgroundMessage(
-  //     firebaseMessagingBackgroundHandler,
-  //   );
-  //   await NotificationService.initialize();
-  // }
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Localization
+  await LocalizationService().init();
 
   await Firebase.initializeApp();
 
@@ -77,20 +62,24 @@ class PosterGaliApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'PosterGali',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryRed,
-          primary: AppColors.primaryRed,
-        ),
-        fontFamily: 'HelveticaNeue',
-      ),
-      home: const SplashScreen(),
+    return ValueListenableBuilder<String>(
+      valueListenable: LocalizationService().localeNotifier,
+      builder: (context, locale, child) {
+        return MaterialApp(
+          key: ValueKey(locale), // Force rebuild on language change
+          debugShowCheckedModeBanner: false,
+          title: 'PosterGali',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primaryRed,
+              primary: AppColors.primaryRed,
+            ),
+            fontFamily: 'HelveticaNeue',
+          ),
+          home: const SplashScreen(),
+        );
+      }
     );
   }
-
-
 }

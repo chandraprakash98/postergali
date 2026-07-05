@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../location/location_permission_screen.dart';
-import '../../../location/presentation/screens/location_selector_screen.dart';
 
 class LanguageSelectionScreen extends StatefulWidget {
   const LanguageSelectionScreen({super.key});
@@ -16,11 +16,12 @@ class LanguageSelectionScreen extends StatefulWidget {
 class _LanguageSelectionScreenState
     extends State<LanguageSelectionScreen> {
 
-  String selectedLanguage = "English";
+  late String selectedLanguage;
 
   @override
   void initState() {
     super.initState();
+    selectedLanguage = LocalizationService().isHindi ? "हिंदी" : "English";
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkLocationStatus();
@@ -41,7 +42,11 @@ class _LanguageSelectionScreenState
     }
   }
 
-  void _goToLocationSelector() {
+  void _goToLocationSelector() async {
+    // Save selection
+    await LocalizationService().changeLocale(selectedLanguage == "हिंदी" ? "hi" : "en");
+
+    if (!mounted) return;
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -152,9 +157,9 @@ class _LanguageSelectionScreenState
                 children: [
                   const SizedBox(height: 26),
 
-                  const Text(
-                    "Welcome to PosterGali",
-                    style: TextStyle(
+                  Text(
+                    context.tr('welcome'),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF8B2D24),
@@ -163,9 +168,9 @@ class _LanguageSelectionScreenState
 
                   const SizedBox(height: 22),
 
-                  const Text(
-                    "Choose your\nlanguage",
-                    style: TextStyle(
+                  Text(
+                    context.tr('choose_language'),
+                    style: const TextStyle(
                       fontSize: 36,
                       height: 1.0,
                       fontWeight: FontWeight.w900,
@@ -197,9 +202,9 @@ class _LanguageSelectionScreenState
                         borderRadius: BorderRadius.circular(45),
                       ),
                       alignment: Alignment.center,
-                      child: const Text(
-                        "Proceed",
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('proceed'),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
