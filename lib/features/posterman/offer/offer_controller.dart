@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 import '../api_service.dart';
 import '../location_service.dart';
@@ -35,9 +36,10 @@ class OfferController {
     plans = await apiService.fetchPlans();
   }
 
-  OfferRequest buildRequest() {
+  Future<OfferRequest> buildRequest() async {
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
     return OfferRequest(
-      deviceId: "12345",
+      deviceId: fcmToken ?? "unknown",
       deviceOs: "android",
       masterCategory: "offers",
       subcategory: subCategory,

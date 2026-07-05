@@ -1,5 +1,6 @@
 
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import '../../core/job_request.dart';
 import 'api_service.dart';
 import 'location_service.dart';
@@ -40,9 +41,10 @@ class PosterManController {
     plans = await apiService.fetchPlans();
   }
 
-  JobRequest buildRequest() {
+  Future<JobRequest> buildRequest() async {
+    String? fcmToken = await FirebaseMessaging.instance.getToken();
     return JobRequest(
-      deviceId: "12345",
+      deviceId: fcmToken ?? "unknown",
       deviceOs: "android",
       masterCategory: "jobs",
       subcategory: "IT",
