@@ -1,6 +1,6 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:postergali/core/localization/localization_service.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../language/presentation/screens/language_selection_screen.dart';
@@ -17,8 +17,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   int _currentPage = 0;
 
+  final List<Map<String, String>> _slides = [
+    {
+      'title': 'PosterGali pe\nlagao aamdani\nbadhao',
+      'subtitle':
+      '1 minute se kam samay mein\nwoh bhi kifayati daam mein..',
+      'button': 'Next',
+
+      /// FIRST SLIDER IMAGE
+      'image': 'assets/images/img_7.png',
+    },
+    {
+      'title': 'Offers ya job\nchahiye?',
+      'subtitle': 'PosterGali jaiye..',
+      'button': 'Let’s Go',
+
+      /// SECOND SLIDER IMAGE
+      'image': 'assets/images/img_11.png',
+    },
+  ];
+
   void _goToNextPage() {
-    if (_currentPage < 1) {
+    if (_currentPage < _slides.length - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 350),
         curve: Curves.easeInOut,
@@ -46,7 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          /// BACKGROUND
+          /// BACKGROUND (Same as Splash)
           Positioned.fill(
             child: Container(
               decoration: BoxDecoration(
@@ -54,13 +74,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Color(0xFFFAE2BC),
-                    Color(0xFFFFF2CC),
-                    Color(0xFFEFDFAE),
+                    Color(0xFFFAE2BC), // Light Cream
+                    Color(0xFFFFF2CC), // Cream
+                    Color(0xFFEFDFAE), // Warm Beige
                   ],
                 ),
                 image: const DecorationImage(
-                  image: AssetImage('assets/images/img.png'),
+                  image: AssetImage(
+                    'assets/images/img.png',
+                  ),
                   fit: BoxFit.cover,
                   opacity: 0.10,
                 ),
@@ -82,6 +104,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 if (index == 0) {
                   return _buildFirstSlide();
                 }
+
                 return _buildSecondSlide();
               },
             ),
@@ -101,6 +124,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 12),
+
           Expanded(
             child: Container(
               width: double.infinity,
@@ -120,11 +144,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
+
           const SizedBox(height: 24),
+
           Stack(
             children: [
               Text(
-                context.tr('onboarding_title_1'),
+                'PosterGali pe\nlagao aamdani\nbadhao',
                 style: TextStyle(
                   fontSize: 44,
                   height: 1.2,
@@ -135,9 +161,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ..color = Colors.black,
                 ),
               ),
-              Text(
-                context.tr('onboarding_title_1'),
-                style: const TextStyle(
+              const Text(
+                'PosterGali pe\nlagao aamdani\nbadhao',
+                style: TextStyle(
                   fontSize: 44,
                   height: 1.2,
                   fontWeight: FontWeight.w900,
@@ -146,24 +172,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ],
           ),
+
           const SizedBox(height: 16),
-          Text(
-            context.tr('onboarding_subtitle_1'),
-            style: const TextStyle(
+
+          const Text(
+            '1 minute se kam samay mein\nwoh bhi kifayati daam mein..',
+            style: TextStyle(
               fontSize: 18,
               height: 1.35,
               color: Color(0xFF83382D),
               fontWeight: FontWeight.w500,
             ),
           ),
+
           const SizedBox(height: 30),
+
           Row(
             children: [
               GestureDetector(
                 onTap: _skip,
-                child: Text(
-                  context.tr('skip'),
-                  style: const TextStyle(
+                child: const Text(
+                  "Skip",
+                  style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
@@ -179,19 +209,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     color: const Color(0xFFB34233),
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  child: Row(
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        context.tr('next'),
-                        style: const TextStyle(
+                        "Next",
+                        style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      const Icon(
+                      SizedBox(width: 8),
+                      Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.white,
                         size: 16,
@@ -202,6 +232,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ],
           ),
+
           const SizedBox(height: 15),
         ],
       ),
@@ -211,12 +242,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _buildSecondSlide() {
     return Stack(
       children: [
+        /// FULL BACKGROUND IMAGE
         Positioned.fill(
           child: Image.asset(
             'assets/images/img_11.png',
             fit: BoxFit.cover,
           ),
         ),
+
+        /// BOTTOM BLUR ONLY
         Positioned(
           left: 0,
           right: 0,
@@ -230,23 +264,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: Container(
                 height: 300,
                 width: double.infinity,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                     colors: [
-                      Color(0x00FFF8E8),
-                      Color(0x98F6E8BF),
-                      Color(0xA9F8D990),
-                      Color(0x55F5E3BC),
+                      const Color(0x00FFF8E8),
+                      const Color(0x98F6E8BF),
+                      const Color(0xA9F8D990),
+                      const Color(0x55F5E3BC),
                     ],
-                    stops: [0.0, 0.40, 0.75, 1.0],
+                    stops: const [
+                      0.0,
+                      0.40,
+                      0.75,
+                      1.0,
+                    ],
                   ),
                 ),
               ),
             ),
           ),
         ),
+
+        /// TEXT
         Positioned(
           left: 32,
           right: 32,
@@ -257,7 +298,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Stack(
                 children: [
                   Text(
-                    context.tr('onboarding_title_2'),
+                    "Offers ya job\nchahiye?",
                     style: TextStyle(
                       fontSize: 47,
                       height: 1.05,
@@ -268,9 +309,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ..color = Colors.black,
                     ),
                   ),
-                  Text(
-                    context.tr('onboarding_title_2'),
-                    style: const TextStyle(
+                  const Text(
+                    "Offers ya job\nchahiye?",
+                    style: TextStyle(
                       fontSize: 47,
                       height: 1.05,
                       fontWeight: FontWeight.w900,
@@ -279,10 +320,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ],
               ),
+
               const SizedBox(height: 10),
-              Text(
-                context.tr('onboarding_subtitle_2'),
-                style: const TextStyle(
+
+              const Text(
+                "PosterGali aaiye...",
+                style: TextStyle(
                   fontSize: 18,
                   color: Color(0xFF83382D),
                   fontWeight: FontWeight.w600,
@@ -291,6 +334,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ],
           ),
         ),
+
+        /// BUTTON
         Positioned(
           left: 25,
           right: 25,
@@ -310,19 +355,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ],
               ),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    context.tr('lets_begin'),
-                    style: const TextStyle(
+                    "Let's Begin",
+                    style: TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  const Icon(
+                  SizedBox(width: 10),
+                  Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
                     size: 18,

@@ -1,8 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:postergali/core/localization/localization_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -58,7 +58,7 @@ class _OfferDetailScreenState
     try {
       final response = await http.get(
         Uri.parse(
-          'https://www.postergali.com/api/v1/offers/${widget.offerId}',
+          'https://postergali.com/api/v1/offers/${widget.offerId}',
         ),
       );
 
@@ -76,7 +76,7 @@ class _OfferDetailScreenState
         if (videoPath != null &&
             videoPath.toString().isNotEmpty) {
           videoUrl =
-          "https://www.postergali.com/storage/$videoPath";
+          "https://postergali.com/storage/$videoPath";
 
           sliderItems.add(videoUrl!);
         }
@@ -85,7 +85,7 @@ class _OfferDetailScreenState
         if (data['media']?['images'] != null) {
           for (var img in data['media']['images']) {
             sliderItems.add(
-              "https://www.postergali.com/storage/$img",
+              "https://postergali.com/storage/$img",
             );
           }
         }
@@ -502,7 +502,7 @@ class _OfferDetailScreenState
                             child: _infoItem(
                               Icons
                                   .remove_red_eye_outlined,
-                              context.tr('views'),
+                              "Views",
                               "${offer['view_count']}",
                             ),
                           ),
@@ -518,7 +518,7 @@ class _OfferDetailScreenState
                             child: _infoItem(
                               Icons
                                   .near_me_outlined,
-                              context.tr('distance'),
+                              "Distance",
                               "${distanceInKm.toStringAsFixed(1)} km",
                             ),
                           ),
@@ -534,7 +534,7 @@ class _OfferDetailScreenState
                             child: _infoItem(
                               Icons
                                   .warning_amber_rounded,
-                              context.tr('expires'),
+                              "Expires",
                               expiryText,
                             ),
                           ),
@@ -573,10 +573,10 @@ class _OfferDetailScreenState
                                   width: 1.5,
                                 ),
                               ),
-                              child: Text(
-                                context.tr('call'),
+                              child: const Text(
+                                "Call",
                                 style:
-                                const TextStyle(
+                                TextStyle(
                                   color: Colors
                                       .black,
                                   fontSize:
@@ -613,10 +613,10 @@ class _OfferDetailScreenState
                                       40),
                                 ),
                               ),
-                              child: Text(
-                                context.tr('directions'),
+                              child: const Text(
+                                "Directions",
                                 style:
-                                const TextStyle(
+                                TextStyle(
                                   color: Colors
                                       .white,
                                   fontSize:

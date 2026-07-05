@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:postergali/core/localization/localization_service.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class ResultHeader extends StatelessWidget {
@@ -24,7 +23,7 @@ class ResultHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              selectedTab == 0 ? context.tr('jobs') : context.tr('offers'),
+              selectedTab == 0 ? "Total results(20)" : "Latest Offers",
               style: const TextStyle(
                 fontFamily: 'ClashDisplay',
                 fontSize: 24,
@@ -34,7 +33,7 @@ class ResultHeader extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              "$resultsCount ${context.tr('results_found')}",
+              "$resultsCount results available",
               style: TextStyle(
                 fontFamily: 'HelveticaNeue',
                 fontSize: 13,
@@ -47,8 +46,8 @@ class ResultHeader extends StatelessWidget {
         GestureDetector(
           onTap: onFilterTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
             height: 52,
+            width: 52,
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18),
@@ -60,22 +59,10 @@ class ResultHeader extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
-              children: [
-                const Icon(
-                  CupertinoIcons.slider_horizontal_3,
-                  color: AppColors.primaryRed,
-                  size: 22,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  context.tr('filter'),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w700,
-                    color: AppColors.primaryRed,
-                  ),
-                ),
-              ],
+            child: const Icon(
+              CupertinoIcons.slider_horizontal_3,
+              color: AppColors.primaryRed,
+              size: 24,
             ),
           ),
         ),

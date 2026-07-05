@@ -1,12 +1,11 @@
-import 'dart:convert';
+  import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:postergali/core/localization/localization_service.dart';
+  import 'package:flutter/cupertino.dart';
+  import 'package:flutter/material.dart';
+  import 'package:http/http.dart' as http;
 
-import '../../../../core/constants/app_colors.dart';
-import '../../../posterman/bot_splash_screen.dart';
+  import '../../../../core/constants/app_colors.dart';
+  import '../../../posterman/bot_splash_screen.dart';
   import '../../data/models/job_filter.dart';
   import '../widgets/home_bottom_bar.dart';
   import '../widgets/home_cards.dart';
@@ -17,7 +16,6 @@ import '../../../posterman/bot_splash_screen.dart';
   import '../widgets/result_header.dart';
   import '../../../job_details/presentation/screens/job_detail_screen.dart';
   import '../../../language/presentation/screens/language_selection_screen.dart';
-  import '../../../location/presentation/screens/location_selector_screen.dart';
   import '../../../offer_details/presentation/screens/offer_detail_screen.dart';
   import '../../../referral/presentation/screens/referral_screen.dart';
   
@@ -92,43 +90,11 @@ import '../../../posterman/bot_splash_screen.dart';
       "Temporary",
     ];
   
-    String? _currentLocationName;
-  double? _currentLatitude;
-  double? _currentLongitude;
-
-  @override
+    @override
     void initState() {
       super.initState();
-      _currentLocationName = widget.location;
-      _currentLatitude = widget.latitude;
-      _currentLongitude = widget.longitude;
       _scrollController.addListener(_scrollListener);
       fetchJobs();
-    }
-
-    void _showLocationSelector() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => LocationSelectorScreen(
-            initialLat: _currentLatitude,
-            initialLng: _currentLongitude,
-          ),
-        ),
-      ).then((result) {
-        if (result != null && result is Map<String, dynamic>) {
-          setState(() {
-            _currentLocationName = result['address'] ?? _currentLocationName;
-            _currentLatitude = result['lat'] ?? _currentLatitude;
-            _currentLongitude = result['lng'] ?? _currentLongitude;
-          });
-          if (selectedTab == 0) {
-            fetchJobs();
-          } else {
-            fetchOffers();
-          }
-        }
-      });
     }
 
     @override
@@ -154,8 +120,8 @@ import '../../../posterman/bot_splash_screen.dart';
       Map<String, String>? extraQuery,
     }) async {
       final query = {
-        "latitude": (_currentLatitude ?? widget.latitude).toString(),
-        "longitude": (_currentLongitude ?? widget.longitude).toString(),
+        "latitude": widget.latitude.toString(),
+        "longitude": widget.longitude.toString(),
         "radius": radius.toString(),
         "per_page": perPage.toString(),
       };
@@ -199,8 +165,8 @@ import '../../../posterman/bot_splash_screen.dart';
 
       try {
         final query = jobFilter.toQuery(
-          latitude: _currentLatitude ?? widget.latitude,
-          longitude: _currentLongitude ?? widget.longitude,
+          latitude: widget.latitude,
+          longitude: widget.longitude,
         );
 
         for (int i = 0; i < radiusList.length; i++) {
@@ -286,10 +252,7 @@ import '../../../posterman/bot_splash_screen.dart';
       debugPrint("Loading more at radius: $radius km");
 
       final query = selectedTab == 0
-          ? jobFilter.toQuery(
-              latitude: _currentLatitude ?? widget.latitude,
-              longitude: _currentLongitude ?? widget.longitude,
-            )
+          ? jobFilter.toQuery(latitude: widget.latitude, longitude: widget.longitude)
           : null;
 
       final results = await _fetchByRadius(
@@ -401,8 +364,7 @@ import '../../../posterman/bot_splash_screen.dart';
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         HomeHeader(
-                          location: _currentLocationName ?? widget.location,
-                          onLocationTap: _showLocationSelector,
+                          location: widget.location,
                           onLanguageTap: () {
                             Navigator.push(
                               context,
@@ -455,12 +417,12 @@ import '../../../posterman/bot_splash_screen.dart';
 
                 else if (selectedTab == 0 && noNearbyJobs)
 
-                  SliverFillRemaining(
+                  const SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(
                       child: Text(
-                        context.tr('no_jobs'),
-                        style: const TextStyle(
+                        "No nearby posters found",
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -470,12 +432,12 @@ import '../../../posterman/bot_splash_screen.dart';
 
                 else if (selectedTab == 1 && noNearbyOffers)
 
-                    SliverFillRemaining(
+                    const SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
                         child: Text(
-                          context.tr('no_offers'),
-                          style: const TextStyle(
+                          "No nearby offers found",
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),

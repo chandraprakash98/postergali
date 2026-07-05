@@ -1,8 +1,8 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
-import 'package:postergali/core/localization/localization_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/widgets/job_templates_full.dart';
@@ -103,7 +103,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   Future<void> fetchJob() async {
     try {
       final response = await http.get(
-        Uri.parse('https://www.postergali.com/api/v1/jobs/${widget.jobId}'),
+        Uri.parse('https://postergali.com/api/v1/jobs/${widget.jobId}'),
       );
 
       if (response.statusCode == 200) {
@@ -207,7 +207,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 Expanded(
                                   child: _modernStatItem(
                                     icon: Icons.remove_red_eye_outlined,
-                                    title: context.tr('views'),
+                                    title: "Views",
                                     value: "${job['view_count']}",
                                   ),
                                 ),
@@ -215,7 +215,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 Expanded(
                                   child: _modernStatItem(
                                     icon: Icons.near_me_rounded,
-                                    title: context.tr('distance'),
+                                    title: "Distance",
                                     value: distanceKm == null
                                         ? "--"
                                         : "${distanceKm!.toStringAsFixed(1)} km",
@@ -226,7 +226,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                 Expanded(
                                   child: _modernStatItem(
                                     icon: Icons.schedule_rounded,
-                                    title: context.tr('expires'),
+                                    title: "Expires",
                                     value: getExpiryText(),
                                   ),
                                 ),
@@ -257,14 +257,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                         ),
                                       ],
                                     ),
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        const Icon(Icons.call_rounded, size: 22, color: Colors.black87),
-                                        const SizedBox(width: 8),
+                                        Icon(Icons.call_rounded, size: 22, color: Colors.black87),
+                                        SizedBox(width: 8),
                                         Text(
-                                          context.tr('call'),
-                                          style: const TextStyle(
+                                          "Call",
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
                                             color: Colors.black87,
@@ -293,14 +293,14 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                         ),
                                       ],
                                     ),
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       children: [
-                                        const Icon(Icons.map_rounded, color: Colors.white, size: 24),
-                                        const SizedBox(width: 10),
+                                        Icon(Icons.map_rounded, color: Colors.white, size: 24),
+                                        SizedBox(width: 10),
                                         Text(
-                                          context.tr('directions'),
-                                          style: const TextStyle(
+                                          "Directions",
+                                          style: TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.w700,
                                             color: Colors.white,

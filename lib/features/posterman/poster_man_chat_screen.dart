@@ -5,7 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:postergali/core/job_request.dart';
 import 'package:postergali/core/widgets/job_templates_small.dart';
 import 'package:postergali/core/widgets/offer_templates.dart';
-import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'package:postergali/features/checkout/checkout_screen.dart';
@@ -119,9 +118,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Future<void> _startFlow() async {
-    await bot(context.tr('welcome_bot'));
+    await bot("Welcome to PosterGali!\nCreate and publish posters easily 🚀\nIn this chat, I'll ask some question for which you need to answer correctly.\n\nLet's get started 😊");
     setState(() => step = ChatStep.chooseType);
-    await bot(context.tr('choose_service'));
+    await bot("Please choose what type of service you want to use:");
     addTypeChips();
   }
 
@@ -191,54 +190,55 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   Future<void> _handleJobFlow(String text) async {
     switch (step) {
       case ChatStep.chooseType:
-        if (text.toLowerCase().contains("job") || text.contains("नौकरी")) {
+        if (text.toLowerCase().contains("hiring")) {
           flowType = FlowType.job;
           step = ChatStep.businessName;
-          await bot(context.tr('business_name_job'));
+          await bot("What is your business name &\naddress where you want job?");
         } else {
           flowType = FlowType.offer;
           step = ChatStep.businessName;
-          await bot(context.tr('business_name_offer'));
+          await bot("Let’s start with your business name 🏪\n"
+              "What is the name of your business?");
         }
         break;
 
       case ChatStep.businessName:
         controller.businessName = text;
-        await bot("📍 ${context.tr('location')}");
+        await bot("📍 Your business location");
         addLocationMap();
         setState(() => step = ChatStep.locationConfirm);
         break;
 
       case ChatStep.locationConfirm:
-        await bot(context.tr('job_role_msg'));
-        await bot(context.tr('job_role_hint'));
+        await bot("Great! 👍 Now tell us job role");
+        await bot("Examples: Helper, Cook, Delivery Boy, Painter, Security Guard");
         setState(() => step = ChatStep.jobRole);
         break;
 
       case ChatStep.jobRole:
         controller.jobRole = text;
-        await bot(context.tr('job_type_msg'));
+        await bot("What type of job is it?");
         addJobTypeChips();
         setState(() => step = ChatStep.jobTypeSelect);
         break;
 
       case ChatStep.jobTypeSelect:
         controller.jobType = text;
-        await bot(context.tr('salary_msg_bot'));
-        await bot(context.tr('salary_hint'));
+        await bot("What is the salary in Rupees? 💰");
+        await bot("Example salary: ₹15,000 - ₹18,000");
         setState(() => step = ChatStep.salary);
         break;
 
       case ChatStep.salary:
         controller.salary = int.tryParse(text.replaceAll(RegExp(r'[^0-9]'), '')) ?? 15000;
-        await bot(context.tr('phone_msg_bot'));
+        await bot("Please enter mobile number on which job seekers can call you 📞");
         setState(() => step = ChatStep.phone);
         break;
 
       case ChatStep.phone:
         controller.phone = text;
-        await bot(context.tr('select_plan'));
-        await bot(context.tr('select_duration'));
+        await bot("Please select your plan below 👇");
+        await bot("Select how long you want to display your post.");
         setState(() => isBotTyping = true);
         await controller.loadPlans();
         setState(() => isBotTyping = false);
@@ -247,15 +247,15 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         break;
 
       case ChatStep.planSelect:
-        await bot("📍 ${context.tr('poster_layouts')}");
-        await bot(context.tr('select_layout_desc'));
+        await bot("📍 Your poster layouts!");
+        await bot("All you have to do is select any one layout below and we'll create a poster for you style ✨");
         addLayoutSelection();
         setState(() => step = ChatStep.layoutSelect);
         break;
 
       case ChatStep.layoutSelect:
-        await bot(context.tr('ready_to_post'));
-        await bot(context.tr('tap_to_post'));
+        await bot("Ready to display the poster?");
+        await bot("👉 Tap the button below to post");
         addFinalConfirmation();
         setState(() => step = ChatStep.done);
         break;
@@ -268,26 +268,27 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   Future<void> _handleOfferFlow(String text) async {
     switch (step) {
       case ChatStep.chooseType:
-        if (text.toLowerCase().contains("job") || text.contains("नौकरी")) {
+        if (text.toLowerCase().contains("hiring")) {
           flowType = FlowType.job;
           step = ChatStep.businessName;
-          await bot(context.tr('business_name_job'));
+          await bot("What is your business name &\naddress where you want job?");
         } else {
           flowType = FlowType.offer;
           step = ChatStep.businessName;
-          await bot(context.tr('tell_us_business'));
+          await bot("Great! Please tell us about your business");
         }
         break;
 
       case ChatStep.businessName:
         offerController.businessName = text;
-        await bot("📍 ${context.tr('location')}");
+        await bot("📍 Your business location");
         addLocationMap();
         setState(() => step = ChatStep.locationConfirm);
         break;
 
       case ChatStep.locationConfirm:
-        await bot(context.tr('offer_type_msg'));
+        await bot("🎯 What type of offer would you like to create? \n"
+            "Choose one that matches your business 👇");
         addOfferSubCategoryChips();
         setState(() => step = ChatStep.offerSubCategory);
         break;
@@ -295,26 +296,32 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       case ChatStep.offerSubCategory:
         offerController.subCategory = text;
         offerController.offerType = text;
-        await bot(context.tr('offer_details_msg'));
+        await bot("Great! 👍\n"
+        "What would you like to showcase in your offer? \n"
+
+    "Examples:\n"
+    "• 50% off on all items \n"
+    "• Fresh homemade tiffin available\n"
+    "• Opening offer for the new salon");
         setState(() => step = ChatStep.offerDetails);
         break;
 
       case ChatStep.offerDetails:
         offerController.offerDetails = text;
-        await bot(context.tr('upload_media_bot'));
+        await bot("Upload some images or videos of your offer... \nSelect photos of products or shop");
         addOfferMediaCard();
         setState(() => step = ChatStep.offerMedia);
         break;
 
       case ChatStep.offerMedia:
-        await bot(context.tr('phone_msg_offer'));
+        await bot("Please enter mobile number on which seekers can call you 📞");
         setState(() => step = ChatStep.phone);
         break;
 
       case ChatStep.phone:
         offerController.mobile = text;
-        await bot(context.tr('select_plan'));
-        await bot(context.tr('select_duration'));
+        await bot("Please select your plan below 👇");
+        await bot("Select how long you want to display your post.");
         setState(() => isBotTyping = true);
         await offerController.loadPlans();
         setState(() => isBotTyping = false);
@@ -323,15 +330,15 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         break;
 
       case ChatStep.planSelect:
-        await bot("📍 ${context.tr('poster_layouts')}");
-        await bot(context.tr('select_layout_desc'));
+        await bot("📍 Your poster layouts!");
+        await bot("All you have to do is select any one layout below and we'll create a poster for you style ✨");
         addLayoutSelection();
         setState(() => step = ChatStep.layoutSelect);
         break;
 
       case ChatStep.layoutSelect:
-        await bot(context.tr('ready_to_post'));
-        await bot(context.tr('tap_to_post'));
+        await bot("Ready to display the poster?");
+        await bot("👉 Tap the button below to post");
         addFinalConfirmation();
         setState(() => step = ChatStep.done);
         break;
@@ -486,8 +493,8 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       child: Wrap(
         spacing: 10,
         children: [
-          _chip(context.tr('job_hiring'), () => next(context.tr('job_hiring'))),
-          _chip(context.tr('offer_others'), () => next(context.tr('offer_others'))),
+          _chip("Job Hiring", () => next("Job Hiring")),
+          _chip("Offer Others", () => next("Offer Others")),
         ],
       ),
     );
@@ -500,11 +507,11 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         spacing: 5,
         runSpacing: 5,
         children: [
-          _chip(context.tr('sale_sale'), () => next(context.tr('sale_sale'))),
-          _chip(context.tr('special_offer'), () => next(context.tr('special_offer'))),
-          _chip(context.tr('grand_opening'), () => next(context.tr('grand_opening'))),
-          _chip(context.tr('inauguration'), () => next(context.tr('inauguration'))),
-          _chip(context.tr('new_arrivals'), () => next(context.tr('new_arrivals'))),
+          _chip("Sale Sale Sale", () => next("Sale Sale Sale")),
+          _chip("Special Offer", () => next("Special Offer")),
+          _chip("Grand Opening Offer", () => next("Grand Opening Offer")),
+          _chip("Inauguration Sale", () => next("Inauguration Sale")),
+          _chip("New Arrivals", () => next("New Arrivals")),
         ],
       ),
     );
@@ -522,14 +529,14 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "📸 ${context.tr('upload_media')}",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          const Text(
+            "📸 Upload Media",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(height: 8),
-          Text(
-            context.tr('upload_desc'),
-            style: const TextStyle(color: Colors.grey),
+          const Text(
+            "Select images or video for your offer poster",
+            style: TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 16),
           if (offerController.images.isNotEmpty || offerController.video != null)
@@ -600,7 +607,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                     }
                   },
                   icon: const Icon(Icons.image),
-                  label: Text(context.tr('images')),
+                  label: const Text("Images"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade100,
                     foregroundColor: Colors.black,
@@ -622,7 +629,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                     }
                   },
                   icon: const Icon(Icons.videocam),
-                  label: Text(context.tr('video')),
+                  label: const Text("Video"),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey.shade100,
                     foregroundColor: Colors.black,
@@ -637,13 +644,13 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () => next(context.tr('media_uploaded')),
+              onPressed: () => next("Media uploaded ✅"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: Text(context.tr('continue')),
+              child: const Text("Continue"),
             ),
           ),
         ],
@@ -658,9 +665,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         spacing: 10,
         runSpacing: 10,
         children: [
-          _chip(context.tr('full_time'), () => next(context.tr('full_time'))),
-          _chip(context.tr('part_time'), () => next(context.tr('part_time'))),
-          _chip(context.tr('temporary'), () => next(context.tr('temporary'))),
+          _chip("Full Time", () => next("Full Time")),
+          _chip("Part Time", () => next("Part Time")),
+          _chip("Temporary", () => next("Temporary")),
         ],
       ),
     );
@@ -695,9 +702,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "📍 ${context.tr('location')}",
-            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
+          const Text(
+            "📍 Your business location",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white, fontSize: 18),
           ),
           const SizedBox(height: 8),
           Text(
@@ -734,14 +741,14 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.my_location, size: 18),
-              label: Text(context.tr('use_current_location')),
+              label: const Text("Use current location"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: primaryColor,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                 elevation: 0,
               ),
-              onPressed: () => next(context.tr('location_selected')),
+              onPressed: () => next("Location selected 👍"),
             ),
           ),
           const SizedBox(height: 8),
@@ -754,7 +761,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 side: const BorderSide(color: Colors.grey),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
               ),
-              child: Text(context.tr('enter_address')),
+              child: const Text("Enter New Address"),
             ),
           ),
         ],
@@ -781,6 +788,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     Color borderColor;
     Color textColor;
     Color chipColor;
+    String bgImage;
 
     switch (planName) {
       case "standerd":
@@ -829,11 +837,14 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: bgColor,
+
+          // Use image instead of color if you want
           image: const DecorationImage(
             image: AssetImage("assets/images/plan_bg.png"),
             fit: BoxFit.cover,
             opacity: 0.15,
           ),
+
           borderRadius: BorderRadius.circular(28),
           border: Border.all(color: borderColor, width: 1.5),
         ),
@@ -874,7 +885,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 ),
               ],
             ),
+
             const Spacer(),
+
             Text(
               p.duration,
               style: TextStyle(
@@ -883,7 +896,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 fontWeight: FontWeight.w700,
               ),
             ),
+
             const SizedBox(height: 8),
+
             Text(
               "₹${p.price}/-",
               style: TextStyle(
@@ -938,9 +953,9 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "🖼️ ${context.tr('poster_layouts')}",
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+          const Text(
+            "🖼️ Your poster layouts!",
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
           ),
           const SizedBox(height: 12),
           GridView.builder(
@@ -1076,7 +1091,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.edit_note),
-                label: Text(context.tr('edit_poster')),
+                label: const Text("Edit Poster"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
@@ -1115,7 +1130,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
               width: double.infinity,
               child: ElevatedButton.icon(
                 icon: const Icon(Icons.edit_note),
-                label: Text(context.tr('edit_poster')),
+                label: const Text("Edit Poster"),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: primaryColor,
                   foregroundColor: Colors.white,
@@ -1153,14 +1168,14 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
             width: double.infinity,
             child: ElevatedButton.icon(
               icon: const Icon(Icons.payment),
-              label: Text(context.tr('proceed_payment')),
+              label: const Text("Proceed for payment"),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              onPressed: () async {
+              onPressed: () {
                 if (selectedPlan == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Please select a plan first")),
@@ -1168,10 +1183,6 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                   return;
                 }
                 
-                final request = flowType == FlowType.job ? await controller.buildRequest() : await offerController.buildRequest();
-
-                if (!mounted) return;
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -1179,7 +1190,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                       mobileNumber: flowType == FlowType.job ? controller.phone : offerController.mobile,
                       plan: selectedPlan!,
                       flowType: flowType == FlowType.job ? CheckoutFlowType.job : CheckoutFlowType.offer,
-                      request: request,
+                      request: flowType == FlowType.job ? controller.buildRequest() : offerController.buildRequest(),
                       images: flowType == FlowType.offer ? offerController.images : null,
                       video: flowType == FlowType.offer ? offerController.video : null,
                     ),

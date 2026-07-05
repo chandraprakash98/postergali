@@ -5,14 +5,12 @@ import '../../../../core/constants/app_assets.dart';
 
 class HomeHeader extends StatelessWidget {
   final String location;
-  final VoidCallback onLocationTap;
   final VoidCallback onLanguageTap;
   final VoidCallback? onBannerTap;
 
   const HomeHeader({
     super.key,
     required this.location,
-    required this.onLocationTap,
     required this.onLanguageTap,
     this.onBannerTap,
   });
@@ -46,53 +44,49 @@ class HomeHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   /// LOCATION
-                  GestureDetector(
-                    onTap: onLocationTap,
-                    behavior: HitTestBehavior.opaque,
-                    child: Row(
-                      children: [
-                        /// LOCATION ICON
-                        Container(
-                          height: 30,
-                          width: 30,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.golden.withOpacity(.22),
-                                AppColors.golden.withOpacity(.08),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            border: Border.all(
-                              color: AppColors.golden.withOpacity(.18),
-                            ),
+                  Row(
+                    children: [
+                      /// LOCATION ICON
+                      Container(
+                        height: 30,
+                        width: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.golden.withOpacity(.22),
+                              AppColors.golden.withOpacity(.08),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                          child: Image.asset(
-                            'assets/images/img_12.png', // your image path
-                            width: 16,
-                            height: 16,
-                            fit: BoxFit.contain,
+                          border: Border.all(
+                            color: AppColors.golden.withOpacity(.18),
                           ),
                         ),
-                        const SizedBox(width: 7),
-                        /// LOCATION TEXT
-                        Expanded(
-                          child: Text(
-                            location,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontFamily: 'HelveticaNeue',
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              color: AppColors.textDark.withOpacity(.72),
-                            ),
+                        child: Image.asset(
+                          'assets/images/img_12.png', // your image path
+                          width: 16,
+                          height: 16,
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      const SizedBox(width: 7),
+                      /// LOCATION TEXT
+                      Expanded(
+                        child: Text(
+                          location,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontFamily: 'HelveticaNeue',
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            color: AppColors.textDark.withOpacity(.72),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -141,6 +135,20 @@ class HomeHeader extends StatelessWidget {
                     width: double.infinity,
                     fit: BoxFit.contain, // Shows complete image
                   ),
+
+                  /// LIGHT REFLECTION
+                  // Positioned(
+                  //   top: -40,
+                  //   right: -20,
+                  //   child: Container(
+                  //     height: 140,
+                  //     width: 140,
+                  //     decoration: BoxDecoration(
+                  //       shape: BoxShape.circle,
+                  //       color: Colors.white.withOpacity(0.10),
+                  //     ),
+                  //   ),
+                  // ),
                 ],
               ),
             ),
