@@ -1175,7 +1175,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 padding: const EdgeInsets.symmetric(vertical: 12),
               ),
-              onPressed: () async {
+              onPressed: () {
                 if (selectedPlan == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Please select a plan first")),
@@ -1183,12 +1183,6 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                   return;
                 }
                 
-                final request = flowType == FlowType.job 
-                    ? await controller.buildRequest() 
-                    : await offerController.buildRequest();
-
-                if (!mounted) return;
-
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -1196,7 +1190,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                       mobileNumber: flowType == FlowType.job ? controller.phone : offerController.mobile,
                       plan: selectedPlan!,
                       flowType: flowType == FlowType.job ? CheckoutFlowType.job : CheckoutFlowType.offer,
-                      request: request,
+                      request: flowType == FlowType.job ? controller.buildRequest() : offerController.buildRequest(),
                       images: flowType == FlowType.offer ? offerController.images : null,
                       video: flowType == FlowType.offer ? offerController.video : null,
                     ),
