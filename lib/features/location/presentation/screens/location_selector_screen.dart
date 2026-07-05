@@ -505,16 +505,28 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                             onPressed: () async {
                               await _saveLocation();
                               if (!mounted) return;
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => HomeScreen(
-                                    location: _address,
-                                    latitude: _currentLatLng.latitude,
-                                    longitude: _currentLatLng.longitude,
+
+                              final result = {
+                                "city": _city,
+                                "address": _address,
+                                "lat": _currentLatLng.latitude,
+                                "lng": _currentLatLng.longitude,
+                              };
+
+                              final nav = Navigator.of(context);
+                              if (nav.canPop()) {
+                                nav.pop(result);
+                              } else {
+                                nav.pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (_) => HomeScreen(
+                                      location: _address,
+                                      latitude: _currentLatLng.latitude,
+                                      longitude: _currentLatLng.longitude,
+                                    ),
                                   ),
-                                ),
-                              );
+                                );
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryRed,

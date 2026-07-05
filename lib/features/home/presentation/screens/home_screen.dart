@@ -16,6 +16,7 @@
   import '../widgets/result_header.dart';
   import '../../../job_details/presentation/screens/job_detail_screen.dart';
   import '../../../language/presentation/screens/language_selection_screen.dart';
+  import '../../../location/presentation/screens/location_selector_screen.dart';
   import '../../../offer_details/presentation/screens/offer_detail_screen.dart';
   import '../../../referral/presentation/screens/referral_screen.dart';
   
@@ -37,12 +38,25 @@
   
   class _HomeScreenState extends State<HomeScreen>
       with SingleTickerProviderStateMixin {
-    int selectedTab = 0;
-    int selectedBottomIndex = 0;
+
     bool isLoading = true;
-  
+
     List<dynamic> jobs = [];
     List<dynamic> offers = [];
+
+    bool noNearbyJobs = false;
+    bool noNearbyOffers = false;
+
+// Radius sequence
+    final List<int> radiusList = [5, 10, 15];
+    final ScrollController _scrollController = ScrollController();
+
+    int currentRadiusIndex = 0;
+
+    bool isLoadingMore = false;
+
+    int selectedTab = 0;
+    int selectedBottomIndex = 0;
   
     JobFilterModel jobFilter = JobFilterModel();
   
@@ -77,69 +91,233 @@
       "Temporary",
     ];
   
-    @override
+    String? _currentLocationName;
+  double? _currentLatitude;
+  double? _currentLongitude;
+
+  @override
     void initState() {
       super.initState();
+      _currentLocationName = widget.location;
+      _currentLatitude = widget.latitude;
+      _currentLongitude = widget.longitude;
+      _scrollController.addListener(_scrollListener);
       fetchJobs();
     }
-  
+
+    void _showLocationSelector() {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => LocationSelectorScreen(
+            initialLat: _currentLatitude,
+            initialLng: _currentLongitude,
+          ),
+        ),
+      ).then((result) {
+        if (result != null && result is Map<String, dynamic>) {
+          setState(() {
+            _currentLocationName = result['address'] ?? _currentLocationName;
+            _currentLatitude = result['lat'] ?? _currentLatitude;
+            _currentLongitude = result['lng'] ?? _currentLongitude;
+          });
+          if (selectedTab == 0) {
+            fetchJobs();
+          } else {
+            fetchOffers();
+          }
+        }
+      });
+    }
+
+    @override
+    void dispose() {
+      _scrollController.removeListener(_scrollListener);
+      _scrollController.dispose();
+      super.dispose();
+    }
+
+    void _scrollListener() {
+      if (_scrollController.position.pixels >=
+          _scrollController.position.maxScrollExtent - 400) {
+        if (!isLoading && !isLoadingMore && currentRadiusIndex < radiusList.length - 1) {
+          _loadMore();
+        }
+      }
+    }
+
+    Future<List<dynamic>> _fetchByRadius({
+      required String endpoint,
+      required int radius,
+      required int perPage,
+      Map<String, String>? extraQuery,
+    }) async {
+      final query = {
+        "latitude": (_currentLatitude ?? widget.latitude).toString(),
+        "longitude": (_currentLongitude ?? widget.longitude).toString(),
+        "radius": radius.toString(),
+        "per_page": perPage.toString(),
+      };
+
+      if (extraQuery != null) {
+        extraQuery.remove("latitude");
+        extraQuery.remove("longitude");
+        extraQuery.remove("radius");
+        extraQuery.remove("per_page");
+        query.addAll(extraQuery);
+      }
+
+      query.removeWhere((key, value) => value.isEmpty);
+
+      final uri = Uri.parse(
+        "https://www.postergali.com/api/v1/$endpoint",
+      ).replace(queryParameters: query);
+
+      try {
+        final response = await http.get(uri);
+        if (response.statusCode != 200) return [];
+
+        final json = jsonDecode(response.body);
+        if (json is Map<String, dynamic>) {
+          return json["data"] ?? [];
+        }
+      } catch (e) {
+        debugPrint("Error fetching radius $radius: $e");
+      }
+      return [];
+    }
+
     Future<void> fetchJobs() async {
       setState(() {
         isLoading = true;
         selectedTab = 0;
+        noNearbyJobs = false;
+        jobs = [];
+        currentRadiusIndex = 0;
       });
-  
+
       try {
         final query = jobFilter.toQuery(
-          latitude: widget.latitude,
-          longitude: widget.longitude,
+          latitude: _currentLatitude ?? widget.latitude,
+          longitude: _currentLongitude ?? widget.longitude,
         );
-  
-        query.removeWhere((key, value) => value.isEmpty);
-  
-        final uri = Uri.parse('https://postergali.com/api/v1/jobs').replace(
-          queryParameters: query,
-        );
-  
-        debugPrint(uri.toString());
-  
-        final response = await http.get(uri);
-  
-        if (response.statusCode == 200) {
-          jobs = jsonDecode(response.body);
+
+        for (int i = 0; i < radiusList.length; i++) {
+          final radius = radiusList[i];
+          debugPrint("Trying initial radius: $radius km");
+          
+          final results = await _fetchByRadius(
+            endpoint: "jobs",
+            radius: radius,
+            perPage: 50,
+            extraQuery: query,
+          );
+
+          if (results.isNotEmpty) {
+            jobs = results;
+            currentRadiusIndex = i;
+            break;
+          }
+          currentRadiusIndex = i;
         }
+
+        noNearbyJobs = jobs.isEmpty;
       } catch (e) {
         debugPrint(e.toString());
+        noNearbyJobs = true;
       }
-  
+
       setState(() {
         isLoading = false;
       });
     }
-  
+
     Future<void> fetchOffers() async {
       setState(() {
         isLoading = true;
         selectedTab = 1;
+        noNearbyOffers = false;
+        offers = [];
+        currentRadiusIndex = 0;
       });
-  
+
       try {
-        final response = await http.get(
-          Uri.parse('https://postergali.com/api/v1/offers'),
-        );
-  
-        if (response.statusCode == 200) {
-          offers = jsonDecode(response.body);
+        for (int i = 0; i < radiusList.length; i++) {
+          final radius = radiusList[i];
+          debugPrint("Trying initial radius: $radius km");
+
+          final results = await _fetchByRadius(
+            endpoint: "offers",
+            radius: radius,
+            perPage: 50,
+          );
+
+          if (results.isNotEmpty) {
+            offers = results;
+            currentRadiusIndex = i;
+            break;
+          }
+          currentRadiusIndex = i;
         }
+
+        noNearbyOffers = offers.isEmpty;
       } catch (e) {
         debugPrint(e.toString());
+        noNearbyOffers = true;
       }
-  
+
       setState(() {
         isLoading = false;
       });
     }
-  
+
+    Future<void> _loadMore() async {
+      if (currentRadiusIndex >= radiusList.length - 1) return;
+
+      setState(() {
+        isLoadingMore = true;
+      });
+
+      final nextRadiusIndex = currentRadiusIndex + 1;
+      final radius = radiusList[nextRadiusIndex];
+      final endpoint = selectedTab == 0 ? "jobs" : "offers";
+
+      debugPrint("Loading more at radius: $radius km");
+
+      final query = selectedTab == 0
+          ? jobFilter.toQuery(
+              latitude: _currentLatitude ?? widget.latitude,
+              longitude: _currentLongitude ?? widget.longitude,
+            )
+          : null;
+
+      final results = await _fetchByRadius(
+        endpoint: endpoint,
+        radius: radius,
+        perPage: 50,
+        extraQuery: query,
+      );
+
+      if (results.isNotEmpty) {
+        setState(() {
+          if (selectedTab == 0) {
+            final existingIds = jobs.map((j) => j['id']).toSet();
+            final newItems = results.where((j) => !existingIds.contains(j['id'])).toList();
+            jobs.addAll(newItems);
+          } else {
+            final existingIds = offers.map((o) => o['id']).toSet();
+            final newItems = results.where((o) => !existingIds.contains(o['id'])).toList();
+            offers.addAll(newItems);
+          }
+        });
+      }
+
+      setState(() {
+        currentRadiusIndex = nextRadiusIndex;
+        isLoadingMore = false;
+      });
+    }
+
     void _showFilterBottomSheet() {
       showModalBottomSheet(
         context: context,
@@ -212,6 +390,7 @@
           ),
           child: SafeArea(
             child: CustomScrollView(
+              controller: _scrollController,
               physics: const BouncingScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(
@@ -221,7 +400,8 @@
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         HomeHeader(
-                          location: widget.location,
+                          location: _currentLocationName ?? widget.location,
+                          onLocationTap: _showLocationSelector,
                           onLanguageTap: () {
                             Navigator.push(
                               context,
@@ -263,17 +443,66 @@
                   ),
                 ),
                 if (isLoading)
+
                   const SliverFillRemaining(
                     child: Center(
-                      child: CircularProgressIndicator(color: AppColors.primaryRed),
+                      child: CircularProgressIndicator(
+                        color: AppColors.primaryRed,
+                      ),
                     ),
                   )
-                else if (selectedTab == 0)
-                  _buildJobsGrid()
-                else
-                  _buildOffersGrid(),
+
+                else if (selectedTab == 0 && noNearbyJobs)
+
+                  const SliverFillRemaining(
+                    hasScrollBody: false,
+                    child: Center(
+                      child: Text(
+                        "No nearby posters found",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  )
+
+                else if (selectedTab == 1 && noNearbyOffers)
+
+                    const SliverFillRemaining(
+                      hasScrollBody: false,
+                      child: Center(
+                        child: Text(
+                          "No nearby offers found",
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    )
+
+                  else if (selectedTab == 0)
+
+                      _buildJobsGrid()
+
+                    else
+                      _buildOffersGrid(),
+
+                if (isLoadingMore)
+                  const SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: AppColors.primaryRed,
+                        ),
+                      ),
+                    ),
+                  ),
+
                 const SliverToBoxAdapter(
-                  child: SizedBox(height: 130),
+                  child: SizedBox(height: 120),
                 ),
               ],
             ),
