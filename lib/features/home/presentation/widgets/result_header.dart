@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class ResultHeader extends StatelessWidget {
@@ -23,7 +24,7 @@ class ResultHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              selectedTab == 0 ? "Total results(20)" : "Latest Offers",
+              selectedTab == 0 ? context.tr('jobs') : context.tr('offers'),
               style: const TextStyle(
                 fontFamily: 'ClashDisplay',
                 fontSize: 24,
@@ -33,7 +34,7 @@ class ResultHeader extends StatelessWidget {
             ),
             const SizedBox(height: 2),
             Text(
-              "$resultsCount results available",
+              "$resultsCount ${context.tr('results_found')}",
               style: TextStyle(
                 fontFamily: 'HelveticaNeue',
                 fontSize: 13,

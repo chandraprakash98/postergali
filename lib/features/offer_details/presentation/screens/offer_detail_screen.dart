@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -502,7 +503,7 @@ class _OfferDetailScreenState
                             child: _infoItem(
                               Icons
                                   .remove_red_eye_outlined,
-                              "Views",
+                              context.tr('views'),
                               "${offer['view_count']}",
                             ),
                           ),
@@ -518,7 +519,7 @@ class _OfferDetailScreenState
                             child: _infoItem(
                               Icons
                                   .near_me_outlined,
-                              "Distance",
+                              context.tr('distance'),
                               "${distanceInKm.toStringAsFixed(1)} km",
                             ),
                           ),
@@ -534,7 +535,7 @@ class _OfferDetailScreenState
                             child: _infoItem(
                               Icons
                                   .warning_amber_rounded,
-                              "Expires",
+                              context.tr('expires'),
                               expiryText,
                             ),
                           ),
@@ -573,10 +574,10 @@ class _OfferDetailScreenState
                                   width: 1.5,
                                 ),
                               ),
-                              child: const Text(
-                                "Call",
+                              child: Text(
+                                context.tr('call'),
                                 style:
-                                TextStyle(
+                                const TextStyle(
                                   color: Colors
                                       .black,
                                   fontSize:
@@ -613,10 +614,10 @@ class _OfferDetailScreenState
                                       40),
                                 ),
                               ),
-                              child: const Text(
-                                "Directions",
+                              child: Text(
+                                context.tr('directions'),
                                 style:
-                                TextStyle(
+                                const TextStyle(
                                   color: Colors
                                       .white,
                                   fontSize:

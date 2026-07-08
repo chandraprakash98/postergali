@@ -1,5 +1,6 @@
   import 'package:flutter/cupertino.dart';
   import 'package:flutter/material.dart';
+  import 'package:postergali/core/localization/localization_service.dart';
 
 import '../../../posterman/bot_splash_screen.dart';
 import '../../../posterman/poster_man_chat_screen.dart';
@@ -128,7 +129,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
                           child: _item(
                             0,
                             CupertinoIcons.house_fill,
-                            "Home",
+                            context.tr('home'),
                           ),
                         ),
 
@@ -136,7 +137,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
                           child: _item(
                             1,
                             CupertinoIcons.location_solid,
-                            "Location",
+                            context.tr('location'),
                           ),
                         ),
 
@@ -146,7 +147,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
                           child: _item(
                             2,
                             CupertinoIcons.heart_fill,
-                            "Liked",
+                            context.tr('liked'),
                           ),
                         ),
 
@@ -154,7 +155,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
                           child: _item(
                             3,
                             CupertinoIcons.doc_text_fill,
-                            "MyPoster",
+                            context.tr('my_poster'),
                           ),
                         ),
                       ],

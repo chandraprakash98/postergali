@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/features/referral/presentation/screens/refer_friend_form_screen.dart';
 
 class ReferralScreen extends StatelessWidget {
@@ -77,12 +78,12 @@ class ReferralScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        child: const Column(
+                        child: Column(
                           children: [
                             Text(
-                              "Refer Friends & Earn\nPoster Credits",
+                              context.tr('refer_earn'),
                               textAlign: TextAlign.center,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 fontFamily: 'ClashDisplay',
                                 fontSize: 24,
                                 fontWeight: FontWeight.w700,
@@ -169,14 +170,14 @@ class ReferralScreen extends StatelessWidget {
 
                             const SizedBox(width: 20),
 
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    "For You",
-                                    style: TextStyle(
+                                    context.tr('for_you'),
+                                    style: const TextStyle(
                                       fontFamily: 'ClashDisplay',
                                       fontSize: 20,
                                       fontWeight: FontWeight.w700,
@@ -242,13 +243,13 @@ class ReferralScreen extends StatelessWidget {
 
                             const SizedBox(width: 20),
 
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "For Your Friend",
-                                    style: TextStyle(
+                                    context.tr('for_friend'),
+                                    style: const TextStyle(
                                       fontFamily: 'ClashDisplay',
                                       fontSize: 20,
                                       fontWeight: FontWeight.w700,
@@ -308,9 +309,9 @@ class ReferralScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        const Text(
-                          "How it Works?",
-                          style: TextStyle(
+                        Text(
+                          context.tr('how_it_works'),
+                          style: const TextStyle(
                             fontFamily: 'ClashDisplay',
                             fontSize: 26,
                             fontWeight: FontWeight.w700,
@@ -374,10 +375,10 @@ class ReferralScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-                      child: const Center(
+                      child: Center(
                         child: Text(
-                          "Refer Now",
-                          style: TextStyle(
+                          context.tr('refer_now'),
+                          style: const TextStyle(
                             fontFamily: 'HelveticaNeue',
                             fontSize: 18,
                             fontWeight: FontWeight.w700,

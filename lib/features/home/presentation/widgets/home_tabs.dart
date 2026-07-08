@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 
 class HomeTabs extends StatelessWidget {
   final int selectedTab;
@@ -52,7 +53,7 @@ class HomeTabs extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  "Jobs",
+                  context.tr('jobs'),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
@@ -87,7 +88,7 @@ class HomeTabs extends StatelessWidget {
                 ),
                 alignment: Alignment.center,
                 child: Text(
-                  "Offers",
+                  context.tr('offers'),
                   style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

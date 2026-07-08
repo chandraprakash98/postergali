@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import '../../../../core/constants/app_assets.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../language/presentation/screens/language_selection_screen.dart';
@@ -150,7 +151,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           Stack(
             children: [
               Text(
-                'PosterGali pe\nlagao aamdani\nbadhao',
+                context.tr('onboarding_title_1'),
                 style: TextStyle(
                   fontSize: 44,
                   height: 1.2,
@@ -161,9 +162,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ..color = Colors.black,
                 ),
               ),
-              const Text(
-                'PosterGali pe\nlagao aamdani\nbadhao',
-                style: TextStyle(
+              Text(
+                context.tr('onboarding_title_1'),
+                style: const TextStyle(
                   fontSize: 44,
                   height: 1.2,
                   fontWeight: FontWeight.w900,
@@ -175,9 +176,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
           const SizedBox(height: 16),
 
-          const Text(
-            '1 minute se kam samay mein\nwoh bhi kifayati daam mein..',
-            style: TextStyle(
+          Text(
+            context.tr('onboarding_subtitle_1'),
+            style: const TextStyle(
               fontSize: 18,
               height: 1.35,
               color: Color(0xFF83382D),
@@ -191,9 +192,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             children: [
               GestureDetector(
                 onTap: _skip,
-                child: const Text(
-                  "Skip",
-                  style: TextStyle(
+                child: Text(
+                  context.tr('skip'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w700,
                   ),
@@ -209,19 +210,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     color: const Color(0xFFB34233),
                     borderRadius: BorderRadius.circular(40),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Next",
-                        style: TextStyle(
+                        context.tr('next'),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      SizedBox(width: 8),
-                      Icon(
+                      const SizedBox(width: 8),
+                      const Icon(
                         Icons.arrow_forward_ios,
                         color: Colors.white,
                         size: 16,
@@ -298,7 +299,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Stack(
                 children: [
                   Text(
-                    "Offers ya job\nchahiye?",
+                    context.tr('onboarding_title_2'),
                     style: TextStyle(
                       fontSize: 47,
                       height: 1.05,
@@ -309,9 +310,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         ..color = Colors.black,
                     ),
                   ),
-                  const Text(
-                    "Offers ya job\nchahiye?",
-                    style: TextStyle(
+                  Text(
+                    context.tr('onboarding_title_2'),
+                    style: const TextStyle(
                       fontSize: 47,
                       height: 1.05,
                       fontWeight: FontWeight.w900,
@@ -323,9 +324,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
               const SizedBox(height: 10),
 
-              const Text(
-                "PosterGali aaiye...",
-                style: TextStyle(
+              Text(
+                context.tr('onboarding_subtitle_2'),
+                style: const TextStyle(
                   fontSize: 18,
                   color: Color(0xFF83382D),
                   fontWeight: FontWeight.w600,
@@ -355,19 +356,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ],
               ),
-              child: const Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    "Let's Begin",
-                    style: TextStyle(
+                    context.tr('lets_begin'),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Icon(
+                  const SizedBox(width: 10),
+                  const Icon(
                     Icons.arrow_forward_ios,
                     color: Colors.white,
                     size: 18,

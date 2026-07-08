@@ -1,10 +1,12 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/service/local_notification_service.dart';
 import 'package:postergali/service/otification_service.dart';
 import 'features/onboarding/presentation/screens/splash_screen.dart';
 import 'core/constants/app_colors.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 
 Future<void> firebaseMessagingBackgroundHandler(
@@ -43,6 +45,9 @@ Future<void> main() async {
     firebaseMessagingBackgroundHandler,
   );
 
+  // Initialize Localization
+  await LocalizationService().init();
+
   // Initialize Local Notifications first
   await LocalNotificationService.initialize();
 
@@ -77,20 +82,33 @@ class PosterGaliApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'PosterGali',
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: AppColors.primaryRed,
-          primary: AppColors.primaryRed,
-        ),
-        fontFamily: 'HelveticaNeue',
-      ),
-      home: const SplashScreen(),
+    return ValueListenableBuilder<String>(
+      valueListenable: LocalizationService().localeNotifier,
+      builder: (context, localeCode, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: 'PosterGali',
+          locale: Locale(localeCode),
+          supportedLocales: const [
+            Locale('en', ''),
+            Locale('hi', ''),
+          ],
+          localizationsDelegates: [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: AppColors.primaryRed,
+              primary: AppColors.primaryRed,
+            ),
+            fontFamily: 'HelveticaNeue',
+          ),
+          home: const SplashScreen(),
+        );
+      },
     );
   }
-
-
 }

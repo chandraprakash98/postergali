@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/features/posterman/poster_man_chat_screen.dart';
 
 class BotSplashScreen extends StatefulWidget {
@@ -48,7 +49,7 @@ class _BotSplashScreenState extends State<BotSplashScreen> {
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
+          children: [
 
             Icon(
               Icons.auto_awesome,
@@ -59,8 +60,8 @@ class _BotSplashScreenState extends State<BotSplashScreen> {
             SizedBox(height: 15),
 
             Text(
-              "Preparing Chatbot...",
-              style: TextStyle(
+              context.tr('preparing_bot'),
+              style: const TextStyle(
                 color: Color(0xffF3C35D),
                 fontSize: 16,
                 fontWeight: FontWeight.w600,

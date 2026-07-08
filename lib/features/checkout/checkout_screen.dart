@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:postergali/features/posterman/plan.dart';
 import 'package:postergali/features/posterman/api_service.dart';
@@ -207,9 +208,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          "Checkout",
-          style: TextStyle(
+        title: Text(
+          context.tr('checkout'),
+          style: const TextStyle(
             color: Color(0xFF4A2511),
             fontSize: 24,
             fontWeight: FontWeight.bold,
@@ -231,12 +232,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   Padding(
                     padding: const EdgeInsets.all(16),
                     child: Row(
-                      children: const [
-                        Icon(Icons.receipt_long, color: Color(0xFF4A2511)),
-                        SizedBox(width: 10),
+                      children: [
+                        const Icon(Icons.receipt_long, color: Color(0xFF4A2511)),
+                        const SizedBox(width: 10),
                         Text(
-                          "Order Summary",
-                          style: TextStyle(
+                          context.tr('order_summary'),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                             color: Color(0xFF4A2511),
@@ -250,15 +251,15 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        _summaryRow("Poster Plan", widget.plan.duration),
+                        _summaryRow(context.tr('poster_plan'), widget.plan.duration),
                         const SizedBox(height: 12),
-                        _summaryRow("Amount", "₹${planAmount.toStringAsFixed(2)}"),
+                        _summaryRow(context.tr('amount'), "₹${planAmount.toStringAsFixed(2)}"),
                         const SizedBox(height: 12),
-                        _summaryRow("Credits Applied", "₹${creditsApplied.toStringAsFixed(2)}", isBold: true),
+                        _summaryRow(context.tr('apply_credits'), "₹${creditsApplied.toStringAsFixed(2)}", isBold: true),
                         const SizedBox(height: 12),
-                        _summaryRow("Total", "₹${(planAmount - creditsApplied).toStringAsFixed(2)}"),
+                        _summaryRow(context.tr('total'), "₹${(planAmount - creditsApplied).toStringAsFixed(2)}"),
                         const SizedBox(height: 12),
-                        _summaryRow("Estimated Tax", "₹0"),
+                        _summaryRow(context.tr('tax'), "₹0"),
                       ],
                     ),
                   ),
@@ -267,9 +268,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          "Grand total",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                        Text(
+                          context.tr('grand_total'),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                         ),
                         Text(
                           "₹${grandTotal.toStringAsFixed(2)}",
@@ -286,9 +287,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               alignment: Alignment.centerRight,
               child: TextButton(
                 onPressed: () => Navigator.pop(context),
-                child: const Text(
-                  "Change Plan",
-                  style: TextStyle(
+                child: Text(
+                  context.tr('change_plan'),
+                  style: const TextStyle(
                     color: Colors.black,
                     decoration: TextDecoration.underline,
                     fontSize: 12,
@@ -320,12 +321,12 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       ),
                       child: const Icon(Icons.percent, color: Colors.red, size: 18),
                     ),
-                    title: const Text(
-                      "Use Poster Credits",
-                      style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    title: Text(
+                      context.tr('use_credits'),
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
                     ),
                     subtitle: Text(
-                      "₹${userCredits.toStringAsFixed(0)} credits available",
+                      "₹${userCredits.toStringAsFixed(0)} ${context.tr('credits_available')}",
                       style: const TextStyle(color: Colors.white70),
                     ),
                     trailing: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
@@ -346,7 +347,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           _calculateTotals();
                         });
                       },
-                      title: const Text("Apply poster credits"),
+                      title: Text(context.tr('apply_credits')),
                       activeColor: const Color(0xFFB34233),
                       controlAffinity: ListTileControlAffinity.leading,
                     ),
@@ -416,11 +417,11 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               ),
               child: ListTile(
                 leading: const Icon(Icons.receipt_long, color: Color(0xFFB34233)),
-                title: const Text(
-                  "Get GST Invoice",
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                title: Text(
+                  context.tr('gst_invoice'),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                subtitle: const Text("Claim up to 18% with the GST Invoice"),
+                subtitle: Text(context.tr('gst_desc')),
                 trailing: const Icon(Icons.chevron_right),
               ),
             ),
@@ -439,9 +440,9 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     borderRadius: BorderRadius.circular(30),
                   ),
                 ),
-                child: const Text(
-                  "Pay now",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+                child: Text(
+                  context.tr('pay_now'),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ),

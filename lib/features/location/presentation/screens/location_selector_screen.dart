@@ -6,6 +6,7 @@ import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
@@ -230,9 +231,9 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                         constraints: const BoxConstraints(maxWidth: 220),
                         child: Column(
                           children: [
-                            const Text(
-                              "Selected Location",
-                              style: TextStyle(
+                            Text(
+                              context.tr('location'),
+                              style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
@@ -389,14 +390,14 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                           ),
                         ],
                       ),
-                      child: const Row(
+                      child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.my_location_rounded, color: AppColors.primaryRed),
-                          SizedBox(width: 12),
+                          const Icon(Icons.my_location_rounded, color: AppColors.primaryRed),
+                          const SizedBox(width: 12),
                           Text(
-                            "Use my current location",
-                            style: TextStyle(
+                            context.tr('use_current_location'),
+                            style: const TextStyle(
                               color: AppColors.primaryRed,
                               fontWeight: FontWeight.w700,
                               fontSize: 16,
@@ -431,9 +432,9 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                         const SizedBox(height: 24),
                         Row(
                           children: [
-                            const Text(
-                              "Select your location",
-                              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                            Text(
+                              context.tr('select_location'),
+                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
                             ),
                             const Spacer(),
                             GestureDetector(
@@ -444,13 +445,13 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                                   color: AppColors.primaryRed.withOpacity(.08),
                                   borderRadius: BorderRadius.circular(14),
                                 ),
-                                child: const Row(
+                                child: Row(
                                   children: [
-                                    Icon(Icons.gps_fixed_rounded, size: 18, color: AppColors.primaryRed),
-                                    SizedBox(width: 6),
+                                    const Icon(Icons.gps_fixed_rounded, size: 18, color: AppColors.primaryRed),
+                                    const SizedBox(width: 6),
                                     Text(
-                                      "Current",
-                                      style: TextStyle(color: AppColors.primaryRed, fontWeight: FontWeight.w700),
+                                      context.tr('current'),
+                                      style: const TextStyle(color: AppColors.primaryRed, fontWeight: FontWeight.w700),
                                     ),
                                   ],
                                 ),
@@ -521,9 +522,9 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                               elevation: 0,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
                             ),
-                            child: const Text(
-                              "Confirm Location",
-                              style: TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
+                            child: Text(
+                              context.tr('confirm_location'),
+                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
                             ),
                           ),
                         ),

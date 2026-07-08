@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../location/location_permission_screen.dart';
@@ -16,12 +17,12 @@ class LanguageSelectionScreen extends StatefulWidget {
 class _LanguageSelectionScreenState
     extends State<LanguageSelectionScreen> {
 
-  String selectedLanguage = "English";
+  late String selectedLanguage;
 
   @override
   void initState() {
     super.initState();
-
+    selectedLanguage = LocalizationService().isHindi ? "हिंदी" : "English";
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _checkLocationStatus();
     });
@@ -52,6 +53,7 @@ class _LanguageSelectionScreenState
 
   Widget buildLanguageTile({
     required String title,
+    required String localeCode,
   }) {
     final bool isSelected = selectedLanguage == title;
 
@@ -60,6 +62,7 @@ class _LanguageSelectionScreenState
         setState(() {
           selectedLanguage = title;
         });
+        LocalizationService().changeLocale(localeCode);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
@@ -152,9 +155,9 @@ class _LanguageSelectionScreenState
                 children: [
                   const SizedBox(height: 26),
 
-                  const Text(
-                    "Welcome to PosterGali",
-                    style: TextStyle(
+                  Text(
+                    context.tr('welcome'),
+                    style: const TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.w400,
                       color: Color(0xFF8B2D24),
@@ -163,9 +166,9 @@ class _LanguageSelectionScreenState
 
                   const SizedBox(height: 22),
 
-                  const Text(
-                    "Choose your\nlanguage",
-                    style: TextStyle(
+                  Text(
+                    context.tr('choose_language'),
+                    style: const TextStyle(
                       fontSize: 36,
                       height: 1.0,
                       fontWeight: FontWeight.w900,
@@ -182,8 +185,8 @@ class _LanguageSelectionScreenState
 
                   const SizedBox(height: 54),
 
-                  buildLanguageTile(title: "English"),
-                  buildLanguageTile(title: "हिंदी"),
+                  buildLanguageTile(title: "English", localeCode: 'en'),
+                  buildLanguageTile(title: "हिंदी", localeCode: 'hi'),
 
                   const Spacer(),
 
@@ -197,9 +200,9 @@ class _LanguageSelectionScreenState
                         borderRadius: BorderRadius.circular(45),
                       ),
                       alignment: Alignment.center,
-                      child: const Text(
-                        "Proceed",
-                        style: TextStyle(
+                      child: Text(
+                        context.tr('proceed'),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
                           fontWeight: FontWeight.w700,

@@ -3,6 +3,7 @@
   import 'package:flutter/cupertino.dart';
   import 'package:flutter/material.dart';
   import 'package:http/http.dart' as http;
+  import 'package:postergali/core/localization/localization_service.dart';
 
   import '../../../../core/constants/app_colors.dart';
   import '../../../posterman/bot_splash_screen.dart';
@@ -417,12 +418,12 @@
 
                 else if (selectedTab == 0 && noNearbyJobs)
 
-                  const SliverFillRemaining(
+                  SliverFillRemaining(
                     hasScrollBody: false,
                     child: Center(
                       child: Text(
-                        "No nearby posters found",
-                        style: TextStyle(
+                        context.tr('no_jobs'),
+                        style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
                         ),
@@ -432,12 +433,12 @@
 
                 else if (selectedTab == 1 && noNearbyOffers)
 
-                    const SliverFillRemaining(
+                    SliverFillRemaining(
                       hasScrollBody: false,
                       child: Center(
                         child: Text(
-                          "No nearby offers found",
-                          style: TextStyle(
+                          context.tr('no_offers'),
+                          style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.w600,
                           ),

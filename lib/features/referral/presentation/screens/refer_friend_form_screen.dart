@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:postergali/core/localization/localization_service.dart';
 
 class ReferFriendFormScreen extends StatefulWidget {
   const ReferFriendFormScreen({super.key});
@@ -53,9 +54,9 @@ class _ReferFriendFormScreenState extends State<ReferFriendFormScreen> {
                       ),
                     ),
                     const Spacer(),
-                    const Text(
-                      "Refer a friend",
-                      style: TextStyle(
+                    Text(
+                      context.tr('refer_friend'),
+                      style: const TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w700,
                         color: Color(0xff4B1E16),
@@ -72,12 +73,12 @@ class _ReferFriendFormScreenState extends State<ReferFriendFormScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: _card(
-                  title: "Enter your details",
+                  title: context.tr('your_details'),
                   child: Column(
                     children: [
-                      _field("Your name", yourName),
+                      _field(context.tr('your_name'), yourName),
                       const SizedBox(height: 20),
-                      _field("Your phone number", yourPhone),
+                      _field(context.tr('your_phone'), yourPhone),
                     ],
                   ),
                 ),
@@ -89,7 +90,7 @@ class _ReferFriendFormScreenState extends State<ReferFriendFormScreen> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: _card(
-                  title: "Enter your friend’s details",
+                  title: context.tr('friend_details'),
                   child: Column(
                     children: [
                       // ADD BUTTON
@@ -98,7 +99,7 @@ class _ReferFriendFormScreenState extends State<ReferFriendFormScreen> {
                         child: ElevatedButton.icon(
                           onPressed: addFriend,
                           icon: const Icon(Icons.add),
-                          label: const Text("Add Friend"),
+                          label: Text(context.tr('add_friend')),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xffB33D22),
                           ),
@@ -145,14 +146,14 @@ class _ReferFriendFormScreenState extends State<ReferFriendFormScreen> {
                                 const SizedBox(height: 10),
 
                                 _field(
-                                  "Friend name",
+                                  context.tr('friend_name'),
                                   friends[index]["name"]!,
                                 ),
 
                                 const SizedBox(height: 12),
 
                                 _field(
-                                  "Friend phone number",
+                                  context.tr('friend_phone'),
                                   friends[index]["phone"]!,
                                 ),
                               ],
@@ -177,10 +178,10 @@ class _ReferFriendFormScreenState extends State<ReferFriendFormScreen> {
                     color: const Color(0xffB33D22),
                     borderRadius: BorderRadius.circular(30),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
-                      "Submit Referral",
-                      style: TextStyle(
+                      context.tr('submit_referral'),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
