@@ -196,7 +196,7 @@
 
         for (int i = 0; i < radiusList.length; i++) {
           final radius = radiusList[i];
-          debugPrint("Trying initial radius: $radius km");
+          debugPrint("Trying radius for Jobs: $radius km");
           
           final results = await _fetchByRadius(
             endpoint: "jobs",
@@ -208,7 +208,11 @@
           if (results.isNotEmpty) {
             jobs = results;
             currentRadiusIndex = i;
-            break;
+            // If we have at least 5 results, we are good. 
+            // Otherwise, if there are more radii, keep looking.
+            if (jobs.length >= 5 || i == radiusList.length - 1) {
+              break;
+            }
           }
           currentRadiusIndex = i;
         }
@@ -241,7 +245,7 @@
       try {
         for (int i = 0; i < radiusList.length; i++) {
           final radius = radiusList[i];
-          debugPrint("Trying initial radius: $radius km");
+          debugPrint("Trying radius for Offers: $radius km");
 
           final results = await _fetchByRadius(
             endpoint: "offers",
@@ -252,7 +256,10 @@
           if (results.isNotEmpty) {
             offers = results;
             currentRadiusIndex = i;
-            break;
+            // If we have at least 5 results, we are good.
+            if (offers.length >= 5 || i == radiusList.length - 1) {
+              break;
+            }
           }
           currentRadiusIndex = i;
         }
@@ -587,7 +594,7 @@
   
     Widget _buildJobsGrid() {
         return SliverPadding(
-          padding: const EdgeInsets.only(left: 15, right: 10, top: 1),
+          padding: const EdgeInsets.only(left: 15, right: 10, top: 1, bottom: 30),
           sliver: SliverGrid(
             delegate: SliverChildBuilderDelegate(
               (context, index) {
@@ -611,7 +618,7 @@
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               crossAxisSpacing: 16,
-              mainAxisSpacing: 1,
+              mainAxisSpacing: 24,
               childAspectRatio: 0.62,
             ),
           ),
@@ -642,7 +649,7 @@
       }
 
       return SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
         sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -671,7 +678,7 @@
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 16,
-            mainAxisSpacing: 20,
+            mainAxisSpacing: 24,
             childAspectRatio: 0.62,
           ),
         ),
@@ -680,7 +687,7 @@
 
     Widget _buildOffersGrid() {
       return SliverPadding(
-        padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 8, bottom: 30),
         sliver: SliverGrid(
           delegate: SliverChildBuilderDelegate(
             (context, index) {
@@ -704,7 +711,7 @@
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 26,
-            mainAxisSpacing: 1,
+            mainAxisSpacing: 24,
               childAspectRatio: 0.50
           ),
         ),
