@@ -506,7 +506,7 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                             onPressed: () async {
                               await _saveLocation();
                               if (!mounted) return;
-                              Navigator.pushReplacement(
+                              Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
                                   builder: (_) => HomeScreen(
@@ -515,6 +515,7 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                                     longitude: _currentLatLng.longitude,
                                   ),
                                 ),
+                                (route) => false,
                               );
                             },
                             style: ElevatedButton.styleFrom(

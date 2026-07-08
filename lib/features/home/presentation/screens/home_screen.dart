@@ -17,6 +17,7 @@
   import '../widgets/result_header.dart';
   import '../../../job_details/presentation/screens/job_detail_screen.dart';
   import '../../../language/presentation/screens/language_selection_screen.dart';
+  import '../../../location/presentation/screens/location_selector_screen.dart';
   import '../../../offer_details/presentation/screens/offer_detail_screen.dart';
   import '../../../referral/presentation/screens/referral_screen.dart';
   
@@ -366,6 +367,14 @@
                       children: [
                         HomeHeader(
                           location: widget.location,
+                          onLocationTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => LocationSelectorScreen(),
+                              ),
+                            );
+                          },
                           onLanguageTap: () {
                             Navigator.push(
                               context,

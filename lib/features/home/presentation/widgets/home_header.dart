@@ -6,12 +6,14 @@ import '../../../../core/constants/app_assets.dart';
 class HomeHeader extends StatelessWidget {
   final String location;
   final VoidCallback onLanguageTap;
+  final VoidCallback? onLocationTap;
   final VoidCallback? onBannerTap;
 
   const HomeHeader({
     super.key,
     required this.location,
     required this.onLanguageTap,
+    this.onLocationTap,
     this.onBannerTap,
   });
 
@@ -44,49 +46,53 @@ class HomeHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   /// LOCATION
-                  Row(
-                    children: [
-                      /// LOCATION ICON
-                      Container(
-                        height: 30,
-                        width: 30,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          gradient: LinearGradient(
-                            colors: [
-                              AppColors.golden.withOpacity(.22),
-                              AppColors.golden.withOpacity(.08),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+                  GestureDetector(
+                    onTap: onLocationTap,
+                    behavior: HitTestBehavior.translucent,
+                    child: Row(
+                      children: [
+                        /// LOCATION ICON
+                        Container(
+                          height: 30,
+                          width: 30,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            gradient: LinearGradient(
+                              colors: [
+                                AppColors.golden.withOpacity(.22),
+                                AppColors.golden.withOpacity(.08),
+                              ],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                            border: Border.all(
+                              color: AppColors.golden.withOpacity(.18),
+                            ),
                           ),
-                          border: Border.all(
-                            color: AppColors.golden.withOpacity(.18),
-                          ),
-                        ),
-                        child: Image.asset(
-                          'assets/images/img_12.png', // your image path
-                          width: 16,
-                          height: 16,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      const SizedBox(width: 7),
-                      /// LOCATION TEXT
-                      Expanded(
-                        child: Text(
-                          location,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontFamily: 'HelveticaNeue',
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.textDark.withOpacity(.72),
+                          child: Image.asset(
+                            'assets/images/img_12.png', // your image path
+                            width: 16,
+                            height: 16,
+                            fit: BoxFit.contain,
                           ),
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 7),
+                        /// LOCATION TEXT
+                        Expanded(
+                          child: Text(
+                            location,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontFamily: 'HelveticaNeue',
+                              fontSize: 14,
+                              fontWeight: FontWeight.w700,
+                              color: AppColors.textDark.withOpacity(.72),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),

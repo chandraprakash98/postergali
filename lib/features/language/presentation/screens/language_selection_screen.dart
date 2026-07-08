@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:postergali/core/localization/localization_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/constants/app_colors.dart';
 import '../../../location/location_permission_screen.dart';
@@ -23,9 +24,6 @@ class _LanguageSelectionScreenState
   void initState() {
     super.initState();
     selectedLanguage = LocalizationService().isHindi ? "हिंदी" : "English";
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _checkLocationStatus();
-    });
   }
 
   Future<void> _checkLocationStatus() async {
@@ -42,13 +40,25 @@ class _LanguageSelectionScreenState
     }
   }
 
-  void _goToLocationSelector() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => const LocationPermissionScreen(),
-      ),
-    );
+  Future<void> _goToLocationSelector() async {
+    final prefs = await SharedPreferences.getInstance();
+    final saved = prefs.getStringList("saved_locations") ?? [];
+
+    if (saved.isNotEmpty && mounted) {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+        return;
+      }
+    }
+
+    if (mounted) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => LocationPermissionScreen(),
+        ),
+      );
+    }
   }
 
   Widget buildLanguageTile({

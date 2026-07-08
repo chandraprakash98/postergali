@@ -81,7 +81,7 @@ class _LocationPermissionScreenState
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (_) => const LocationSelectorScreen(),
+            builder: (_) => LocationSelectorScreen(),
           ),
         );
       }
@@ -94,7 +94,7 @@ class _LocationPermissionScreenState
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const LocationSelectorScreen(),
+        builder: (_) => LocationSelectorScreen(),
       ),
     );
   }
