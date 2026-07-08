@@ -40,6 +40,8 @@ class OfferController {
   Future<OfferRequest> buildRequest() async {
     final prefs = await SharedPreferences.getInstance();
     final fcmToken = prefs.getString('fcm_token') ?? "12345";
+1
+
 
     return OfferRequest(
       deviceId: fcmToken,
