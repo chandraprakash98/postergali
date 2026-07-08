@@ -115,6 +115,8 @@ class AppTranslations {
       'friend_phone': 'Friend phone number',
       'add_friend': 'Add Friend',
       'submit_referral': 'Submit Referral',
+      'liked_jobs': 'Liked Jobs',
+      'liked_offers': 'Liked Offers',
     },
     'hi': {
       'welcome': 'पोस्टरगली में आपका स्वागत है',
@@ -231,6 +233,8 @@ class AppTranslations {
       'friend_phone': 'दोस्त का फोन नंबर',
       'add_friend': 'दोस्त जोड़ें',
       'submit_referral': 'रेफरल सबमिट करें',
+      'liked_jobs': 'पसंद की गई नौकरियां',
+      'liked_offers': 'पसंद किए गए ऑफर्स',
     }
   };
 

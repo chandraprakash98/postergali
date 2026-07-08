@@ -7,16 +7,25 @@ class ResultHeader extends StatelessWidget {
   final int selectedTab;
   final int resultsCount;
   final VoidCallback onFilterTap;
+  final bool isLikedMode;
 
   const ResultHeader({
     super.key,
     required this.selectedTab,
     required this.resultsCount,
     required this.onFilterTap,
+    this.isLikedMode = false,
   });
 
   @override
   Widget build(BuildContext context) {
+    String title;
+    if (isLikedMode) {
+      title = selectedTab == 0 ? context.tr('liked_jobs') : context.tr('liked_offers');
+    } else {
+      title = selectedTab == 0 ? context.tr('jobs') : context.tr('offers');
+    }
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -24,7 +33,7 @@ class ResultHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              selectedTab == 0 ? context.tr('jobs') : context.tr('offers'),
+              title,
               style: const TextStyle(
                 fontFamily: 'ClashDisplay',
                 fontSize: 24,

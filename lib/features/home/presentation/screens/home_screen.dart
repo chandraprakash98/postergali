@@ -451,6 +451,7 @@
                         const SizedBox(height: 24),
                         ResultHeader(
                           selectedTab: selectedTab,
+                          isLikedMode: isLikedMode,
                           resultsCount: isLikedMode 
                               ? (selectedTab == 0 
                                   ? allLikedPosters.where((p) => p['type'] == 'job').length 
