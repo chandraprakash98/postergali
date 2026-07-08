@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:postergali/core/localization/localization_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/widgets/job_templates_full.dart';
@@ -26,11 +27,53 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   dynamic job;
   double? distanceKm;
   bool isDistanceLoading = true;
+  bool isLiked = false;
 
   @override
   void initState() {
     super.initState();
     fetchJob();
+    _checkLikedStatus();
+  }
+
+  Future<void> _checkLikedStatus() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final liked = prefs.getStringList('liked_posters') ?? [];
+      setState(() {
+        isLiked = liked.any((item) {
+          final data = jsonDecode(item);
+          return data['id'] == widget.jobId && data['type'] == 'job';
+        });
+      });
+    } catch (e) {
+      debugPrint("Check Liked Error: $e");
+    }
+  }
+
+  Future<void> _toggleLike() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      List<String> liked = prefs.getStringList('liked_posters') ?? [];
+
+      if (isLiked) {
+        liked.removeWhere((item) {
+          final data = jsonDecode(item);
+          return data['id'] == widget.jobId && data['type'] == 'job';
+        });
+      } else {
+        if (job != null) {
+          final posterData = Map<String, dynamic>.from(job);
+          posterData['type'] = 'job'; // Tag as job
+          liked.add(jsonEncode(posterData));
+        }
+      }
+
+      await prefs.setStringList('liked_posters', liked);
+      setState(() => isLiked = !isLiked);
+    } catch (e) {
+      debugPrint("Toggle Like Error: $e");
+    }
   }
 
   String getExpiryText() {
@@ -167,7 +210,11 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                         ),
                         Row(
                           children: [
-                            _topActionButton(icon: Icons.favorite_border_rounded),
+                            _topActionButton(
+                              icon: isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                              onTap: _toggleLike,
+                              color: isLiked ? Colors.red : Colors.black87,
+                            ),
                             const SizedBox(width: 10),
                             _topActionButton(icon: Icons.share_rounded),
                           ],
@@ -362,7 +409,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
 
   Widget _modernDivider() => Container(height: 54, width: 1, color: Colors.black12);
 
-  Widget _topActionButton({required IconData icon, VoidCallback? onTap}) {
+  Widget _topActionButton({required IconData icon, VoidCallback? onTap, Color? color}) {
     return Material(
       color: Colors.white,
       borderRadius: BorderRadius.circular(18),
@@ -377,7 +424,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
             borderRadius: BorderRadius.circular(18),
             border: Border.all(color: Colors.black12),
           ),
-          child: Icon(icon, size: 22, color: Colors.black87),
+          child: Icon(icon, size: 22, color: color ?? Colors.black87),
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:postergali/core/localization/localization_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:video_player/video_player.dart';
 
@@ -26,6 +27,7 @@ class _OfferDetailScreenState
     extends State<OfferDetailScreen> {
   bool isLoading = true;
   dynamic offer;
+  bool isLiked = false;
 
   final PageController _pageController =
   PageController(viewportFraction: 0.92);
@@ -46,6 +48,47 @@ class _OfferDetailScreenState
   void initState() {
     super.initState();
     fetchOffer();
+    _checkLikedStatus();
+  }
+
+  Future<void> _checkLikedStatus() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final liked = prefs.getStringList('liked_posters') ?? [];
+      setState(() {
+        isLiked = liked.any((item) {
+          final data = jsonDecode(item);
+          return data['id'] == widget.offerId && data['type'] == 'offer';
+        });
+      });
+    } catch (e) {
+      debugPrint("Check Liked Error: $e");
+    }
+  }
+
+  Future<void> _toggleLike() async {
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      List<String> liked = prefs.getStringList('liked_posters') ?? [];
+
+      if (isLiked) {
+        liked.removeWhere((item) {
+          final data = jsonDecode(item);
+          return data['id'] == widget.offerId && data['type'] == 'offer';
+        });
+      } else {
+        if (offer != null) {
+          final posterData = Map<String, dynamic>.from(offer);
+          posterData['type'] = 'offer'; // Tag as offer
+          liked.add(jsonEncode(posterData));
+        }
+      }
+
+      await prefs.setStringList('liked_posters', liked);
+      setState(() => isLiked = !isLiked);
+    } catch (e) {
+      debugPrint("Toggle Like Error: $e");
+    }
   }
 
   @override
@@ -371,17 +414,19 @@ class _OfferDetailScreenState
                   _topButton(
                     Icons
                         .arrow_back_ios_new_rounded,
-                        () => Navigator.pop(
+                        onTap: () => Navigator.pop(
                         context),
                   ),
                   Row(
                     children: [
-                      _topButton(Icons
-                          .favorite_border_rounded),
+                      _topButton(
+                        isLiked ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                        onTap: _toggleLike,
+                        color: isLiked ? Colors.red : null,
+                      ),
                       const SizedBox(
                           width: 10),
-                      _topButton(Icons
-                          .share_rounded),
+                      _topButton(Icons.share_rounded),
                     ],
                   ),
                 ],
@@ -683,9 +728,10 @@ class _OfferDetailScreenState
   }
 
   Widget _topButton(
-      IconData icon, [
+      IconData icon, {
         VoidCallback? onTap,
-      ]) {
+        Color? color,
+      }) {
     return Material(
       color: Colors.white,
       borderRadius:
@@ -705,7 +751,7 @@ class _OfferDetailScreenState
               color: Colors.black12,
             ),
           ),
-          child: Icon(icon, size: 22),
+          child: Icon(icon, size: 22, color: color),
         ),
       ),
     );

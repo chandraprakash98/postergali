@@ -4,6 +4,7 @@
   import 'package:flutter/material.dart';
   import 'package:http/http.dart' as http;
   import 'package:postergali/core/localization/localization_service.dart';
+  import 'package:shared_preferences/shared_preferences.dart';
 
   import '../../../../core/constants/app_colors.dart';
   import '../../../posterman/bot_splash_screen.dart';
@@ -59,6 +60,9 @@
     int selectedTab = 0;
     int selectedBottomIndex = 0;
   
+    List<dynamic> allLikedPosters = [];
+    bool isLikedMode = false;
+
     JobFilterModel jobFilter = JobFilterModel();
   
     final List<String> jobCategories = [
@@ -156,7 +160,26 @@
       return [];
     }
 
+    Future<void> _loadLikedPosters() async {
+      setState(() => isLoading = true);
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final liked = prefs.getStringList('liked_posters') ?? [];
+        setState(() {
+          allLikedPosters = liked.map((e) => jsonDecode(e)).toList();
+          isLoading = false;
+        });
+      } catch (e) {
+        setState(() => isLoading = false);
+      }
+    }
+
     Future<void> fetchJobs() async {
+      if (isLikedMode) {
+        setState(() => selectedTab = 0);
+        return;
+      }
+
       setState(() {
         isLoading = true;
         selectedTab = 0;
@@ -202,6 +225,11 @@
     }
 
     Future<void> fetchOffers() async {
+      if (isLikedMode) {
+        setState(() => selectedTab = 1);
+        return;
+      }
+
       setState(() {
         isLoading = true;
         selectedTab = 1;
@@ -332,7 +360,29 @@
           child: HomeBottomBar(
             selectedIndex: selectedBottomIndex,
             onItemTapped: (index) {
-              setState(() => selectedBottomIndex = index);
+              if (index == 0) {
+                setState(() {
+                  selectedBottomIndex = 0;
+                  isLikedMode = false;
+                });
+                fetchJobs();
+              } else if (index == 1) {
+                // Location Selection
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => LocationSelectorScreen(),
+                  ),
+                );
+              } else if (index == 2) {
+                setState(() {
+                  selectedBottomIndex = 2;
+                  isLikedMode = true;
+                });
+                _loadLikedPosters();
+              } else {
+                setState(() => selectedBottomIndex = index);
+              }
             },
           ),
         ),
@@ -401,7 +451,11 @@
                         const SizedBox(height: 24),
                         ResultHeader(
                           selectedTab: selectedTab,
-                          resultsCount: selectedTab == 0 ? jobs.length : offers.length,
+                          resultsCount: isLikedMode 
+                              ? (selectedTab == 0 
+                                  ? allLikedPosters.where((p) => p['type'] == 'job').length 
+                                  : allLikedPosters.where((p) => p['type'] == 'offer').length)
+                              : (selectedTab == 0 ? jobs.length : offers.length),
                           onFilterTap: () {
                             if (selectedTab == 0) {
                               _showFilterBottomSheet();
@@ -457,10 +511,10 @@
 
                   else if (selectedTab == 0)
 
-                      _buildJobsGrid()
+                      isLikedMode ? _buildLikedGrid() : _buildJobsGrid()
 
                     else
-                      _buildOffersGrid(),
+                      isLikedMode ? _buildLikedGrid() : _buildOffersGrid(),
 
                 if (isLoadingMore)
                   const SliverToBoxAdapter(
@@ -563,6 +617,66 @@
         );
     }
   
+    Widget _buildLikedGrid() {
+      final type = selectedTab == 0 ? 'job' : 'offer';
+      final filtered = allLikedPosters.where((p) => p['type'] == type).toList();
+
+      if (filtered.isEmpty) {
+        return SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.favorite_border_rounded, size: 80, color: Colors.black26),
+                const SizedBox(height: 20),
+                Text(
+                  selectedTab == 0 ? context.tr('no_jobs') : context.tr('no_offers'),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black54),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      return SliverPadding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+        sliver: SliverGrid(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              final poster = filtered[index];
+              final bool isJob = poster['type'] == 'job';
+
+              return _buildGridItemWrapper(
+                index: index,
+                onTap: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => isJob
+                          ? JobDetailScreen(jobId: poster['id'])
+                          : OfferDetailScreen(offerId: poster['id']),
+                    ),
+                  );
+                  _loadLikedPosters();
+                },
+                child: isJob ? HomeJobCard(job: poster) : HomeOfferCard(offer: poster),
+                isJob: isJob,
+              );
+            },
+            childCount: filtered.length,
+          ),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 16,
+            mainAxisSpacing: 20,
+            childAspectRatio: 0.62,
+          ),
+        ),
+      );
+    }
+
     Widget _buildOffersGrid() {
       return SliverPadding(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 8),
