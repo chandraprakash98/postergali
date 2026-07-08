@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../api_service.dart';
 import '../location_service.dart';
 import '../plan.dart';
@@ -35,9 +37,12 @@ class OfferController {
     plans = await apiService.fetchPlans();
   }
 
-  OfferRequest buildRequest() {
+  Future<OfferRequest> buildRequest() async {
+    final prefs = await SharedPreferences.getInstance();
+    final fcmToken = prefs.getString('fcm_token') ?? "12345";
+
     return OfferRequest(
-      deviceId: "12345",
+      deviceId: fcmToken,
       deviceOs: "android",
       masterCategory: "offers",
       subcategory: subCategory,

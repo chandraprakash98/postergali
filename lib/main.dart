@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/service/local_notification_service.dart';
 import 'package:postergali/service/otification_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'features/onboarding/presentation/screens/splash_screen.dart';
 import 'core/constants/app_colors.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -55,6 +56,11 @@ Future<void> main() async {
 
   String? token =
   await FirebaseMessaging.instance.getToken();
+
+  if (token != null) {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('fcm_token', token);
+  }
 
   print("FCM TOKEN: $token");
 

@@ -1,5 +1,7 @@
 
 
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../core/job_request.dart';
 import 'api_service.dart';
 import 'location_service.dart';
@@ -40,9 +42,12 @@ class PosterManController {
     plans = await apiService.fetchPlans();
   }
 
-  JobRequest buildRequest() {
+  Future<JobRequest> buildRequest() async {
+    final prefs = await SharedPreferences.getInstance();
+    final fcmToken = prefs.getString('fcm_token') ?? "12345";
+
     return JobRequest(
-      deviceId: "12345",
+      deviceId: fcmToken,
       deviceOs: "android",
       masterCategory: "jobs",
       subcategory: "IT",
