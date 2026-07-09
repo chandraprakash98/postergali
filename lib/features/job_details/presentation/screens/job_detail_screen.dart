@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +12,12 @@ import '../../../../core/constants/app_colors.dart';
 
 class JobDetailScreen extends StatefulWidget {
   final int jobId;
+  final dynamic initialDistance;
 
   const JobDetailScreen({
     super.key,
     required this.jobId,
+    this.initialDistance,
   });
 
   @override
@@ -218,9 +221,7 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                   child: _modernStatItem(
                                     icon: Icons.near_me_rounded,
                                     title: context.tr('distance'),
-                                    value: job['distance'] != null
-                                        ? "${double.tryParse(job['distance'].toString())?.toStringAsFixed(1) ?? job['distance']} km"
-                                        : "--",
+                                    value: _getDistanceText(),
                                   ),
                                 ),
                                 _modernDivider(),
@@ -361,6 +362,18 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   }
 
   Widget _modernDivider() => Container(height: 54, width: 1, color: Colors.black12);
+
+  String _getDistanceText() {
+    final dist = job?['distance'] ?? widget.initialDistance;
+    if (dist == null) return "--";
+
+    try {
+      final double value = double.parse(dist.toString());
+      return "${value.toStringAsFixed(1)} km";
+    } catch (e) {
+      return "$dist km";
+    }
+  }
 
   Widget _topActionButton({required IconData icon, VoidCallback? onTap, Color? color}) {
     return Material(

@@ -605,7 +605,10 @@
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (_) => JobDetailScreen(jobId: job['id']),
+                        builder: (_) => JobDetailScreen(
+                          jobId: job['id'],
+                          initialDistance: job['distance'],
+                        ),
                       ),
                     );
                   },
@@ -663,8 +666,14 @@
                     context,
                     MaterialPageRoute(
                       builder: (_) => isJob
-                          ? JobDetailScreen(jobId: poster['id'])
-                          : OfferDetailScreen(offerId: poster['id']),
+                          ? JobDetailScreen(
+                              jobId: poster['id'],
+                              initialDistance: poster['distance'],
+                            )
+                          : OfferDetailScreen(
+                              offerId: poster['id'],
+                              initialDistance: poster['distance'],
+                            ),
                     ),
                   );
                   _loadLikedPosters();
@@ -698,7 +707,10 @@
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => OfferDetailScreen(offerId: offer['id']),
+                      builder: (_) => OfferDetailScreen(
+                        offerId: offer['id'],
+                        initialDistance: offer['distance'],
+                      ),
                     ),
                   );
                 },

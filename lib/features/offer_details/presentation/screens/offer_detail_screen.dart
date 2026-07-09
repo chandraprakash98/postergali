@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -11,10 +12,12 @@ import '../../../../core/widgets/offer_templates_full.dart';
 
 class OfferDetailScreen extends StatefulWidget {
   final int offerId;
+  final dynamic initialDistance;
 
   const OfferDetailScreen({
     super.key,
     required this.offerId,
+    this.initialDistance,
   });
 
   @override
@@ -511,9 +514,7 @@ class _OfferDetailScreenState
                               Icons
                                   .near_me_outlined,
                               context.tr('distance'),
-                              offer['distance'] != null
-                                  ? "${double.tryParse(offer['distance'].toString())?.toStringAsFixed(1) ?? offer['distance']} km"
-                                  : "--",
+                              _getDistanceText(),
                             ),
                           ),
 
@@ -635,6 +636,18 @@ class _OfferDetailScreenState
         ),
       ),
     );
+  }
+
+  String _getDistanceText() {
+    final dist = offer?['distance'] ?? widget.initialDistance;
+    if (dist == null) return "--";
+
+    try {
+      final double value = double.parse(dist.toString());
+      return "${value.toStringAsFixed(1)} km";
+    } catch (e) {
+      return "$dist km";
+    }
   }
 
   Widget _infoItem(
