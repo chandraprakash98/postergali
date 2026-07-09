@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,8 +38,6 @@ class _OfferDetailScreenState
   List<String> sliderItems = [];
 
   String? videoUrl;
-
-  double distanceInKm = 0;
 
   String expiryText = "N/A";
 
@@ -134,8 +131,6 @@ class _OfferDetailScreenState
           }
         }
 
-        await _calculateDistance(data);
-
         _calculateExpiry(data);
 
         setState(() {
@@ -156,55 +151,6 @@ class _OfferDetailScreenState
     } catch (e) {
       debugPrint(e.toString());
       setState(() => isLoading = false);
-    }
-  }
-
-  Future<void> _calculateDistance(dynamic data) async {
-    try {
-      bool serviceEnabled =
-      await Geolocator.isLocationServiceEnabled();
-
-      if (!serviceEnabled) return;
-
-      LocationPermission permission =
-      await Geolocator.checkPermission();
-
-      if (permission == LocationPermission.denied) {
-        permission =
-        await Geolocator.requestPermission();
-      }
-
-      if (permission ==
-          LocationPermission.denied ||
-          permission ==
-              LocationPermission.deniedForever) {
-        return;
-      }
-
-      Position position =
-      await Geolocator.getCurrentPosition();
-
-      double userLat = position.latitude;
-      double userLng = position.longitude;
-
-      double offerLat = double.tryParse(
-          data['latitude']?.toString() ?? "0") ??
-          0;
-
-      double offerLng = double.tryParse(
-          data['longitude']?.toString() ?? "0") ??
-          0;
-
-      double distance = Geolocator.distanceBetween(
-        userLat,
-        userLng,
-        offerLat,
-        offerLng,
-      );
-
-      distanceInKm = distance / 1000;
-    } catch (e) {
-      debugPrint("DISTANCE ERROR => $e");
     }
   }
 
@@ -565,7 +511,9 @@ class _OfferDetailScreenState
                               Icons
                                   .near_me_outlined,
                               context.tr('distance'),
-                              "${distanceInKm.toStringAsFixed(1)} km",
+                              offer['distance'] != null
+                                  ? "${double.tryParse(offer['distance'].toString())?.toStringAsFixed(1) ?? offer['distance']} km"
+                                  : "--",
                             ),
                           ),
 

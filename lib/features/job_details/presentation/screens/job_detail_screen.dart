@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,8 +24,6 @@ class JobDetailScreen extends StatefulWidget {
 class _JobDetailScreenState extends State<JobDetailScreen> {
   bool isLoading = true;
   dynamic job;
-  double? distanceKm;
-  bool isDistanceLoading = true;
   bool isLiked = false;
 
   @override
@@ -102,48 +99,6 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
     }
   }
 
-  Future<void> calculateDistance() async {
-    try {
-      setState(() => isDistanceLoading = true);
-      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-      if (!serviceEnabled) {
-        setState(() => isDistanceLoading = false);
-        return;
-      }
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          setState(() => isDistanceLoading = false);
-          return;
-        }
-      }
-      if (permission == LocationPermission.deniedForever) {
-        setState(() => isDistanceLoading = false);
-        return;
-      }
-
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-      );
-
-      double jobLat = double.tryParse(job['latitude'].toString()) ?? 0;
-      double jobLng = double.tryParse(job['longitude'].toString()) ?? 0;
-
-      double distanceInMeters = Geolocator.distanceBetween(
-        position.latitude,
-        position.longitude,
-        jobLat,
-        jobLng,
-      );
-
-      distanceKm = distanceInMeters / 1000;
-      setState(() => isDistanceLoading = false);
-    } catch (e) {
-      setState(() => isDistanceLoading = false);
-    }
-  }
-
   Future<void> fetchJob() async {
     try {
       final response = await http.get(
@@ -153,7 +108,6 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
       if (response.statusCode == 200) {
         job = jsonDecode(response.body);
         setState(() => isLoading = false);
-        calculateDistance();
       } else {
         setState(() => isLoading = false);
       }
@@ -264,10 +218,9 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
                                   child: _modernStatItem(
                                     icon: Icons.near_me_rounded,
                                     title: context.tr('distance'),
-                                    value: distanceKm == null
-                                        ? "--"
-                                        : "${distanceKm!.toStringAsFixed(1)} km",
-                                    isLoading: isDistanceLoading,
+                                    value: job['distance'] != null
+                                        ? "${double.tryParse(job['distance'].toString())?.toStringAsFixed(1) ?? job['distance']} km"
+                                        : "--",
                                   ),
                                 ),
                                 _modernDivider(),
