@@ -71,13 +71,54 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
   fonts:
+    - family: BernardMTCondensed
+      fonts:
+        - asset: assets/fonts/BernardMTCondensedRegular.ttf
+
     - family: ClashDisplay
       fonts:
         - asset: assets/fonts/ClashDisplay.ttf
 
+    - family: Garamond
+      fonts:
+        - asset: assets/fonts/Garamond - Garamond - Regular.ttf
+
     - family: HelveticaNeue
       fonts:
         - asset: assets/fonts/HelveticaNeue.ttf
+
+    - family: Impact
+      fonts:
+        - asset: assets/fonts/impact.ttf
+
+    - family: KumarOne
+      fonts:
+        - asset: assets/fonts/kumarfont.otf
+
+    - family: KumarOne
+      fonts:
+        - asset: assets/fonts/KumarOne-Regular.ttf
+
+
+    - family: LemonMilk
+      fonts:
+        - asset: assets/fonts/LEMONMILK-Bold.otf
+
+    - family: MonteStella
+      fonts:
+        - asset: assets/fonts/MonteStella_Trial_Rg.ttf
+
+    - family: Qasira
+      fonts:
+        - asset: assets/fonts/Qasira.otf
+
+    - family: Quintessential
+      fonts:
+        - asset: assets/fonts/Quintessential-Regular.ttf
+
+    - family: TimesNewRoman
+      fonts:
+        - asset: assets/fonts/timesnew.ttf
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

@@ -12,7 +12,6 @@ class JobTemplatesSmall {
       ),
     );
   }
-
   static Widget templateT001(dynamic job) {
     return Container(
       decoration: _bgDecoration('assets/images/T001.png'),
@@ -22,12 +21,12 @@ class JobTemplatesSmall {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-
-              Colors.green.withOpacity(0.440),
-              Colors.black.withOpacity(0.30),
-              Colors.black.withOpacity(0.45),
+              const Color(0xFF2E7D32).withOpacity(0.830), // Primary/Saffron/100
+              const Color(0xFF179A1E).withOpacity(0.450), // Secondary/Retro Green/500
+              const Color(0xFF2E7D32).withOpacity(0.950), // Primary/Terracotta/700
             ],
-          ),       ),
+          ),
+        ),
         child: Stack(
           fit: StackFit.expand,
           children: [
@@ -41,29 +40,35 @@ class JobTemplatesSmall {
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 14,
-                vertical: 16,
+                vertical: 36,
               ),
               child: Column(
                 children: [
                   const Text(
-                    "JOB\nVACANCY",
+                    "VACANCY",
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontSize: 30,
+                      fontFamily: "KumarOne-Regular",
+                      fontSize: 34,
                       height: .85,
                       fontWeight: FontWeight.w900,
-                      color: Colors.white,
-                      letterSpacing: -1.5,
+                      color: Color(0xFF2E7D32), // Green text
+
                       shadows: [
-                        Shadow(
-                          offset: Offset(2, 2),
-                          color: Colors.black,
-                        ),
+                        // White outline
+                        Shadow(offset: Offset(-2, 0), color: Colors.white),
+                        Shadow(offset: Offset(2, 0), color: Colors.white),
+                        Shadow(offset: Offset(0, -2), color: Colors.white),
+                        Shadow(offset: Offset(0, 2), color: Colors.white),
+                        Shadow(offset: Offset(-2, -2), color: Colors.white),
+                        Shadow(offset: Offset(2, -2), color: Colors.white),
+                        Shadow(offset: Offset(-2, 2), color: Colors.white),
+                        Shadow(offset: Offset(2, 2), color: Colors.white),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 32),
 
                   Text(
                     (job['business_name'] ?? '').toUpperCase(),
@@ -71,18 +76,26 @@ class JobTemplatesSmall {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
+                      fontFamily: "KumarOne-Regular",
                       fontSize: 18,
-                      color: Colors.white,
+                      color: Color(0xFF2E7D32), // Green text
                       fontWeight: FontWeight.w800,
                       shadows: [
-                        Shadow(
-                          offset: Offset(1.5, 1.5),
-                          color: Colors.black,
-                        ),
+                        // White outline
+                        Shadow(offset: Offset(-2, 0), color: Colors.yellow),
+                        Shadow(offset: Offset(2, 0), color: Colors.white),
+                        Shadow(offset: Offset(0, -2), color: Colors.white),
+                        Shadow(offset: Offset(0, 2), color: Colors.white),
+                        Shadow(offset: Offset(-2, -2), color: Colors.white),
+                        Shadow(offset: Offset(2, -2), color: Colors.white),
+                        Shadow(offset: Offset(-2, 2), color: Colors.white),
+                        Shadow(offset: Offset(2, 2), color: Colors.white),
                       ],
                     ),
                   ),
 
+
+                  const SizedBox(height:22),
                   Expanded(
                     child: Center(
                       child: Text(
@@ -91,68 +104,75 @@ class JobTemplatesSmall {
                         maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
-                          fontSize: 28,
-                          height: .9,
+                          fontFamily: "kumarfont",
+                          fontSize: 14,
                           color: Colors.white,
-                          fontWeight: FontWeight.w900,
+                          fontWeight: FontWeight.bold,
+
                           shadows: [
-                            Shadow(
-                              offset: Offset(-2, -2),
-                              color: Colors.black,
-                            ),
-                            Shadow(
-                              offset: Offset(2, -2),
-                              color: Colors.black,
-                            ),
-                            Shadow(
-                              offset: Offset(-2, 2),
-                              color: Colors.black,
-                            ),
-                            Shadow(
-                              offset: Offset(2, 2),
-                              color: Colors.black,
-                            ),
+                            // White outline
+                            Shadow(offset: Offset(-1, 0), color: Colors.black87),
+                            Shadow(offset: Offset(1, 0), color: Colors.black87),
+                            Shadow(offset: Offset(0, -1), color: Colors.black87),
+                            Shadow(offset: Offset(0, 1), color: Colors.black87),
+                            Shadow(offset: Offset(-1, -1), color: Colors.black87),
+                            Shadow(offset: Offset(1, -1), color: Colors.black87),
+                            Shadow(offset: Offset(-1, 1), color: Colors.black87),
+                            Shadow(offset: Offset(1, 1), color: Colors.black87),
                           ],
                         ),
                       ),
                     ),
                   ),
 
+                  const SizedBox(height: 15),
+
+                  Text(
+                    (job['job_type'] ?? 'FULL TIME'),
+                    style: const TextStyle(
+                      fontFamily: "LEMONMILK-Bold",
+                      fontSize: 16,
+                      color: Colors.black87,
+                      shadows: [
+                        // White outline
+                        Shadow(offset: Offset(-1, 0), color: Colors.white),
+                        Shadow(offset: Offset(1, 0), color: Colors.white24),
+                        Shadow(offset: Offset(0, -1), color: Colors.white),
+                        Shadow(offset: Offset(0, 1), color: Colors.white24),
+                        Shadow(offset: Offset(-1, -1), color: Colors.white),
+                        Shadow(offset: Offset(1, -1), color: Colors.black87),
+                        Shadow(offset: Offset(-1, 1), color: Colors.white),
+                        Shadow(offset: Offset(1, 1), color: Colors.black87),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 15),
+
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 18,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(100),
-                    ),
                     child: Text(
                       "₹${job['salary'] ?? '25,000'}",
                       style: const TextStyle(
+                        fontFamily: "ClashDisplay",
                         fontSize: 24,
-                        fontWeight: FontWeight.w900,
-                        color: Color(0xff7AA933),
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xfff3f6f0),
+
+                        shadows: [
+                          // White outline
+                          Shadow(offset: Offset(-1, 0), color: Colors.black87),
+                          Shadow(offset: Offset(1, 0), color: Colors.black87),
+                          Shadow(offset: Offset(0, -1), color: Colors.black87),
+                          Shadow(offset: Offset(0, 1), color: Colors.black87),
+                          Shadow(offset: Offset(-1, -1), color: Colors.black87),
+                          Shadow(offset: Offset(1, -1), color: Colors.black87),
+                          Shadow(offset: Offset(-1, 1), color: Colors.black87),
+                          Shadow(offset: Offset(1, 1), color: Colors.black87),
+                        ],
                       ),
                     ),
                   ),
 
-                  const SizedBox(height: 10),
-
-                  Text(
-                    (job['job_type'] ?? 'FULL TIME').toUpperCase(),
-                    style: const TextStyle(
-                      fontSize: 16,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(1, 1),
-                          color: Colors.black,
-                        ),
-                      ],
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -161,6 +181,9 @@ class JobTemplatesSmall {
       ),
     );
   }
+
+
+
   static Widget templateT002(dynamic job) {
     return Container(
       decoration: _bgDecoration('assets/images/T002.png'),
@@ -277,9 +300,9 @@ class JobTemplatesSmall {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.amber.withOpacity(0.200),
-              Colors.amber.withOpacity(0.440),
-              Colors.redAccent.withOpacity(0.555),
+              const Color(0xFFE8D22D).withOpacity(0.630), // Primary/Saffron/100
+              const Color(0xFFE8D22D).withOpacity(0.850), // Secondary/Retro Green/500
+              const Color(0xFFE8D22D).withOpacity(0.550), // Primary/Terracotta/700
             ],
           ),
         ),
@@ -409,41 +432,51 @@ class JobTemplatesSmall {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.amber.withOpacity(0.500),
-              Colors.lightGreenAccent.withOpacity(0.3),
-              Colors.amber.withOpacity(0.500),
+              const Color(0xFFA64B2A).withOpacity(0.50), // Primary/Saffron/100
+              const Color(0xFFF3DAAC).withOpacity(0.800), // Secondary/Retro Green/500
+              const Color(0xFFA64B2A).withOpacity(0.950), // Primary/Terracotta/700
             ],
           ),
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 20),
           child: Column(
             children: [
-              const Text(
-                "WE'RE",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w900,
-                  color: Colors.white,
+
+
+
+              Transform.rotate(
+                angle: -0.02,
+                child: Container(
+
+
+                  child:  const Text(
+                    "WE'RE",
+                    style: TextStyle(
+                      fontFamily: "ClashDisplay",
+                      fontSize: 44,
+                      fontWeight: FontWeight.w900,
+                      color: Colors.white70,
+                    ),
+                  ),
                 ),
               ),
 
-              const SizedBox(height: 8),
-
               Transform.rotate(
-                angle: -0.08,
+                angle: -0.02,
                 child: Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
+                    horizontal: 27,
+                    vertical: 1,
                   ),
                   decoration: BoxDecoration(
                     color: const Color(0xffFFE600),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(1),
                   ),
                   child: const Text(
                     "HIRING",
                     style: TextStyle(
+                      fontFamily: "MonteStella_Trial_Rg",
                       fontSize: 26,
                       fontWeight: FontWeight.w900,
                       color: Colors.black,
@@ -453,7 +486,7 @@ class JobTemplatesSmall {
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 35),
 
               Text(
                 (job['business_name'] ?? '').toUpperCase(),
@@ -461,71 +494,38 @@ class JobTemplatesSmall {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: FontWeight.w900,
-                  color: Color(0xffFFE600),
-                  shadows: [
-                    Shadow(
-                      offset: Offset(-1.5, -1.5),
-                      color: Colors.black,
-                    ),
-                    Shadow(
-                      offset: Offset(1.5, -1.5),
-                      color: Colors.black,
-                    ),
-                    Shadow(
-                      offset: Offset(-1.5, 1.5),
-                      color: Colors.black,
-                    ),
-                    Shadow(
-                      offset: Offset(1.5, 1.5),
-                      color: Colors.black,
-                    ),
-                  ],
+                  color: Color(0xff130217),
                 ),
               ),
 
+              const SizedBox(height: 15),
               Expanded(
                 child: Center(
                   child: Text(
                     (job['job_role'] ?? '').toUpperCase(),
                     textAlign: TextAlign.center,
-                    maxLines: 3,
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 15,
+                      fontSize: 22,
                       height: 0.95,
                       fontWeight: FontWeight.w900,
                       color: Colors.white,
-                      shadows: [
-                        Shadow(
-                          offset: Offset(-2, -2),
-                          color: Colors.black,
-                        ),
-                        Shadow(
-                          offset: Offset(2, -2),
-                          color: Colors.black,
-                        ),
-                        Shadow(
-                          offset: Offset(-2, 2),
-                          color: Colors.black,
-                        ),
-                        Shadow(
-                          offset: Offset(2, 2),
-                          color: Colors.black,
-                        ),
-                      ],
+
                     ),
                   ),
                 ),
               ),
 
+
               Text(
                 (job['job_type'] ?? 'FULL TIME').toUpperCase(),
                 style: const TextStyle(
-                  fontSize: 18,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w900,
+                  fontSize: 22,
+                  color: Color(0xff3c3505),
+                  fontWeight: FontWeight.bold,
                   shadows: [
                     Shadow(
                       offset: Offset(1, 1),
@@ -540,15 +540,10 @@ class JobTemplatesSmall {
               Text(
                 "₹${job['salary'] ?? '18,000'}",
                 style: const TextStyle(
-                  fontSize: 26,
-                  color: Colors.white,
+                  fontSize: 18,
+                  color: Color(0xffedebdd),
                   fontWeight: FontWeight.w900,
-                  shadows: [
-                    Shadow(
-                      offset: Offset(1.5, 1.5),
-                      color: Colors.black,
-                    ),
-                  ],
+
                 ),
               ),
             ],
