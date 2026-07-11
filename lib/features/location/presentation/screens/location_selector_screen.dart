@@ -171,39 +171,40 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.cream,
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Positioned.fill(
-            child: GoogleMap(
-              initialCameraPosition: CameraPosition(target: _currentLatLng, zoom: 15),
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              zoomControlsEnabled: false,
-              compassEnabled: false,
-              mapToolbarEnabled: false,
-              rotateGesturesEnabled: false,
-              tiltGesturesEnabled: false,
-              onMapCreated: (controller) async {
-                controller.setMapStyle(_mapStyle);
-                if (!_mapController.isCompleted) {
-                  _mapController.complete(controller);
-                }
-              },
-              onCameraMove: (position) {
-                if (!_isMovingBySearch) {
-                  setState(() {
+            child: RepaintBoundary(
+              child: GoogleMap(
+                initialCameraPosition: CameraPosition(target: _currentLatLng, zoom: 15),
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                compassEnabled: false,
+                mapToolbarEnabled: false,
+                rotateGesturesEnabled: false,
+                tiltGesturesEnabled: false,
+                onMapCreated: (controller) async {
+                  controller.setMapStyle(_mapStyle);
+                  if (!_mapController.isCompleted) {
+                    _mapController.complete(controller);
+                  }
+                },
+                onCameraMove: (position) {
+                  if (!_isMovingBySearch) {
                     _currentLatLng = position.target;
-                  });
-                }
-              },
-              onCameraIdle: () async {
-                if (!_isMovingBySearch) {
-                  _debounce?.cancel();
-                  _debounce = Timer(const Duration(milliseconds: 300), () async {
-                    await _fetchAddress(_currentLatLng.latitude, _currentLatLng.longitude);
-                  });
-                }
-              },
+                  }
+                },
+                onCameraIdle: () async {
+                  if (!_isMovingBySearch) {
+                    _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 300), () async {
+                      await _fetchAddress(_currentLatLng.latitude, _currentLatLng.longitude);
+                    });
+                  }
+                },
+              ),
             ),
           ),
           IgnorePointer(
@@ -287,81 +288,56 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
               child: Column(
                 children: [
                   Material(
-                    elevation: 12,
-                    shadowColor: Colors.black.withOpacity(.12),
-                    borderRadius: BorderRadius.circular(34),
+                    elevation: 8,
+                    shadowColor: Colors.black26,
+                    borderRadius: BorderRadius.circular(30),
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(34),
-                        border: Border.all(color: AppColors.golden, width: 2),
+                        borderRadius: BorderRadius.circular(30),
+                        border: Border.all(color: AppColors.golden.withOpacity(0.5), width: 1.5),
                       ),
                       child: GooglePlaceAutoCompleteTextField(
                         textEditingController: _searchController,
                         focusNode: _searchFocus,
                         googleAPIKey: googleApiKey,
-                        debounceTime: 250,
+                        debounceTime: 300,
                         countries: const ["in"],
                         isLatLngRequired: true,
                         isCrossBtnShown: false,
                         containerHorizontalPadding: 0,
-                        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                        textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
                         inputDecoration: InputDecoration(
                           border: InputBorder.none,
                           hintText: "Search area, street or city",
-                          hintStyle: TextStyle(color: Colors.grey.shade500),
-                          contentPadding: const EdgeInsets.symmetric(vertical: 24),
-                          prefixIcon: Padding(
-                            padding: const EdgeInsets.only(left: 14, right: 10),
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(vertical: 10),
-                              width: 54,
-                              height: 54,
-                              decoration: BoxDecoration(
-                                border: Border.all(color: AppColors.primaryRed, width: 2),
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(Icons.search, color: AppColors.primaryRed, size: 30),
-                            ),
-                          ),
+                          hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 15),
+                          contentPadding: const EdgeInsets.symmetric(vertical: 16),
+                          prefixIcon: const Icon(Icons.search, color: AppColors.primaryRed, size: 24),
                         ),
                         itemClick: (prediction) async {
                           FocusScope.of(context).unfocus();
                           _searchController.text = prediction.description ?? "";
                         },
                         itemBuilder: (context, index, prediction) {
-                          return Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            padding: const EdgeInsets.all(14),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(18),
-                            ),
+                          return Padding(
+                            padding: const EdgeInsets.all(12),
                             child: Row(
                               children: [
-                                Container(
-                                  width: 46,
-                                  height: 46,
-                                  decoration: BoxDecoration(
-                                    color: AppColors.primaryRed.withOpacity(.1),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: const Icon(Icons.location_on_rounded, color: AppColors.primaryRed),
-                                ),
-                                const SizedBox(width: 14),
+                                const Icon(Icons.location_on_rounded, color: AppColors.primaryRed, size: 20),
+                                const SizedBox(width: 12),
                                 Expanded(
                                   child: Text(
                                     prediction.description ?? "",
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                                    style: const TextStyle(fontSize: 14),
                                   ),
                                 ),
                               ],
                             ),
                           );
                         },
-                        seperatedBuilder: Divider(height: 1, thickness: 1, color: Colors.grey.shade100),
+                        seperatedBuilder: const Divider(height: 1),
                         getPlaceDetailWithLatLng: (prediction) async {
                           if (prediction.lat != null && prediction.lng != null) {
                             await _moveToLocation(
@@ -374,84 +350,88 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                     ),
                   ),
                   const Spacer(),
+                  const SizedBox(height: 10),
                   GestureDetector(
                     onTap: _getCurrentLocation,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 18),
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(26),
+                        borderRadius: BorderRadius.circular(22),
                         border: Border.all(color: AppColors.primaryRed, width: 1.6),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(.08),
-                            blurRadius: 18,
-                            offset: const Offset(0, 6),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
                         ],
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.my_location_rounded, color: AppColors.primaryRed),
-                          const SizedBox(width: 12),
+                          const Icon(Icons.my_location_rounded, color: AppColors.primaryRed, size: 20),
+                          const SizedBox(width: 10),
                           Text(
                             context.tr('use_current_location'),
                             style: const TextStyle(
                               color: AppColors.primaryRed,
                               fontWeight: FontWeight.w700,
-                              fontSize: 16,
+                              fontSize: 15,
                             ),
                           ),
                         ],
                       ),
                     ),
                   ),
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 12),
                   Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.fromLTRB(22, 22, 22, 30),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
                     decoration: const BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(34),
-                        topRight: Radius.circular(34),
+                        topLeft: Radius.circular(30),
+                        topRight: Radius.circular(30),
                       ),
+                      boxShadow: [
+                        BoxShadow(color: Colors.black12, blurRadius: 15, offset: Offset(0, -4)),
+                      ],
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Container(
-                          width: 56,
-                          height: 6,
+                          width: 40,
+                          height: 4,
                           decoration: BoxDecoration(
                             color: Colors.grey.shade300,
                             borderRadius: BorderRadius.circular(20),
                           ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 20),
                         Row(
                           children: [
                             Text(
                               context.tr('select_location'),
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                             ),
                             const Spacer(),
                             GestureDetector(
                               onTap: _getCurrentLocation,
                               child: Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                                 decoration: BoxDecoration(
                                   color: AppColors.primaryRed.withOpacity(.08),
-                                  borderRadius: BorderRadius.circular(14),
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.gps_fixed_rounded, size: 18, color: AppColors.primaryRed),
-                                    const SizedBox(width: 6),
+                                    const Icon(Icons.gps_fixed_rounded, size: 16, color: AppColors.primaryRed),
+                                    const SizedBox(width: 4),
                                     Text(
                                       context.tr('current'),
-                                      style: const TextStyle(color: AppColors.primaryRed, fontWeight: FontWeight.w700),
+                                      style: const TextStyle(color: AppColors.primaryRed, fontWeight: FontWeight.w700, fontSize: 13),
                                     ),
                                   ],
                                 ),
@@ -459,37 +439,39 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 22),
+                        const SizedBox(height: 16),
                         Container(
                           width: double.infinity,
-                          padding: const EdgeInsets.all(18),
+                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
                             color: AppColors.lightCream,
-                            borderRadius: BorderRadius.circular(26),
-                            border: Border.all(color: AppColors.primaryRed.withOpacity(.12)),
+                            borderRadius: BorderRadius.circular(22),
+                            border: Border.all(color: AppColors.primaryRed.withOpacity(.1)),
                           ),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Container(
-                                width: 60,
-                                height: 60,
+                                width: 50,
+                                height: 50,
                                 decoration: const BoxDecoration(color: AppColors.primaryRed, shape: BoxShape.circle),
-                                child: const Icon(Icons.location_on_rounded, color: Colors.white, size: 32),
+                                child: const Icon(Icons.location_on_rounded, color: Colors.white, size: 28),
                               ),
-                              const SizedBox(width: 16),
+                              const SizedBox(width: 14),
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(_city, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800)),
-                                    const SizedBox(height: 8),
+                                    Text(_city, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                                    const SizedBox(height: 6),
                                     Text(
                                       _address,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
-                                        fontSize: 14,
-                                        height: 1.5,
-                                        color: Colors.black.withOpacity(.68),
+                                        fontSize: 13,
+                                        height: 1.4,
+                                        color: Colors.black.withOpacity(.6),
                                       ),
                                     ),
                                   ],
@@ -498,10 +480,10 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 22),
+                        const SizedBox(height: 20),
                         SizedBox(
                           width: double.infinity,
-                          height: 58,
+                          height: 54,
                           child: ElevatedButton(
                             onPressed: () async {
                               await _saveLocation();
@@ -521,11 +503,11 @@ class _LocationSelectorScreenState extends State<LocationSelectorScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryRed,
                               elevation: 0,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(22)),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                             ),
                             child: Text(
                               context.tr('confirm_location'),
-                              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w700, color: Colors.white),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700, color: Colors.white),
                             ),
                           ),
                         ),

@@ -18,6 +18,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   int _currentPage = 0;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    precacheImage(const AssetImage('assets/images/img_7.png'), context);
+    precacheImage(const AssetImage('assets/images/img_11.png'), context);
+    precacheImage(const AssetImage('assets/images/img.png'), context);
+  }
+
   final List<Map<String, String>> _slides = [
     {
       'title': 'PosterGali pe\nlagao aamdani\nbadhao',
@@ -251,38 +259,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
 
-        /// BOTTOM BLUR ONLY
+        /// BOTTOM BLUR REPLACED WITH GRADIENT FOR PERFORMANCE
         Positioned(
           left: 0,
           right: 0,
           bottom: 0,
-          child: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 10,
-              ),
-              child: Container(
-                height: 300,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      const Color(0x00FFF8E8),
-                      const Color(0x98F6E8BF),
-                      const Color(0xA9F8D990),
-                      const Color(0x55F5E3BC),
-                    ],
-                    stops: const [
-                      0.0,
-                      0.40,
-                      0.75,
-                      1.0,
-                    ],
-                  ),
-                ),
+          child: Container(
+            height: 350,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  const Color(0x00FFF8E8),
+                  const Color(0xCCF6E8BF),
+                  const Color(0xEEF8D990),
+                  const Color(0xFFF5E3BC),
+                ],
+                stops: const [
+                  0.0,
+                  0.30,
+                  0.65,
+                  1.0,
+                ],
               ),
             ),
           ),

@@ -1,5 +1,6 @@
 
 
+import 'dart:io' show Platform;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/job_request.dart';
@@ -48,7 +49,7 @@ class PosterManController {
 
     return JobRequest(
       deviceId: fcmToken,
-      deviceOs: "android",
+      deviceOs: Platform.isIOS ? "ios" : "android",
       masterCategory: "jobs",
       subcategory: "IT",
       businessName: businessName,

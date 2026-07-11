@@ -43,7 +43,7 @@ class OfferController {
 
     return OfferRequest(
       deviceId: fcmToken,
-      deviceOs: "android",
+      deviceOs: Platform.isIOS ? "ios" : "android",
       masterCategory: "offers",
       subcategory: subCategory,
       businessName: businessName,

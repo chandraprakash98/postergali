@@ -20,6 +20,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      precacheImage(const AssetImage('assets/images/img.png'), context);
+      precacheImage(const AssetImage(AppAssets.splashLogo), context);
+    });
+
     Future.delayed(const Duration(seconds: 3), () async {
       if (!mounted) return;
 
