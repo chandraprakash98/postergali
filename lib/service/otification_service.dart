@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'local_notification_service.dart';
 
 class NotificationService {
@@ -13,9 +14,20 @@ class NotificationService {
     );
 
     // Device Token
-    String? token = await messaging.getToken();
-
-    print("FCM TOKEN: $token");
+    try {
+      String? token;
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        final apnsToken = await messaging.getAPNSToken();
+        if (apnsToken != null) {
+          token = await messaging.getToken();
+        }
+      } else {
+        token = await messaging.getToken();
+      }
+      print("FCM TOKEN (Service): $token");
+    } catch (e) {
+      print("Error fetching token in NotificationService: $e");
+    }
 
     // Foreground Notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
