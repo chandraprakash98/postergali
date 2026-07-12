@@ -20,7 +20,7 @@ class OfferTemplates {
             fit: BoxFit.scaleDown,
             child: SizedBox(
               width: 300,
-              height: 400,
+              height: 380,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -92,7 +92,7 @@ class OfferTemplates {
             fit: BoxFit.scaleDown,
             child: SizedBox(
               width: 300,
-              height: 400,
+              height: 380,
               child: Column(
                 children: [
                   const SizedBox(height: 34),
@@ -160,7 +160,7 @@ class OfferTemplates {
             fit: BoxFit.scaleDown,
             child: SizedBox(
               width: 300,
-              height: 400,
+              height: 380,
               child: Column(
                 children: [
                   const SizedBox(height: 34),
@@ -224,7 +224,7 @@ class OfferTemplates {
             fit: BoxFit.scaleDown,
             child: SizedBox(
               width: 300,
-              height: 400,
+              height: 380,
               child: Column(
                 children: [
                   const SizedBox(height: 34),

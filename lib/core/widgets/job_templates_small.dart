@@ -48,7 +48,7 @@ class JobTemplatesSmall {
                 fit: BoxFit.scaleDown,
                 child: SizedBox(
                   width: 300,
-                  height: 400,
+                  height: 380,
                   child: Column(
                     children: [
                       Text(
@@ -178,7 +178,7 @@ class JobTemplatesSmall {
                 fit: BoxFit.scaleDown,
                 child: SizedBox(
                   width: 300,
-                  height: 400,
+                  height: 380,
                   child: Column(
                     children: [
                       Text(
