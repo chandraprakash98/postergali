@@ -19,19 +19,19 @@ class HomeJobCard extends StatelessWidget {
 
     switch (job['temp_id']) {
       case 'T001':
-        card = JobTemplatesSmall.templateT001(job);
+        card = JobTemplatesSmall.templateT001(job, context);
         break;
       case 'T002':
-        card = JobTemplatesSmall.templateT002(job);
+        card = JobTemplatesSmall.templateT002(job, context);
         break;
       case 'T003':
-        card = JobTemplatesSmall.templateT003(job);
+        card = JobTemplatesSmall.templateT003(job, context);
         break;
       case 'T004':
-        card = JobTemplatesSmall.templateT004(job);
+        card = JobTemplatesSmall.templateT004(job, context);
         break;
       default:
-        card = JobTemplates.defaultTemplate(job);
+        card = JobTemplates.defaultTemplate(job, context);
     }
 
     return AspectRatio(
@@ -101,19 +101,19 @@ class HomeOfferCard extends StatelessWidget {
 
     switch (offer['temp_id']) {
       case 'T001':
-        card = OfferTemplates.templateT001(offer);
+        card = OfferTemplates.templateT001(offer, context);
         break;
       case 'T002':
-        card = OfferTemplates.templateT002(offer);
+        card = OfferTemplates.templateT002(offer, context);
         break;
       case 'T003':
-        card = OfferTemplates.templateT003(offer);
+        card = OfferTemplates.templateT003(offer, context);
         break;
       case 'T004':
-        card = OfferTemplates.templateT004(offer);
+        card = OfferTemplates.templateT004(offer, context);
         break;
       default:
-        card = OfferTemplates.defaultTemplate(offer);
+        card = OfferTemplates.defaultTemplate(offer, context);
     }
 
     return AspectRatio(

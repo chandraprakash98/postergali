@@ -215,7 +215,7 @@ class _OfferDetailScreenState
 
       if (!mounted) return;
 
-      await _videoController!
+      _videoController!
         ..setLooping(true)
         ..setVolume(1.0);
 
@@ -260,24 +260,19 @@ class _OfferDetailScreenState
     switch (offer['temp_id']) {
       case 'T001':
       case 'T01':
-        return OfferTemplatesFull.templateT001(
-            offer);
+        return OfferTemplatesFull.templateT001(offer, context);
 
       case 'T002':
-        return OfferTemplatesFull.templateT002(
-            offer);
+        return OfferTemplatesFull.templateT002(offer, context);
 
       case 'T003':
-        return OfferTemplatesFull.templateT003(
-            offer);
+        return OfferTemplatesFull.templateT003(offer, context);
 
       case 'T004':
-        return OfferTemplatesFull.templateT004(
-            offer);
+        return OfferTemplatesFull.templateT004(offer, context);
 
       default:
-        return OfferTemplatesFull.defaultTemplate(
-            offer);
+        return OfferTemplatesFull.defaultTemplate(offer, context);
     }
   }
 
@@ -331,7 +326,7 @@ class _OfferDetailScreenState
         item,
         fit: BoxFit.cover,
         width: double.infinity,
-        errorBuilder: (_, __, ___) =>
+        errorBuilder: (_, ___, ____) =>
         const Center(
           child: Icon(Icons.broken_image),
         ),
@@ -389,40 +384,22 @@ class _OfferDetailScreenState
                     horizontal: 20),
                 child: Column(
                   children: [
-                    SizedBox(
-                      height:
-                      MediaQuery.of(context)
-                          .size
-                          .height *
-                          0.63,
-                      child: PageView.builder(
-                        controller:
-                        _pageController,
-                        itemCount:
-                        sliderItems.length,
-                        onPageChanged:
-                            (index) {
-                          setState(() =>
-                          currentPage =
-                              index);
-                        },
-                        itemBuilder:
-                            (_, index) {
-                          return Padding(
-                            padding:
-                            const EdgeInsets
-                                .only(
-                                right:
-                                12),
-                            child:
-                            _buildSliderItem(
-                              sliderItems[
-                              index],
+                          AspectRatio(
+                            aspectRatio: 0.72,
+                            child: PageView.builder(
+                              controller: _pageController,
+                              itemCount: sliderItems.length,
+                              onPageChanged: (index) {
+                                setState(() => currentPage = index);
+                              },
+                              itemBuilder: (_, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: _buildSliderItem(sliderItems[index]),
+                                );
+                              },
                             ),
-                          );
-                        },
-                      ),
-                    ),
+                          ),
 
                     const SizedBox(height: 18),
 

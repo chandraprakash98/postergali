@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../constants/app_assets.dart';
 
 class OfferTemplates {
-  static Widget templateT001(dynamic offer) {
+  static double _getResponsiveSize(BuildContext context, double baseSize) {
+    double width = MediaQuery.of(context).size.width;
+    double scaleFactor = width / 375.0;
+    scaleFactor = scaleFactor.clamp(0.85, 1.2);
+    return baseSize * scaleFactor;
+  }
+
+  static Widget templateT001(dynamic offer, BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: [
         Image.asset(AppAssets.offerImg1, fit: BoxFit.cover),
         Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.all(12.0),
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: SizedBox(
@@ -19,129 +25,49 @@ class OfferTemplates {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(height: 50),
-                  Align(
-                    alignment: Alignment.center,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 2),
-                      child: Text(
-                        (offer['business_name'] ?? '').toString(),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: GoogleFonts.yesevaOne(
-                          color: const Color(0xffF5B32C),
-                          fontSize: 19,
-                          fontWeight: FontWeight.w700,
-                          height: 1,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 44),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      (offer['offer_type'] ?? 'SPECIAL OFFER').toString().toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w900,
-                        height: 1,
-                        letterSpacing: -.5,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 44),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 210),
-                          child: Text(
-                            (offer['offer_details'] ?? '').toString().toUpperCase(),
-                            textAlign: TextAlign.center,
-                            softWrap: true,
-                            overflow: TextOverflow.visible,
-                            style: const TextStyle(
-                              color: Color(0xff6CF6F2),
-                              fontSize: 32,
-                              fontWeight: FontWeight.w900,
-                              height: 1.08,
-                              letterSpacing: -1.5,
-                              shadows: [
-                                Shadow(color: Colors.black45, blurRadius: 6, offset: Offset(2, 3)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  static Widget templateT002(dynamic offer) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(AppAssets.offerImg2, fit: BoxFit.cover),
-        Padding(
-          padding: const EdgeInsets.all(14.0),
-          child: FittedBox(
-            fit: BoxFit.scaleDown,
-            child: SizedBox(
-              width: 300,
-              height: 400,
-              child: Column(
-                children: [
-                  const SizedBox(height: 34),
                   Text(
-                    offer['business_name'] ?? '',
-                    textAlign: TextAlign.center,
+                    (offer['business_name'] ?? '').toString().toUpperCase(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 18,
-                      fontStyle: FontStyle.italic,
+                    style: TextStyle(
+                      fontFamily: "KumarOne",
+                      color: const Color(0xffF5B32C),
+                      fontSize: _getResponsiveSize(context, 22),
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(height: 84),
+                  const SizedBox(height: 40),
                   Text(
-                    offer['offer_type'] ?? '',
+                    (offer['offer_type'] ?? 'SPECIAL OFFER').toString().toUpperCase(),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
+                      fontFamily: "Impact",
                       color: Colors.white,
+                      fontSize: _getResponsiveSize(context, 24),
                       fontWeight: FontWeight.w900,
-                      fontSize: 16,
-                      height: .96,
+                      letterSpacing: 1,
                     ),
                   ),
-                  const SizedBox(height: 54),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(
-                      offer['offer_details'] ?? '',
-                      textAlign: TextAlign.center,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Color(0xffFFF04A),
-                        fontWeight: FontWeight.w900,
-                        fontSize: 19,
-                        height: 1.01,
+                  const SizedBox(height: 40),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        (offer['offer_details'] ?? '').toString().toUpperCase(),
+                        textAlign: TextAlign.center,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: "Qasira",
+                          color: const Color(0xff6CF6F2),
+                          fontSize: _getResponsiveSize(context, 38),
+                          fontWeight: FontWeight.w900,
+                          height: 1.1,
+                          shadows: const [
+                            Shadow(color: Colors.black, blurRadius: 4, offset: Offset(2, 2)),
+                          ],
+                        ),
                       ),
                     ),
                   ),
@@ -155,13 +81,13 @@ class OfferTemplates {
     );
   }
 
-  static Widget templateT003(dynamic offer) {
+  static Widget templateT002(dynamic offer, BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: [
-        Image.asset(AppAssets.offerImg3, fit: BoxFit.cover),
+        Image.asset(AppAssets.offerImg2, fit: BoxFit.cover),
         Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.all(12.0),
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: SizedBox(
@@ -171,33 +97,111 @@ class OfferTemplates {
                 children: [
                   const SizedBox(height: 34),
                   Text(
-                    offer['business_name'] ?? '',
+                    (offer['business_name'] ?? '').toString().toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: "BernardMTCondensed",
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: _getResponsiveSize(context, 24),
+                    ),
+                  ),
+                  const SizedBox(height: 80),
+                  Text(
+                    (offer['offer_type'] ?? '').toString().toUpperCase(),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Color(0xffFFD08A),
+                    style: TextStyle(
+                      fontFamily: "Impact",
+                      color: Colors.white,
                       fontWeight: FontWeight.w900,
-                      fontSize: 27,
-                      height: .95,
+                      fontSize: _getResponsiveSize(context, 20),
                     ),
                   ),
-                  const Spacer(),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      (offer['offer_type'] ?? 'OFFER').toString().toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 28, height: .88),
+                  const SizedBox(height: 50),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        (offer['offer_details'] ?? '').toString().toUpperCase(),
+                        textAlign: TextAlign.center,
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontFamily: "Garamond",
+                          color: const Color(0xffFFF04A),
+                          fontWeight: FontWeight.w900,
+                          fontSize: _getResponsiveSize(context, 28),
+                          height: 1,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  static Widget templateT003(dynamic offer, BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.asset(AppAssets.offerImg3, fit: BoxFit.cover),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: SizedBox(
+              width: 300,
+              height: 400,
+              child: Column(
+                children: [
+                  const SizedBox(height: 34),
+                  Text(
+                    (offer['business_name'] ?? '').toString().toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: "Quintessential",
+                      color: const Color(0xffFFD08A),
+                      fontWeight: FontWeight.w900,
+                      fontSize: _getResponsiveSize(context, 32),
                     ),
                   ),
                   const Spacer(),
                   Text(
-                    offer['offer_details'] ?? '',
+                    (offer['offer_type'] ?? 'OFFER').toString().toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: "Impact",
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: _getResponsiveSize(context, 36),
+                    ),
+                  ),
+                  const Spacer(),
+                  Text(
+                    (offer['offer_details'] ?? '').toString().toUpperCase(),
                     textAlign: TextAlign.center,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontSize: 24, fontStyle: FontStyle.italic, height: 1),
+                    style: TextStyle(
+                      fontFamily: "TimesNewRoman",
+                      color: Colors.white,
+                      fontSize: _getResponsiveSize(context, 30),
+                      fontWeight: FontWeight.bold,
+                      fontStyle: FontStyle.italic,
+                    ),
                   ),
                   const SizedBox(height: 12),
                 ],
@@ -209,13 +213,13 @@ class OfferTemplates {
     );
   }
 
-  static Widget templateT004(dynamic offer) {
+  static Widget templateT004(dynamic offer, BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: [
         Image.asset(AppAssets.offerImg4, fit: BoxFit.cover),
         Padding(
-          padding: const EdgeInsets.all(14.0),
+          padding: const EdgeInsets.all(12.0),
           child: FittedBox(
             fit: BoxFit.scaleDown,
             child: SizedBox(
@@ -225,28 +229,43 @@ class OfferTemplates {
                 children: [
                   const SizedBox(height: 34),
                   Text(
-                    offer['business_name'] ?? '',
+                    (offer['business_name'] ?? '').toString().toUpperCase(),
                     textAlign: TextAlign.center,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700, fontSize: 16),
+                    style: TextStyle(
+                      fontFamily: "LemonMilk",
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: _getResponsiveSize(context, 20),
+                    ),
                   ),
-                  const SizedBox(height: 64),
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Text(
-                      (offer['offer_type'] ?? 'NEW ARRIVALS').toString().toUpperCase(),
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w900, fontSize: 26),
+                  const SizedBox(height: 60),
+                  Text(
+                    (offer['offer_type'] ?? 'NEW ARRIVALS').toString().toUpperCase(),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontFamily: "ClashDisplay",
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: _getResponsiveSize(context, 32),
                     ),
                   ),
                   const Spacer(),
                   Text(
-                    offer['offer_details'] ?? '',
+                    (offer['offer_details'] ?? '').toString().toUpperCase(),
                     textAlign: TextAlign.center,
                     maxLines: 4,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Color(0xffFFF04A), fontWeight: FontWeight.w900, fontSize: 22, height: .95),
+                    style: TextStyle(
+                      fontFamily: "MonteStella",
+                      color: const Color(0xffFFF04A),
+                      fontWeight: FontWeight.w900,
+                      fontSize: _getResponsiveSize(context, 30),
+                      height: .95,
+                    ),
                   ),
                   const Spacer(),
                 ],
@@ -258,27 +277,44 @@ class OfferTemplates {
     );
   }
 
-  static Widget defaultTemplate(dynamic offer) {
+  static Widget defaultTemplate(dynamic offer, BuildContext context) {
     return Container(
       color: Colors.white,
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            offer['business_name'] ?? '',
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w900, fontSize: 22),
+      padding: const EdgeInsets.all(24),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: SizedBox(
+          width: 300,
+          height: 400,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                (offer['business_name'] ?? '').toString().toUpperCase(),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: "HelveticaNeue",
+                  fontWeight: FontWeight.w900,
+                  fontSize: _getResponsiveSize(context, 26),
+                  color: Colors.black,
+                ),
+              ),
+              const Spacer(),
+              Text(
+                (offer['offer_details'] ?? '').toString().toUpperCase(),
+                maxLines: 6,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontFamily: "HelveticaNeue",
+                  fontWeight: FontWeight.w700,
+                  fontSize: _getResponsiveSize(context, 22),
+                  color: Colors.black87,
+                ),
+              ),
+            ],
           ),
-          const Spacer(),
-          Text(
-            offer['offer_details'] ?? '',
-            maxLines: 4,
-            overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-          ),
-        ],
+        ),
       ),
     );
   }
