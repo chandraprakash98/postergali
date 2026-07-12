@@ -23,7 +23,7 @@ class LocalNotificationService {
     );
 
     await flutterLocalNotificationsPlugin.initialize(
-      settings: initializationSettings,
+      initializationSettings,
     );
   }
 
@@ -56,10 +56,10 @@ class LocalNotificationService {
     );
 
     await flutterLocalNotificationsPlugin.show(
-      id: id,
-      title: title,
-      body: body,
-      notificationDetails: details,
+      id,
+      title,
+      body,
+      details,
     );
   }
 }

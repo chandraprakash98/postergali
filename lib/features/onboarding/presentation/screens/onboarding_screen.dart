@@ -23,6 +23,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     super.didChangeDependencies();
     precacheImage(const AssetImage('assets/images/img_7.png'), context);
     precacheImage(const AssetImage('assets/images/img_11.png'), context);
+    precacheImage(const AssetImage('assets/images/img_12.png'), context);
     precacheImage(const AssetImage('assets/images/img.png'), context);
   }
 
@@ -39,10 +40,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     {
       'title': 'Offers ya job\nchahiye?',
       'subtitle': 'PosterGali jaiye..',
-      'button': 'Let’s Go',
+      'button': 'Next',
 
       /// SECOND SLIDER IMAGE
       'image': 'assets/images/img_11.png',
+    },
+    {
+      'title': 'Apne doston ko\nrefer karein',
+      'subtitle': 'Aur payein Poster Credits..',
+      'button': 'Let’s Go',
+
+      /// THIRD SLIDER IMAGE
+      'image': 'assets/images/img_12.png',
     },
   ];
 
@@ -101,21 +110,53 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
           /// MAIN CONTENT
           SafeArea(
-            child: PageView.builder(
-              controller: _pageController,
-              itemCount: 2,
-              onPageChanged: (value) {
-                setState(() {
-                  _currentPage = value;
-                });
-              },
-              itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _buildFirstSlide();
-                }
+            child: Column(
+              children: [
+                /// PROGRESS INDICATOR
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 12,
+                  ),
+                  child: Row(
+                    children: List.generate(3, (index) {
+                      return Expanded(
+                        child: Container(
+                          height: 5,
+                          margin: const EdgeInsets.symmetric(horizontal: 4),
+                          decoration: BoxDecoration(
+                            color: index <= _currentPage
+                                ? const Color(0xFFB34233)
+                                : const Color(0xFFB34233).withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      );
+                    }),
+                  ),
+                ),
 
-                return _buildSecondSlide();
-              },
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: 3,
+                    onPageChanged: (value) {
+                      setState(() {
+                        _currentPage = value;
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return _buildFirstSlide();
+                      } else if (index == 1) {
+                        return _buildSecondSlide();
+                      }
+
+                      return _buildThirdSlide();
+                    },
+                  ),
+                ),
+              ],
             ),
           ),
         ],
@@ -253,21 +294,30 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         /// FULL BACKGROUND IMAGE
         Positioned.fill(
-          child: Image.asset(
-            'assets/images/img_11.png',
-            fit: BoxFit.cover,
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                'assets/images/img_11.png',
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
         ),
 
         /// BOTTOM BLUR REPLACED WITH GRADIENT FOR PERFORMANCE
         Positioned(
-          left: 0,
-          right: 0,
-          bottom: 0,
+          left: 24,
+          right: 24,
+          bottom: 24,
           child: Container(
             height: 350,
             width: double.infinity,
             decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -290,8 +340,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
         /// TEXT
         Positioned(
-          left: 32,
-          right: 32,
+          left: 48,
+          right: 48,
           bottom: 135,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -338,8 +388,160 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
         /// BUTTON
         Positioned(
-          left: 25,
-          right: 25,
+          left: 48,
+          right: 48,
+          bottom: 50,
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: _skip,
+                child: Text(
+                  context.tr('skip'),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: _goToNextPage,
+                child: Container(
+                  height: 64,
+                  width: 160,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFB34233),
+                    borderRadius: BorderRadius.circular(40),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        context.tr('next'),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildThirdSlide() {
+    return Stack(
+      children: [
+        /// FULL BACKGROUND IMAGE
+        Positioned.fill(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.asset(
+                'assets/images/img_12.png',
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ),
+
+        /// BOTTOM BLUR REPLACED WITH GRADIENT FOR PERFORMANCE
+        Positioned(
+          left: 24,
+          right: 24,
+          bottom: 24,
+          child: Container(
+            height: 350,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  const Color(0x00FFF8E8),
+                  const Color(0xCCF6E8BF),
+                  const Color(0xEEF8D990),
+                  const Color(0xFFF5E3BC),
+                ],
+                stops: const [
+                  0.0,
+                  0.30,
+                  0.65,
+                  1.0,
+                ],
+              ),
+            ),
+          ),
+        ),
+
+        /// TEXT
+        Positioned(
+          left: 48,
+          right: 48,
+          bottom: 135,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  Text(
+                    context.tr('onboarding_title_3'),
+                    style: TextStyle(
+                      fontSize: 47,
+                      height: 1.05,
+                      fontWeight: FontWeight.w900,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = 3
+                        ..color = Colors.black,
+                    ),
+                  ),
+                  Text(
+                    context.tr('onboarding_title_3'),
+                    style: const TextStyle(
+                      fontSize: 47,
+                      height: 1.05,
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.golden,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                context.tr('onboarding_subtitle_3'),
+                style: const TextStyle(
+                  fontSize: 18,
+                  color: Color(0xFF83382D),
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        /// BUTTON
+        Positioned(
+          left: 24,
+          right: 24,
           bottom: 40,
           child: GestureDetector(
             onTap: _goToLanguageScreen,

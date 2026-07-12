@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'local_notification_service.dart';
 
 class NotificationService {
@@ -7,26 +8,36 @@ class NotificationService {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
 
     // Permission
-    await messaging.requestPermission(
+    NotificationSettings settings = await messaging.requestPermission(
       alert: true,
       badge: true,
       sound: true,
     );
+    print("Notification permission status: ${settings.authorizationStatus}");
 
     // Device Token
     try {
       String? token;
       if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final apnsToken = await messaging.getAPNSToken();
-        if (apnsToken != null) {
-          token = await messaging.getToken();
+        // Try getting token, if null it means APNS is not ready yet.
+        // On iOS, getToken() automatically waits for APNS token if swizzling is enabled.
+        token = await messaging.getToken();
+        
+        // If still null, we don't block initialization, we just log it.
+        if (token == null) {
+          print("FCM Token not available yet on iOS. It will be fetched later.");
         }
       } else {
         token = await messaging.getToken();
       }
-      print("FCM TOKEN (Service): $token");
+      
+      if (token != null) {
+        print("FCM TOKEN: $token");
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('fcm_token', token);
+      }
     } catch (e) {
-      print("Error fetching token in NotificationService: $e");
+      print("Error fetching token: $e");
     }
 
     // Foreground Notification
