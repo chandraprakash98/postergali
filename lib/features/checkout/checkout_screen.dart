@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:postergali/features/posterman/plan.dart';
+import 'submission_processing_screen.dart';
 import 'package:postergali/features/posterman/api_service.dart';
 import 'package:postergali/features/posterman/offer/offer_request.dart';
 import 'package:postergali/core/job_request.dart';
@@ -116,35 +117,41 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   }
 
   Future<void> _submitData() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(child: CircularProgressIndicator()),
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => SubmissionProcessingScreen(
+          title: "Payment Processing...",
+          subtitle: "Connecting with your bank",
+          onComplete: () async {
+            bool success = false;
+            final apiService = ApiService();
+
+            if (widget.flowType == CheckoutFlowType.job) {
+              success = await apiService.submitJob(widget.request as JobRequest);
+            } else {
+              success = await apiService.submitOffer(
+                request: widget.request as OfferRequest,
+                images: widget.images ?? [],
+                video: widget.video,
+              );
+            }
+
+            if (!mounted) return;
+
+            if (success) {
+              Navigator.pop(context); // Pop Processing Screen
+              _showSuccessDialog();
+            } else {
+              Navigator.pop(context); // Pop Processing Screen
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Failed to submit. Please try again.")),
+              );
+            }
+          },
+        ),
+      ),
     );
-
-    bool success = false;
-    final apiService = ApiService();
-
-    if (widget.flowType == CheckoutFlowType.job) {
-      success = await apiService.submitJob(widget.request as JobRequest);
-    } else {
-      success = await apiService.submitOffer(
-        request: widget.request as OfferRequest,
-        images: widget.images ?? [],
-        video: widget.video,
-      );
-    }
-
-    if (!mounted) return;
-    Navigator.pop(context); // Close loading dialog
-
-    if (success) {
-      _showSuccessDialog();
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Failed to submit. Please try again.")),
-      );
-    }
   }
 
   void _showSuccessDialog() {
