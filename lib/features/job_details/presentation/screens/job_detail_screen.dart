@@ -135,18 +135,17 @@ class _JobDetailScreenState extends State<JobDetailScreen> {
   Widget _buildPoster() {
     switch (job['temp_id']) {
       case 'T001':
-        return JobTemplates.templateT001(job);
+        return JobTemplates.templateT001(job, context);
       case 'T002':
-        return JobTemplates.templateT002(job);
+        return JobTemplates.templateT002(job, context);
       case 'T003':
-        return JobTemplates.templateT003(job);
+        return JobTemplates.templateT003(job, context);
       case 'T004':
-        return JobTemplates.templateT004(job);
+        return JobTemplates.templateT004(job, context);
       default:
-        return JobTemplates.defaultTemplate(job);
+        return JobTemplates.defaultTemplate(job, context);
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

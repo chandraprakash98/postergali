@@ -422,56 +422,70 @@
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        HomeHeader(
-                          location: widget.location,
-                          onLocationTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => LocationSelectorScreen(),
+                        if (isLikedMode) ...[
+                          const SizedBox(height: 10),
+                          Center(
+                            child: Text(
+                              context.tr('liked'),
+                              style: const TextStyle(
+                                fontFamily: 'ClashDisplay',
+                                fontSize: 32,
+                                fontWeight: FontWeight.w700,
+                                color: Color(0xff4A1F14),
                               ),
-                            );
-                          },
-                          onLanguageTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const LanguageSelectionScreen(),
-                              ),
-                            );
-                          },
-                          onBannerTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const ReferralScreen(),
-                              ),
-                            );
-                          },
-                        ),
-                        const SizedBox(height: 28),
+                            ),
+                          ),
+                          const SizedBox(height: 25),
+                        ] else ...[
+                          HomeHeader(
+                            location: widget.location,
+                            onLocationTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => LocationSelectorScreen(),
+                                ),
+                              );
+                            },
+                            onLanguageTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const LanguageSelectionScreen(),
+                                ),
+                              );
+                            },
+                            onBannerTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const ReferralScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          const SizedBox(height: 28),
+                        ],
                         HomeTabs(
                           selectedTab: selectedTab,
                           onJobsTap: fetchJobs,
                           onOffersTap: fetchOffers,
                         ),
-                        const SizedBox(height: 24),
-                        ResultHeader(
-                          selectedTab: selectedTab,
-                          isLikedMode: isLikedMode,
-                          resultsCount: isLikedMode 
-                              ? (selectedTab == 0 
-                                  ? allLikedPosters.where((p) => p['type'] == 'job').length 
-                                  : allLikedPosters.where((p) => p['type'] == 'offer').length)
-                              : (selectedTab == 0 ? jobs.length : offers.length),
-                          onFilterTap: () {
-                            if (selectedTab == 0) {
-                              _showFilterBottomSheet();
-                            } else {
-                              _showOfferFilterBottomSheet();
-                            }
-                          },
-                        ),
+                        if (!isLikedMode) ...[
+                          const SizedBox(height: 24),
+                          ResultHeader(
+                            selectedTab: selectedTab,
+                            isLikedMode: isLikedMode,
+                            resultsCount: (selectedTab == 0 ? jobs.length : offers.length),
+                            onFilterTap: () {
+                              if (selectedTab == 0) {
+                                _showFilterBottomSheet();
+                              } else {
+                                _showOfferFilterBottomSheet();
+                              }
+                            },
+                          ),
+                        ],
                         const SizedBox(height: 22),
                       ],
                     ),
@@ -722,9 +736,9 @@
           ),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
-            crossAxisSpacing: 26,
+            crossAxisSpacing: 16,
             mainAxisSpacing: 24,
-              childAspectRatio: 0.50
+            childAspectRatio: 0.62,
           ),
         ),
       );

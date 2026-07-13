@@ -924,16 +924,16 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
 
     final templates = flowType == FlowType.job
         ? [
-            {'id': 'T001', 'widget': JobTemplatesSmall.templateT001(data)},
-            {'id': 'T002', 'widget': JobTemplatesSmall.templateT002(data)},
-            {'id': 'T003', 'widget': JobTemplatesSmall.templateT003(data)},
-            {'id': 'T004', 'widget': JobTemplatesSmall.templateT004(data)},
+            {'id': 'T001', 'widget': JobTemplatesSmall.templateT001(data, context)},
+            {'id': 'T002', 'widget': JobTemplatesSmall.templateT002(data, context)},
+            {'id': 'T003', 'widget': JobTemplatesSmall.templateT003(data, context)},
+            {'id': 'T004', 'widget': JobTemplatesSmall.templateT004(data, context)},
           ]
         : [
-            {'id': 'T001', 'widget': OfferTemplates.templateT001(data)},
-            {'id': 'T002', 'widget': OfferTemplates.templateT002(data)},
-            {'id': 'T003', 'widget': OfferTemplates.templateT003(data)},
-            {'id': 'T004', 'widget': OfferTemplates.templateT004(data)},
+            {'id': 'T001', 'widget': OfferTemplates.templateT001(data, context)},
+            {'id': 'T002', 'widget': OfferTemplates.templateT002(data, context)},
+            {'id': 'T003', 'widget': OfferTemplates.templateT003(data, context)},
+            {'id': 'T004', 'widget': OfferTemplates.templateT004(data, context)},
           ];
 
     return Container(
@@ -1017,16 +1017,16 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     if (flowType == FlowType.job) {
       switch (controller.tempId) {
         case 'T001':
-          preview = JobTemplatesSmall.templateT001(data);
+          preview = JobTemplatesSmall.templateT001(data, context);
           break;
         case 'T002':
-          preview = JobTemplatesSmall.templateT002(data);
+          preview = JobTemplatesSmall.templateT002(data, context);
           break;
         case 'T003':
-          preview = JobTemplatesSmall.templateT003(data);
+          preview = JobTemplatesSmall.templateT003(data, context);
           break;
         case 'T004':
-          preview = JobTemplatesSmall.templateT004(data);
+          preview = JobTemplatesSmall.templateT004(data, context);
           break;
         default:
           preview = const Center(
@@ -1035,16 +1035,16 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     } else {
       switch (offerController.tempId) {
         case 'T001':
-          preview = OfferTemplates.templateT001(data);
+          preview = OfferTemplates.templateT001(data, context);
           break;
         case 'T002':
-          preview = OfferTemplates.templateT002(data);
+          preview = OfferTemplates.templateT002(data, context);
           break;
         case 'T003':
-          preview = OfferTemplates.templateT003(data);
+          preview = OfferTemplates.templateT003(data, context);
           break;
         case 'T004':
-          preview = OfferTemplates.templateT004(data);
+          preview = OfferTemplates.templateT004(data, context);
           break;
         default:
           preview = const Center(

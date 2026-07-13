@@ -59,7 +59,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
     @override
     Widget build(BuildContext context) {
       return SizedBox(
-        height: 109,
+        height: 95,
         child: LayoutBuilder(
           builder: (context, constraints) {
             final width = constraints.maxWidth;
@@ -71,7 +71,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
                 Positioned(
                   bottom: 0,
                   child: CustomPaint(
-                    size: Size(width, 108),
+                    size: Size(width, 94),
                     painter: _BottomBarPainter(),
                   ),
                 ),
@@ -81,11 +81,11 @@ import '../../../posterman/poster_man_chat_screen.dart';
                   duration: const Duration(milliseconds: 450),
                   curve: Curves.easeInOut,
                   left: _spotLeft(selectedIndex, width),
-                  top: -7,
+                  top: -12,
                   child: IgnorePointer(
                     child: SizedBox(
                       width: 105,
-                      height: 95,
+                      height: 90,
                       child: CustomPaint(
                         painter: _StreetLightPainter(),
                       ),
@@ -95,7 +95,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
 
                 /// CENTER BUTTON
                 Positioned(
-                  top: -32,
+                  top: -35,
                   left: width / 2 - 39,
 
                   child: GestureDetector(
@@ -120,8 +120,8 @@ import '../../../posterman/poster_man_chat_screen.dart';
                     padding: const EdgeInsets.only(
                       left: 8,
                       right: 8,
-                      top: 6,
-                      bottom: 6,
+                      top: 4,
+                      bottom: 4,
                     ),
                     child: Row(
                       children: [
@@ -147,7 +147,7 @@ import '../../../posterman/poster_man_chat_screen.dart';
                           child: _item(
                             2,
                             CupertinoIcons.heart_fill,
-                            context.tr('liked'),
+                            context.tr('heart'),
                           ),
                         ),
 
