@@ -17,13 +17,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
 
   int _currentPage = 0;
+  int _selectedOption = -1;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     precacheImage(const AssetImage('assets/images/img_7.png'), context);
     precacheImage(const AssetImage('assets/images/img_11.png'), context);
-    precacheImage(const AssetImage('assets/images/img_12.png'), context);
+    precacheImage(const AssetImage('assets/images/img_14.png'), context);
     precacheImage(const AssetImage('assets/images/img.png'), context);
   }
 
@@ -442,145 +443,148 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildThirdSlide() {
-    return Stack(
+    return Column(
       children: [
-        /// FULL BACKGROUND IMAGE
-        Positioned.fill(
+        /// TOP CHARACTER IMAGE (Peeking)
+        Container(
+          width: double.infinity,
+          height: 180,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/img_13.png'),
+              fit: BoxFit.contain,
+              alignment: Alignment.bottomCenter,
+            ),
+          ),
+        ),
+
+        Expanded(
           child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.asset(
-                'assets/images/img_12.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ),
-
-        /// BOTTOM BLUR REPLACED WITH GRADIENT FOR PERFORMANCE
-        Positioned(
-          left: 24,
-          right: 24,
-          bottom: 24,
-          child: Container(
-            height: 350,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: const BorderRadius.vertical(
-                bottom: Radius.circular(20),
-              ),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  const Color(0x00FFF8E8),
-                  const Color(0xCCF6E8BF),
-                  const Color(0xEEF8D990),
-                  const Color(0xFFF5E3BC),
-                ],
-                stops: const [
-                  0.0,
-                  0.30,
-                  0.65,
-                  1.0,
-                ],
-              ),
-            ),
-          ),
-        ),
-
-        /// TEXT
-        Positioned(
-          left: 48,
-          right: 48,
-          bottom: 135,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Text(
-                    context.tr('onboarding_title_3'),
-                    style: TextStyle(
-                      fontSize: 47,
-                      height: 1.05,
-                      fontWeight: FontWeight.w900,
-                      foreground: Paint()
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 3
-                        ..color = Colors.black,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 20),
+                Stack(
+                  children: [
+                    Text(
+                      context.tr('onboarding_title_3'),
+                      style: TextStyle(
+                        fontSize: 38,
+                        height: 1.1,
+                        fontWeight: FontWeight.w900,
+                        foreground: Paint()
+                          ..style = PaintingStyle.stroke
+                          ..strokeWidth = 3
+                          ..color = Colors.black,
+                      ),
                     ),
-                  ),
-                  Text(
-                    context.tr('onboarding_title_3'),
-                    style: const TextStyle(
-                      fontSize: 47,
-                      height: 1.05,
-                      fontWeight: FontWeight.w900,
-                      color: AppColors.golden,
+                    Text(
+                      context.tr('onboarding_title_3'),
+                      style: const TextStyle(
+                        fontSize: 38,
+                        height: 1.1,
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.golden,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 10),
-
-              Text(
-                context.tr('onboarding_subtitle_3'),
-                style: const TextStyle(
-                  fontSize: 18,
-                  color: Color(0xFF83382D),
-                  fontWeight: FontWeight.w600,
+                  ],
                 ),
-              ),
-            ],
-          ),
-        ),
-
-        /// BUTTON
-        Positioned(
-          left: 24,
-          right: 24,
-          bottom: 40,
-          child: GestureDetector(
-            onTap: _goToLanguageScreen,
-            child: Container(
-              height: 65,
-              decoration: BoxDecoration(
-                color: const Color(0xFFB34233),
-                borderRadius: BorderRadius.circular(40),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.15),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                const SizedBox(height: 16),
+                Text(
+                  context.tr('onboarding_subtitle_3'),
+                  style: const TextStyle(
+                    fontSize: 18,
+                    color: Color(0xFF83382D),
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    context.tr('lets_begin'),
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
+                ),
+                const SizedBox(height: 30),
+
+                /// OPTIONS
+                _buildOption(0, context.tr('grow_business')),
+                const SizedBox(height: 12),
+                _buildOption(1, context.tr('find_deals')),
+                const SizedBox(height: 12),
+                _buildOption(2, context.tr('find_job')),
+
+                const Spacer(),
+
+                /// BUTTON
+                GestureDetector(
+                  onTap: _goToLanguageScreen,
+                  child: Container(
+                    height: 65,
+                    margin: const EdgeInsets.only(bottom: 40),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFB34233),
+                      borderRadius: BorderRadius.circular(40),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          context.tr('lets_begin'),
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: 18,
+                        ),
+                      ],
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 18,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildOption(int index, String title) {
+    bool isSelected = _selectedOption == index;
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          _selectedOption = index;
+        });
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 18),
+        decoration: BoxDecoration(
+          color: isSelected ? const Color(0xFFB34233).withOpacity(0.08) : Colors.white.withOpacity(0.5),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(
+            color: isSelected ? const Color(0xFFB34233) : const Color(0xFF83382D).withOpacity(0.3),
+            width: isSelected ? 2 : 1,
+          ),
+        ),
+        child: Text(
+          title,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: isSelected ? const Color(0xFFB34233) : const Color(0xFF4A1F14),
+          ),
+        ),
+      ),
     );
   }
 }

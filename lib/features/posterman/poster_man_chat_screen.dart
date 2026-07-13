@@ -1102,6 +1102,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                         jobType: controller.jobType,
                         salary: controller.salary.toString(),
                         phone: controller.phone,
+                        isOffer: false,
                       ),
                     ),
                   );
@@ -1110,9 +1111,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                     setState(() {
                       controller.businessName = result["shopName"];
                       controller.jobRole = result["jobRole"];
-                      controller.jobType = result["jobType"];
-                      controller.salary =
-                          int.tryParse(result["salary"].toString()) ?? controller.salary;
+                      // Note: jobType and salary are not in the new EditPoster UI yet, but we keep them
                       controller.phone = result["phone"];
                     });
                   }
@@ -1135,12 +1134,13 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                   final result = await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => EditOfferPosterScreen(
+                      builder: (_) => EditPosterScreen(
                         shopName: offerController.businessName,
                         offerDetails: offerController.offerDetails,
                         phone: offerController.mobile,
                         images: offerController.images,
                         video: offerController.video,
+                        isOffer: true,
                       ),
                     ),
                   );
