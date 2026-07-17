@@ -43,7 +43,7 @@ class _BotSplashScreenState extends State<BotSplashScreen> with TickerProviderSt
     );
 
     _logoScale = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _logoController, curve: Curves.backOut),
+      CurvedAnimation(parent: _logoController, curve: Curves.easeOutBack),
     );
 
     _logoRotate = Tween<double>(begin: 0.0, end: 2 * 3.14159).animate(

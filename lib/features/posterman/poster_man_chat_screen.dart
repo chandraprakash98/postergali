@@ -9,6 +9,7 @@ import 'package:postergali/core/widgets/offer_templates.dart';
 import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'package:postergali/features/checkout/checkout_screen.dart';
+import 'package:postergali/features/location/presentation/screens/location_selector_screen.dart';
 import '../otp/otp_verification.dart';
 import 'api_service.dart';
 import 'edit_poster.dart';
