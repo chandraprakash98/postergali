@@ -23,8 +23,8 @@ class _OfferFilterScreenState extends State<OfferFilterScreen> {
   late List<String> selectedCategories;
   String? selectedExpiry;
 
-  bool categoryExpanded = true;
-  bool expiryExpanded = true;
+  bool categoryExpanded = false;
+  bool expiryExpanded = false;
 
   @override
   void initState() {

@@ -29,10 +29,10 @@ class _JobFilterScreenState extends State<JobFilterScreen> {
   String? selectedJobType;
   String? selectedSalary;
 
-  bool subCategoryExpanded = true;
-  bool expiryExpanded = true;
-  bool jobTypeExpanded = true;
-  bool salaryExpanded = true;
+  bool subCategoryExpanded = false;
+  bool expiryExpanded = false;
+  bool jobTypeExpanded = false;
+  bool salaryExpanded = false;
 
   @override
   void initState() {
