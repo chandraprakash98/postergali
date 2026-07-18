@@ -13,9 +13,9 @@
   import '../widgets/home_cards.dart';
   import '../widgets/home_header.dart';
   import '../widgets/home_tabs.dart';
-  import '../widgets/job_filter_sheet.dart';
   import '../widgets/offer_filter_sheet.dart';
   import '../widgets/result_header.dart';
+  import 'job_filter_screen.dart';
   import '../../../job_details/presentation/screens/job_detail_screen.dart';
   import '../../../language/presentation/screens/language_selection_screen.dart';
   import '../../../location/presentation/screens/location_selector_screen.dart';
@@ -85,14 +85,16 @@
     ];
   
     final List<String> salaryOptions = [
-      "0-10,000",
-      "10,001-20,000",
-      "20,000 and above",
+      "10000",
+      "15000",
+      "20000",
+      "25000",
+      "30000",
     ];
   
     final List<String> jobTypes = [
-      "Full-time",
-      "Part-time",
+      "Full Time",
+      "Part Time",
       "Temporary",
     ];
   
@@ -319,25 +321,26 @@
       });
     }
 
-    void _showFilterBottomSheet() {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return JobFilterSheet(
+    Future<void> _showFilterBottomSheet() async {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => JobFilterScreen(
             initialFilter: jobFilter,
             jobCategories: jobCategories,
             expiryOptions: expiryOptions,
             salaryOptions: salaryOptions,
             jobTypes: jobTypes,
-            onApply: (newFilter) {
-              jobFilter = newFilter;
-              fetchJobs();
-            },
-          );
-        },
+          ),
+        ),
       );
+
+      if (result != null && result is JobFilterModel) {
+        setState(() {
+          jobFilter = result;
+        });
+        fetchJobs();
+      }
     }
   
     void _showOfferFilterBottomSheet() {

@@ -18,10 +18,10 @@ class JobFilterModel {
     return {
       "latitude": latitude.toString(),
       "longitude": longitude.toString(),
-      "categories": categories.join(','),
-      "expiry": expiry ?? '',
+      "sub_categories": categories.map((e) => e.toLowerCase()).join(','),
+      "is_expiry": (expiry ?? '').toLowerCase().replaceAll(' ', '_'),
       "job_type": jobType ?? '',
-      "salary": salary ?? '',
+      "salary": (salary ?? '').replaceAll(RegExp(r'[^0-9]'), ''),
     };
   }
 
