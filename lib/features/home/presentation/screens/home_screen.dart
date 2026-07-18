@@ -13,9 +13,10 @@
   import '../widgets/home_cards.dart';
   import '../widgets/home_header.dart';
   import '../widgets/home_tabs.dart';
-  import '../widgets/offer_filter_sheet.dart';
   import '../widgets/result_header.dart';
   import 'job_filter_screen.dart';
+  import 'offer_filter_screen.dart';
+  import '../../data/models/offer_filter.dart';
   import '../../../job_details/presentation/screens/job_detail_screen.dart';
   import '../../../language/presentation/screens/language_selection_screen.dart';
   import '../../../location/presentation/screens/location_selector_screen.dart';
@@ -64,6 +65,7 @@
     bool isLikedMode = false;
 
     JobFilterModel jobFilter = JobFilterModel();
+    OfferFilterModel offerFilter = OfferFilterModel();
   
     final List<String> jobCategories = [
       "Retail and Shop Jobs",
@@ -96,6 +98,17 @@
       "Full Time",
       "Part Time",
       "Temporary",
+    ];
+
+    final List<String> offerCategories = [
+      "Food",
+      "Fashion",
+      "Salon",
+      "Electronics",
+      "Grocery",
+      "Travel",
+      "Cafe",
+      "Gym",
     ];
   
     @override
@@ -245,6 +258,11 @@
       });
 
       try {
+        final query = offerFilter.toQuery(
+          latitude: widget.latitude,
+          longitude: widget.longitude,
+        );
+
         for (int i = 0; i < radiusList.length; i++) {
           final radius = radiusList[i];
           debugPrint("Trying radius for Offers: $radius km");
@@ -253,6 +271,7 @@
             endpoint: "offers",
             radius: radius,
             perPage: 50,
+            extraQuery: query,
           );
 
           if (results.isNotEmpty) {
@@ -292,7 +311,7 @@
 
       final query = selectedTab == 0
           ? jobFilter.toQuery(latitude: widget.latitude, longitude: widget.longitude)
-          : null;
+          : offerFilter.toQuery(latitude: widget.latitude, longitude: widget.longitude);
 
       final results = await _fetchByRadius(
         endpoint: endpoint,
@@ -343,20 +362,24 @@
       }
     }
   
-    void _showOfferFilterBottomSheet() {
-      showModalBottomSheet(
-        context: context,
-        isScrollControlled: true,
-        backgroundColor: Colors.transparent,
-        builder: (context) {
-          return OfferFilterSheet(
-            onApply: (filters) {
-              // Later call offer api with filters
-              debugPrint("Offer filters applied: $filters");
-            },
-          );
-        },
+    Future<void> _showOfferFilterBottomSheet() async {
+      final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => OfferFilterScreen(
+            initialFilter: offerFilter,
+            offerCategories: offerCategories,
+            expiryOptions: expiryOptions,
+          ),
+        ),
       );
+
+      if (result != null && result is OfferFilterModel) {
+        setState(() {
+          offerFilter = result;
+        });
+        fetchOffers();
+      }
     }
   
     @override
