@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:postergali/core/localization/localization_service.dart';
@@ -61,6 +62,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
 
   final TextEditingController input = TextEditingController();
   final ScrollController scroll = ScrollController();
+  final FocusNode inputFocus = FocusNode();
 
   ChatStep step = ChatStep.welcome;
   FlowType flowType = FlowType.job;
@@ -102,6 +104,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
 
   Future<void> bot(String text) async {
     setState(() => isBotTyping = true);
+    inputFocus.unfocus(); // Close keyboard while bot is typing
     await Future.delayed(const Duration(milliseconds: 600));
 
     setState(() {
@@ -110,6 +113,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     });
 
     scrollToBottom();
+    _checkFocusRequirement();
   }
 
   void user(String text) {
@@ -342,6 +346,24 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     }
   }
 
+  void _checkFocusRequirement() {
+    if (isBotTyping) return;
+
+    final requiresInput = [
+      ChatStep.businessName,
+      ChatStep.jobRole,
+      ChatStep.salary,
+      ChatStep.offerDetails,
+      ChatStep.phone,
+    ].contains(step);
+
+    if (requiresInput) {
+      inputFocus.requestFocus();
+    } else {
+      inputFocus.unfocus();
+    }
+  }
+
   void scrollToBottom() {
     Future.delayed(const Duration(milliseconds: 300), () {
       if (scroll.hasClients) {
@@ -352,6 +374,14 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
         );
       }
     });
+  }
+
+  @override
+  void dispose() {
+    input.dispose();
+    inputFocus.dispose();
+    scroll.dispose();
+    super.dispose();
   }
 
   @override
@@ -1206,45 +1236,75 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
   }
 
   Widget _inputArea() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        border: Border(top: BorderSide(color: Color(0xFFE5E5EA))),
-      ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF2F2F7),
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: TextField(
-                  controller: input,
-                  decoration: InputDecoration(
-                    hintText: context.tr('enter_otp'), // Using a generic enter text key or adding a new one
-                    border: InputBorder.none,
-                    hintStyle: const TextStyle(color: Colors.grey),
+    final requiresInput = [
+      ChatStep.businessName,
+      ChatStep.jobRole,
+      ChatStep.salary,
+      ChatStep.offerDetails,
+      ChatStep.phone,
+    ].contains(step);
+
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 300),
+      opacity: requiresInput ? 1.0 : 0.5,
+      child: AbsorbPointer(
+        absorbing: !requiresInput,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: Color(0xFFE5E5EA))),
+          ),
+          child: SafeArea(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF2F2F7),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: TextField(
+                      controller: input,
+                      focusNode: inputFocus,
+                      enabled: requiresInput,
+                      keyboardType: step == ChatStep.phone || step == ChatStep.salary
+                          ? TextInputType.number
+                          : TextInputType.text,
+                      inputFormatters: [
+                        if (step == ChatStep.phone) LengthLimitingTextInputFormatter(10),
+                        FilteringTextInputFormatter.deny(RegExp(r'\s{2,}')),
+                        TextInputFormatter.withFunction((oldValue, newValue) {
+                          if (newValue.text.contains('  ')) {
+                            return oldValue;
+                          }
+                          return newValue;
+                        }),
+                      ],
+                      decoration: InputDecoration(
+                        hintText: requiresInput ? "Type a message..." : "Select an option above",
+                        border: InputBorder.none,
+                        hintStyle: const TextStyle(color: Colors.grey),
+                      ),
+                      onSubmitted: next,
+                    ),
                   ),
-                  onSubmitted: next,
                 ),
-              ),
+                const SizedBox(width: 8),
+                Container(
+                  decoration: BoxDecoration(
+                    color: requiresInput ? primaryColor : Colors.grey,
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.send, color: Colors.white, size: 20),
+                    onPressed: requiresInput ? () => next(input.text.trim()) : null,
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 8),
-            Container(
-              decoration: BoxDecoration(
-                color: primaryColor,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                icon: const Icon(Icons.send, color: Colors.white, size: 20),
-                onPressed: () => next(input.text.trim()),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
