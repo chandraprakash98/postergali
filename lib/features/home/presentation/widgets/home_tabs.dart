@@ -44,7 +44,7 @@ class HomeTabs extends StatelessWidget {
                   boxShadow: selectedTab == 0
                       ? [
                     BoxShadow(
-                      color: const Color(0xffFFB08C).withOpacity(.7),
+                      color: const Color(0xfff3cdaa).withOpacity(.7),
                       blurRadius: 18,
                       spreadRadius: 1,
                     ),

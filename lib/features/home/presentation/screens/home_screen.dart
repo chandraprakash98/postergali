@@ -426,15 +426,15 @@
               begin: Alignment.centerLeft,
               end: Alignment.centerRight,
               colors: [
-                Color(0xFFFAE2BC),
-                Color(0xFFFFF2CC),
-                Color(0xFFEFDFAE),
+                Color(0xECFFDAB5),
+                Color(0xECFFDAB5),
+                Color(0xFFFFDCB9),
               ],
             ),
             image: const DecorationImage(
               image: AssetImage('assets/images/img.png'),
               fit: BoxFit.cover,
-              opacity: 0.10,
+              opacity: 0.01,
             ),
           ),
           child: SafeArea(

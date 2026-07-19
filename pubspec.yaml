@@ -95,14 +95,14 @@ flutter:
       fonts:
         - asset: assets/fonts/kumarfont.otf
 
-    - family: KumarOne
+    - family: KumarOne1
       fonts:
         - asset: assets/fonts/KumarOne-Regular.ttf
 
 
     - family: LemonMilk
       fonts:
-        - asset: assets/fonts/LEMONMILK-Bold.otf
+        - asset: assets/fonts/lemonmilk.otf
 
     - family: MonteStella
       fonts:
@@ -119,6 +119,11 @@ flutter:
     - family: TimesNewRoman
       fonts:
         - asset: assets/fonts/timesnew.ttf
+
+    - family: DelaGothicOne
+      fonts:
+        - asset: assets/fonts/delagothicone.ttf
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
