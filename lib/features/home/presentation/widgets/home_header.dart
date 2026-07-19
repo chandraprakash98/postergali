@@ -8,6 +8,7 @@ class HomeHeader extends StatelessWidget {
   final VoidCallback onLanguageTap;
   final VoidCallback? onLocationTap;
   final VoidCallback? onBannerTap;
+  final int? walletBalance;
 
   const HomeHeader({
     super.key,
@@ -15,6 +16,7 @@ class HomeHeader extends StatelessWidget {
     required this.onLanguageTap,
     this.onLocationTap,
     this.onBannerTap,
+    this.walletBalance,
   });
 
   @override
@@ -128,37 +130,73 @@ class HomeHeader extends StatelessWidget {
         ),
         const SizedBox(height: 10),
         /// 3D MATERIAL BANNER
-        GestureDetector(
-          onTap: onBannerTap,
-          child: ClipRRect(
-            borderRadius: borderRadius,
-            child: Container(
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  Image.asset(
-                    AppAssets.bannerHome,
-                    width: double.infinity,
-                    fit: BoxFit.contain, // Shows complete image
+        Column(
+          children: [
+            GestureDetector(
+              onTap: onBannerTap,
+              child: ClipRRect(
+                borderRadius: borderRadius,
+                child: Container(
+                  width: double.infinity,
+                  child: Stack(
+                    children: [
+                      Image.asset(
+                        AppAssets.bannerHome,
+                        width: double.infinity,
+                        fit: BoxFit.contain, // Shows complete image
+                      ),
+                    ],
                   ),
-
-                  /// LIGHT REFLECTION
-                  // Positioned(
-                  //   top: -40,
-                  //   right: -20,
-                  //   child: Container(
-                  //     height: 140,
-                  //     width: 140,
-                  //     decoration: BoxDecoration(
-                  //       shape: BoxShape.circle,
-                  //       color: Colors.white.withOpacity(0.10),
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+                ),
               ),
             ),
-          ),
+            
+            if (walletBalance != null)
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Transform.translate(
+                  offset: const Offset(0, -5), // Slightly overlap with banner bottom
+                  child: Container(
+                    width: double.infinity, // Match banner width
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF1F8F1), // Very light mint green
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(16),
+                        bottomRight: Radius.circular(16),
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 4,
+                          offset: const Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.account_balance_wallet,
+                          color: Color(0xFF34693D), // Forest green icon
+                          size: 20,
+                        ),
+                        const SizedBox(width: 10),
+                        Text(
+                          "Poster Credits: ₹$walletBalance",
+                          style: const TextStyle(
+                            fontFamily: 'HelveticaNeue',
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF1B3A23), // Deep green text
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+          ],
         ),
       ],
     );
