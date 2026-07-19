@@ -6,7 +6,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:postergali/core/localization/localization_service.dart';
 import 'package:postergali/core/job_request.dart';
 import 'package:postergali/core/widgets/job_templates_small.dart';
+import 'package:postergali/core/widgets/job_templates_full.dart';
 import 'package:postergali/core/widgets/offer_templates.dart';
+import 'package:postergali/core/widgets/offer_templates_full.dart';
 import 'package:postergali/features/posterman/offer/offer_controller.dart';
 import 'package:postergali/features/posterman/posterman_controller.dart';
 import 'package:postergali/features/checkout/checkout_screen.dart';
@@ -990,7 +992,7 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
               crossAxisCount: 2,
               crossAxisSpacing: 10,
               mainAxisSpacing: 10,
-              childAspectRatio: 0.75,
+              childAspectRatio: 0.65,
             ),
             itemCount: templates.length,
             itemBuilder: (context, i) {
@@ -1009,13 +1011,20 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: Colors.grey.shade300),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
                   ),
                   child: AbsorbPointer(
                     child: FittedBox(
-                      fit: BoxFit.contain,
+                      fit: BoxFit.cover,
                       child: SizedBox(
                         width: 300,
-                        height: 400,
+                        height: 460,
                         child: t['widget'] as Widget,
                       ),
                     ),
@@ -1048,16 +1057,16 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     if (flowType == FlowType.job) {
       switch (controller.tempId) {
         case 'T001':
-          preview = JobTemplatesSmall.templateT001(data, context);
+          preview = JobTemplates.templateT001(data, context);
           break;
         case 'T002':
-          preview = JobTemplatesSmall.templateT002(data, context);
+          preview = JobTemplates.templateT002(data, context);
           break;
         case 'T003':
-          preview = JobTemplatesSmall.templateT003(data, context);
+          preview = JobTemplates.templateT003(data, context);
           break;
         case 'T004':
-          preview = JobTemplatesSmall.templateT004(data, context);
+          preview = JobTemplates.templateT004(data, context);
           break;
         default:
           preview = const Center(
@@ -1066,16 +1075,16 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
     } else {
       switch (offerController.tempId) {
         case 'T001':
-          preview = OfferTemplates.templateT001(data, context);
+          preview = OfferTemplatesFull.templateT001(data, context);
           break;
         case 'T002':
-          preview = OfferTemplates.templateT002(data, context);
+          preview = OfferTemplatesFull.templateT002(data, context);
           break;
         case 'T003':
-          preview = OfferTemplates.templateT003(data, context);
+          preview = OfferTemplatesFull.templateT003(data, context);
           break;
         case 'T004':
-          preview = OfferTemplates.templateT004(data, context);
+          preview = OfferTemplatesFull.templateT004(data, context);
           break;
         default:
           preview = const Center(
@@ -1094,18 +1103,25 @@ class _PosterManChatScreenState extends State<PosterManChatScreen> {
       child: Column(
         children: [
           Container(
-            height: 350,
+            height: 420,
             width: double.infinity,
             clipBehavior: Clip.antiAlias,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
             ),
             child: FittedBox(
               fit: BoxFit.contain,
               child: SizedBox(
-                width: 300,
-                height: 400,
+                width: 320,
+                height: 480,
                 child: preview,
               ),
             ),
