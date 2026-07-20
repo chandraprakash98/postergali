@@ -437,22 +437,22 @@ class JobTemplatesSmall {
             height: 560,
             child: Column(
               children: [
-                const SizedBox(height: 30),
 
+                const SizedBox(height: 5),
                 /// WE'RE
                 Text(
                   "WE'RE",
                   style: TextStyle(
                     fontFamily: "DelaGothicOne",
                     fontSize: _getResponsiveSize(context, 48),
-                    fontWeight: FontWeight.w900,
+                    fontWeight: FontWeight.w700,
                     color: Colors.black,
                     letterSpacing: 2,
                     height: 0.9,
                   ),
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 25),
 
                 /// HIRING
                 Transform.rotate(
@@ -475,7 +475,7 @@ class JobTemplatesSmall {
                   ),
                 ),
 
-                const SizedBox(height: 35),
+                const SizedBox(height: 45),
 
                 /// BUSINESS NAME
                 SizedBox(
@@ -486,11 +486,11 @@ class JobTemplatesSmall {
                       Text(
                         (job['business_name'] ?? '').toString(),
                         textAlign: TextAlign.center,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: "MonteStella_Trial_Rg",
-                          fontSize: _getResponsiveSize(context, 40),
+                          fontSize: _getResponsiveSize(context, 30),
                           fontWeight: FontWeight.w900,
                           foreground: Paint()
                             ..style = PaintingStyle.stroke
@@ -501,20 +501,20 @@ class JobTemplatesSmall {
                       Text(
                         (job['business_name'] ?? '').toString(),
                         textAlign: TextAlign.center,
-                        maxLines: 1,
+                        maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontFamily: "MonteStella_Trial_Rg",
-                          fontSize: _getResponsiveSize(context, 40),
+                          fontSize: _getResponsiveSize(context, 30),
                           fontWeight: FontWeight.w900,
-                          color: const Color(0xffF1DB00),
+                          color: const Color(0xfff4de04),
                         ),
                       ),
                     ],
                   ),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 5),
 
                 /// JOB ROLE
                 Expanded(
@@ -526,7 +526,7 @@ class JobTemplatesSmall {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         fontFamily: "Impact",
-                        fontSize: _getResponsiveSize(context, 76),
+                        fontSize: _getResponsiveSize(context, 70),
                         fontWeight: FontWeight.w400,
                         color: Colors.white,
                         height: 0.9,
