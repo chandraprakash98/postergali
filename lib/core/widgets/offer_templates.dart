@@ -361,7 +361,7 @@ class OfferTemplates {
             /// Background
             Image.asset(
               AppAssets.offerImg4,
-              fit: BoxFit.cover,
+              fit: BoxFit.fill,
             ),
 
             /// Content
