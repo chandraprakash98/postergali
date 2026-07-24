@@ -93,7 +93,7 @@ class AppTranslations {
       'grand_opening': 'Grand Opening Offer',
       'inauguration': 'Inauguration Sale',
       'new_arrivals': 'New Arrivals',
-      'onboarding_title_1': 'PosterGali pe\nlagao aamdani\nbadhao',
+      'onboarding_title_1': 'Humari gali mein poster lagao dhanda badhao',
       'onboarding_subtitle_1': '1 minute se kam samay mein\nwoh bhi kifayati daam mein..',
       'onboarding_title_2': 'Offers ya job\nchahiye?',
       'onboarding_subtitle_2': 'PosterGali jaiye..',

@@ -364,7 +364,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
           gradient: const LinearGradient(
             begin: Alignment.centerLeft,
             end: Alignment.centerRight,
-            colors: [Color(0xECFFDAB5), Color(0xECFFDAB5), Color(0xFFFFDCB9)],
+            colors: [Color(0xFFFFEFC2), Color(0xFFFFEFC2), Color(0xFFFFEFC2)],
           ),
           image: const DecorationImage(
             image: AssetImage('assets/images/img.png'),

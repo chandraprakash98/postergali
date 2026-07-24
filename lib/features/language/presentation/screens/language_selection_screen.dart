@@ -80,7 +80,7 @@ class _LanguageSelectionScreenState
         margin: const EdgeInsets.only(bottom: 16), // reduced from 26
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
-          color: const Color(0xFFF4EAC7).withOpacity(0.78),
+          color: const Color(0xFFFAF7E9).withOpacity(0.78),
           borderRadius: BorderRadius.circular(30), // reduced from 42
           border: Border.all(
             color: const Color(0xFFB6402C),
@@ -140,9 +140,9 @@ class _LanguageSelectionScreenState
                   begin: Alignment.centerLeft,
                   end: Alignment.centerRight,
                   colors: [
-                    Color(0xFFFAE2BC),
-                    Color(0xFFFFF2CC),
-                    Color(0xFFEFDFAE),
+                    Color(0xFFFAF7E9),
+                    Color(0xFFFAF7E9),
+                    Color(0xFFFAF7E9),
                   ],
                 ),
                 image: const DecorationImage(
